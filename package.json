@@ -1,0 +1,60 @@
+{
+  "name": "nautilus1",
+  "version": "1.0.0",
+  "description": "A cool dev tool to help automate the intialize phase of your git workflow.",
+  "main": "./bin/index.js",
+  "bin": {
+    "nautilus1": "./bin/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm install"
+  },
+  "keywords": [
+    "git",
+    "node",
+    "cli"
+  ],
+  "pkg": {
+    "scripts": "../**/*.js",
+    "assets": [
+      "node_modules/figlet/fonts/Standard.flf",
+      "C:/Users/elchanana/AppData/Local/Microsoft/TypeScript/4.6/node_modules/@types/figlet/index.d.ts",
+      "C:/**/nautilus1/node_modules/figlet/fonts/Standard.flf",
+      "data/xiaomiPackageRemovalList.json",
+      "C:/Projects/Js/nautilus1/powerShellScript/createCluster.ps1"
+    ],
+    "targets": [
+      "node12-linux-x64",
+      "node12-macos-x64",
+      "node12-win-x86"
+    ],
+    "outputPath": "dist"
+  },
+  "author": "Elchanan Arbiv",
+  "license": "ISC",
+  "dependencies": {
+    "@octokit/auth-basic": "^1.4.8",
+    "@octokit/rest": "^16.43.2",
+    "chalk": "^2.4.2",
+    "child_process": "^1.0.2",
+    "clear": "^0.1.0",
+    "clui": "^0.3.6",
+    "commander": "^2.20.3",
+    "configstore": "^4.0.0",
+    "dns": "^0.2.2",
+    "figlet": "^1.5.2",
+    "fs": "^0.0.1-security",
+    "inquirer": "^6.5.2",
+    "lodash": "^4.17.21",
+    "minimist": "^1.2.6",
+    "os": "^0.1.2",
+    "path": "^0.12.7",
+    "pkg": "^5.7.0",
+    "prompt-sync": "^4.2.0",
+    "save": "^2.5.0",
+    "simple-git": "^3.7.1",
+    "touch": "^3.1.0",
+    "util": "^0.12.4"
+  }
+}

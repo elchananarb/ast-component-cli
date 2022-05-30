@@ -1,0 +1,43 @@
+{
+  "astPath": "C:/Users/elchanana/IdeaProjects/ast/helm",
+  "region": "eu-west-3",
+  "devName": "",
+  "teamName": "",
+  "clusters": [
+    "Nautilus-Igor",
+    "Nautilus-Orly",
+    "Nautilus-Jorge",
+    "Nautilus-Ely",
+    "ely-test",
+    "Nautilus-Team",
+    "N-Ely"
+  ],
+  "regions": ["eu-west-1", "eu-west-2", "eu-west-3", "eu-north-1"],
+  "services": [
+    {
+      "name": "ast-flow-publisher",
+      "path": "",
+      "chartPath": "/helm/charts/ast-flow-publisher"
+    },
+    {
+      "name": "ast-flow-listener",
+      "path": "",
+      "chartPath": ""
+    },
+    {
+      "name": "integrations-repos-manager",
+      "path": "",
+      "chartPath": ""
+    },
+    {
+      "name": "integrations-datastore",
+      "path": "",
+      "chartPath": ""
+    },
+    {
+      "name": "feedback-app",
+      "path": "",
+      "chartPath": ""
+    }
+  ]
+}
