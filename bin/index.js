@@ -55,7 +55,6 @@ nautilus1
   .command("Build-Cluster")
   .alias("bc")
   .description("Build Cluster in Aws")
-
   .action(() => {
     const homeDirectory = os.homedir();
     const fileContents = fs.readFileSync(
@@ -83,12 +82,14 @@ nautilus1
     }
     printData.printData(child);
   });
+
 nautilus1
   .command("connect-Cluster")
   .alias("conc")
   .description("connect to Cluster in Aws")
   .action(() => {
     const homeDirectory = os.homedir();
+    //const fileContents = fs.readFileSync("./configFile.json", "utf8");
     const fileContents = fs.readFileSync(
       `${homeDirectory}/.nautilus-cli/configFile.json`,
       "utf8"
@@ -97,17 +98,17 @@ nautilus1
       ////take from the file config
       const data = JSON.parse(fileContents);
       ////take astPath from the data from the file config
-      const astPath = data.astPath;
-      console.log(astPath);
-      ////Change the directory
-      //process.chdir("C:/Users/elchanana/IdeaProjects/ast/helm");
-      process.chdir(astPath);
-      //console.log("Starting directory: " + process.cwd());
-      // //after Change the directory can be input command in new directory
+      const clusters = data.clusters;
+      console.log("Please enter the command \n");
+      clusters.forEach(myFunction);
+      function myFunction(item, index, arr) {
+        console.log(chalk.blue(`Connect to a cluster ${item} enter ${index}`));
+      }
+      let num = prompt();
       var spawn = require("child_process").spawn,
         child;
       child = spawn("powershell.exe", [
-        "make ecr; helm dep up ast; helm upgrade main ast -f ./ast/values-customer.yaml -f ./ast/values-release-tags.yaml --install",
+        `eksctl utils write-kubeconfig --cluster=${clusters[num]} --region eu-north-1 `,
       ]);
     } catch (err) {
       console.error(err);
@@ -166,7 +167,6 @@ nautilus1
       const data = JSON.parse(fileContents);
       ////take astPath from the data from the file config
       const clusters = data.clusters;
-      console.log(typeof clusters);
       console.log("Please enter the command \n");
       clusters.forEach(myFunction);
       function myFunction(item, index, arr) {
@@ -204,7 +204,7 @@ nautilus1
       const services = data.services;
       const services_arry = Object(services);
 
-      console.log(typeof services_arry);
+      //console.log(typeof services_arry);
       console.log(services_arry[0]["name"]);
 
       //const service = services.firstOrDefault((x) => x.name == item);

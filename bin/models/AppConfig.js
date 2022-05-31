@@ -59,9 +59,27 @@ let configeureNau = {
 };
 
 function Config_nautilus_cli() {
-  console.log(chalk.green("We create a directory named .nautilus-cli"));
+  //check if a file exists
 
   const homeDirectory = os.homedir();
+  const checkPath = `${homeDirectory}/.nautilus-cli/configFile.json`;
+  if (fs.existsSync(checkPath)) {
+    console.log(
+      chalk.green("you heve alredy '.nautilus-cli/configFile.json' file")
+    );
+    return;
+  }
+  console.log(chalk.green("We will create a directory named .nautilus-cli"));
+
+  console.log("Please enter the 'ast' path \n");
+  let path = prompt();
+  while (!fs.existsSync(path)) {
+    console.log("path not exists \n");
+    console.log("Please  a valid 'ast' path \n");
+    path = prompt();
+  }
+  configeureNau.astPath = path;
+
   fs.mkdir(`${homeDirectory}/.nautilus-cli`, (err) => {
     if (err) throw err;
     fs.writeFile(
@@ -80,6 +98,7 @@ function Config_nautilus_cli() {
 
   console.log();
 }
+module.exports = { Config_nautilus_cli };
 
 // function printData(child) {
 //   var scriptOutput = "";
@@ -110,7 +129,6 @@ function Config_nautilus_cli() {
 
 // Adding the code below to allow importing
 // the functions in other files
-module.exports = { Config_nautilus_cli };
 //module.exports = { printData };`
 
 // class AppConfig {
