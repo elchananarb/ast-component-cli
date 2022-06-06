@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const nautilus1 = require("commander");
+const nautilus = require("commander");
 const path = require("path");
 const chalk = require("chalk");
 const clear = require("clear");
@@ -22,7 +22,7 @@ console.log(
   })
 );
 
-nautilus1
+nautilus
   .command("Ast-Upgrade")
   .alias("au")
   .description("Ast Upgrade")
@@ -51,7 +51,7 @@ nautilus1
     printData.printData(child);
   });
 
-nautilus1
+nautilus
   .command("Build-Cluster")
   .alias("bc")
   .description("Build Cluster in Aws")
@@ -83,7 +83,7 @@ nautilus1
     printData.printData(child);
   });
 
-nautilus1
+nautilus
   .command("connect-Cluster")
   .alias("conc")
   .description("connect to Cluster in Aws")
@@ -97,18 +97,29 @@ nautilus1
     try {
       ////take from the file config
       const data = JSON.parse(fileContents);
-      ////take astPath from the data from the file config
+      ////take cluster name from the file config
       const clusters = data.clusters;
-      console.log("Please enter the command \n");
+      console.log(chalk.green("Please coose the cluster to Connect \n"));
       clusters.forEach(myFunction);
       function myFunction(item, index, arr) {
         console.log(chalk.blue(`Connect to a cluster ${item} enter ${index}`));
       }
-      let num = prompt();
+      let cluster = prompt();
+
+      const regions = data.regions;
+      console.log(chalk.green("Please coose  region \n"));
+      regions.forEach(myFunction);
+      function myFunction(item, index, arr) {
+        console.log(
+          chalk.blue(`To Connect a cluster in ${item} enter ${index}`)
+        );
+      }
+      let region = prompt();
+
       var spawn = require("child_process").spawn,
         child;
       child = spawn("powershell.exe", [
-        `eksctl utils write-kubeconfig --cluster=${clusters[num]} --region eu-north-1 `,
+        `eksctl utils write-kubeconfig --cluster=${clusters[cluster]} --region ${regions[region]} `,
       ]);
     } catch (err) {
       console.error(err);
@@ -116,7 +127,7 @@ nautilus1
     printData.printData(child);
   });
 
-nautilus1
+nautilus
   .command("create-cluster")
   .alias("crec")
   .description("create a new cluster in Aws")
@@ -130,20 +141,31 @@ nautilus1
     try {
       ////take from the file config
       const data = JSON.parse(fileContents);
-      ////take astPath from the data from the file config
+
+      ////take cluster name from the file config
       const clusters = data.clusters;
-      console.log("Please enter the command \n");
+      console.log(chalk.green("Please coose the cluster to create \n"));
       clusters.forEach(myFunction);
       function myFunction(item, index, arr) {
         console.log(
           chalk.blue(`To create a cluster for ${item} enter ${index}`)
         );
       }
-      let num = prompt();
+      let cluster = prompt();
+      const regions = data.regions;
+      console.log(chalk.green("Please coose  region \n"));
+      regions.forEach(myFunction);
+      function myFunction(item, index, arr) {
+        console.log(
+          chalk.blue(`To create a cluster name ${item} enter ${index}`)
+        );
+      }
+      let region = prompt();
+
       var spawn = require("child_process").spawn,
         child;
       child = spawn("powershell.exe", [
-        `eksctl create cluster --name ${clusters[num]} --region eu-north-1 --node-type t3.large --nodes 2 --nodes-min 1 --nodes-max 3`,
+        `eksctl create cluster --name ${clusters[cluster]} --region ${regions[region]} --node-type t3.large --nodes 2 --nodes-min 1 --nodes-max 3`,
       ]);
     } catch (err) {
       console.error(err);
@@ -151,7 +173,7 @@ nautilus1
     printData.printData(child);
   });
 
-nautilus1
+nautilus
   .command("delete-cluster")
   .description("delete a cluster in Aws")
   .alias("dc")
@@ -165,20 +187,31 @@ nautilus1
     try {
       ////take from the file config
       const data = JSON.parse(fileContents);
-      ////take astPath from the data from the file config
+      ////take cluster name from the file config
       const clusters = data.clusters;
-      console.log("Please enter the command \n");
+      console.log(chalk.green("Please coose the cluster to delete \n"));
       clusters.forEach(myFunction);
       function myFunction(item, index, arr) {
         console.log(
           chalk.blue(`To delete a cluster for ${item} enter ${index}`)
         );
       }
-      let num = prompt();
+      let cluster = prompt();
+
+      const regions = data.regions;
+      console.log(chalk.green("Please coose  region \n"));
+      regions.forEach(myFunction);
+      function myFunction(item, index, arr) {
+        console.log(
+          chalk.blue(`To delete a cluster in ${item} enter ${index}`)
+        );
+      }
+      let region = prompt();
+
       var spawn = require("child_process").spawn,
         child;
       child = spawn("powershell.exe", [
-        `eksctl delete cluster -n ${clusters[num]} -r eu-north-1`,
+        `eksctl delete cluster -n ${clusters[cluster]} -r ${regions[region]}`,
       ]);
     } catch (err) {
       console.error(err);
@@ -186,7 +219,7 @@ nautilus1
     printData.printData(child);
   });
 
-nautilus1
+nautilus
   .command("Delete-Service")
   .description("Delete Service")
   .alias("dels")
@@ -200,7 +233,7 @@ nautilus1
     try {
       ////take from the file config
       const data = JSON.parse(fileContents);
-      ////take astPath from the data from the file config
+      ////take Service name from the file config
       const services = data.services;
       const services_arry = Object(services);
 
@@ -210,18 +243,18 @@ nautilus1
       //const service = services.firstOrDefault((x) => x.name == item);
       //console.log(services[0]);
 
-      console.log("Please enter the number \n");
+      console.log(chalk.green("Please enter the number \n"));
       services_arry.forEach(myFunction);
       function myFunction(item, index, arr) {
         console.log(
           chalk.blue(`To delete a service  ${item["name"]} enter ${index}`)
         );
       }
-      let num = prompt();
+      let service = prompt();
       var spawn = require("child_process").spawn,
         child;
       child = spawn("powershell.exe", [
-        `Deleting Service ${services_arry[num]["name"]}; kubectl delete deployment main-${services_arry[num]["name"]}`,
+        `Deleting Service ${services_arry[service]["name"]}; kubectl delete deployment main-${services_arry[service]["name"]}`,
       ]);
     } catch (err) {
       console.error(err);
@@ -229,7 +262,7 @@ nautilus1
     printData.printData(child);
   });
 
-nautilus1
+nautilus
   .command("Deploy-Service")
   .description("Deploy Service")
   .alias("deps")
@@ -261,11 +294,11 @@ nautilus1
     //       chalk.blue(`To delete a service  ${item["name"]} enter ${index}`)
     //     );
     //   }
-    //   let num = prompt();
+    //   let service = prompt();
     //   var spawn = require("child_process").spawn,
     //     child;
     //   child = spawn("powershell.exe", [
-    //     `Deleting Service ${services_arry[num]["name"]}; kubectl delete deployment main-${services_arry[num]["name"]}`,
+    //     `Deleting Service ${services_arry[service]["name"]}; kubectl delete deployment main-${services_arry[service]["name"]}`,
     //   ]);
     // } catch (err) {
     //   console.error(err);
@@ -273,7 +306,7 @@ nautilus1
     // printData.printData(child);
   });
 
-nautilus1
+nautilus
   .command("init")
   .alias("i")
   .description("create a directory named .nautilus-cli")
@@ -282,10 +315,34 @@ nautilus1
     AppConfig.Config_nautilus_cli();
   });
 
-nautilus1
+// nautilus
+//   .command("Login-to-Docker")
+//   .alias("ltd")
+//   .description("Login to Docker")
+//   .action(() => {
+//     clear();
+//     AppConfig.Config_nautilus_cli();
+//   });
+
+nautilus
   .command("delete-cluster-gui")
   .description("delete cluster with window")
   .alias("dcg")
+  .action(() => {
+    const os = require("os");
+    temp = `${process.cwd()}/powerShellScript/deleteCluster.ps1`;
+    console.log(temp);
+
+    var spawn = require("child_process").spawn,
+      child;
+
+    child = spawn("powershell.exe", [`${temp}`]);
+    printData.printData(child);
+  });
+nautilus
+  .command("-help")
+  .description("display help for command")
+  .alias("-h")
   .action(() => {
     console.log("pppp");
     const os = require("os");
@@ -299,12 +356,12 @@ nautilus1
     printData.printData(child);
   });
 
-nautilus1.parse(process.argv);
-if (!nautilus1.args.length) {
-  nautilus1.help();
+nautilus.parse(process.argv);
+if (!nautilus.args.length) {
+  nautilus.help();
 }
 
-// const num = prompt(
+// const cluster = prompt(
 //   'Please enter the command \n To create a cluster insert "1"  \n To delete a cluster insert     "2" \n To delete delete service Enter "3":\n '
 // );
 
@@ -317,7 +374,7 @@ if (!nautilus1.args.length) {
 //not woring in exe
 //    console.log(chalk.greenBright(figlet.textSync("hello world")));
 
-// nautilus1
+// nautilus
 //   .command("create-cluster1")
 //   .description("create a new cluster in Aws")
 //   .action(() => {
@@ -326,15 +383,15 @@ if (!nautilus1.args.length) {
 //         "Please enter the command \n To create a cluster for 'igor' Enter   '1' \n To create a cluster for 'orly' Enter   '2' \n To create a cluster for 'ely' Enter    '3' "
 //       )
 //     );
-//     //to get num
-//     let num = prompt();
-//     if (num == 3) {
+//     //to get cluster
+//     let cluster = prompt();
+//     if (cluster == 3) {
 //       console.log(chalk.green("create cluster start!"));
-
+////--region
 //       var spawn = require("child_process").spawn,
 //         child;
 //       child = spawn("powershell.exe", [
-//         "eksctl create cluster --name ely --region eu-north-1 --node-type t3.large --nodes 2 --nodes-min 1 --nodes-max 3",
+//         "eksctl create cluster --name ely --region eu-west-1 --node-type t3.large --nodes 2 --nodes-min 1 --nodes-max 3",
 //       ]);
 
 //       var scriptOutput = "";
@@ -364,7 +421,7 @@ if (!nautilus1.args.length) {
 //     }
 //   });
 
-// nautilus1
+// nautilus
 //   .command("create-cluster3")
 //   .description("create a new cluster in Aws")
 //   .action(() => {
@@ -377,7 +434,7 @@ if (!nautilus1.args.length) {
 //     try {
 //       ////take from the file config
 //       const data = JSON.parse(fileContents);
-//       ////take astPath from the data from the file config
+////take cluster name from the file config
 //       const clusters = data.clusters;
 //       console.log("Please enter the command \n");
 //       clusters.forEach(myFunction);
@@ -386,11 +443,12 @@ if (!nautilus1.args.length) {
 //           chalk.blue(`To create a cluster for ${item} enter ${index}`)
 //         );
 //       }
-//       let num = prompt();
+//       let cluster = prompt();
 //       var spawn = require("child_process").spawn,
 //         child;
+////--region
 //       child = spawn("powershell.exe", [
-//         `eksctl create cluster --name ${clusters[num]} --region eu-north-1 --node-type t3.large --nodes 2 --nodes-min 1 --nodes-max 3`,
+//         `eksctl create cluster --name ${clusters[cluster]} --region eu-west-1 --node-type t3.large --nodes 2 --nodes-min 1 --nodes-max 3`,
 //       ]);
 //     } catch (err) {
 //       console.error(err);
@@ -421,7 +479,7 @@ if (!nautilus1.args.length) {
 //     child.stdin.end(); //end input
 //   });
 
-// nautilus1
+// nautilus
 //   .command("test-ls")
 
 //   .description("ls command")
@@ -491,7 +549,7 @@ if (!nautilus1.args.length) {
 //     child.stdin.end(); //end input
 //   });
 
-// nautilus1
+// nautilus
 //   .command("create-cluster0")
 //   .description("beny mastuer")
 //   .action(() => {
@@ -525,7 +583,7 @@ if (!nautilus1.args.length) {
 //     //console.log(process.cwd() + `/node_modules`);
 //   });
 
-//nautilus1;
+//nautilus;
 //   .command("test-ps1")
 //   .description("ps1 script ")
 //   .action(() => {
@@ -535,7 +593,7 @@ if (!nautilus1.args.length) {
 //     ps.addCommand("& {" + startStr + "} \n");
 //   });
 
-// nautilus1
+// nautilus
 //   .command("delete-cluster0")
 //   .description("beny mastuer")
 //   .action(() => {

@@ -6,6 +6,8 @@ const figlet = require("figlet");
 const prompt = require("prompt-sync")({ sigint: true });
 var spawn = require("child_process").execFileSync,
   child;
+var rimraf = require("rimraf");
+
 const os = require("os");
 const util = require("util");
 const dns = require("dns");
@@ -15,6 +17,8 @@ const ind = require("../index");
 
 let configeureNau = {
   astPath: "C:/Users/elchanana/IdeaProjects/ast/helm",
+  username: "elchanan.arbiv@checkmarx.com",
+  jfrogToken: "",
   region: "eu-west-3",
   devName: "",
   teamName: "",
@@ -23,12 +27,11 @@ let configeureNau = {
     "Nautilus-Orly",
     "Nautilus-Jorge",
     "Nautilus-Shifra",
+    "Nautilus-Chaya",
     "Nautilus-Ely",
-    "ely-test",
-    "Nautilus-Team",
     "N-Ely",
   ],
-  regions: ["eu-west-1", "eu-west-2", "eu-west-3", "eu-north-1"],
+  regions: ["eu-west-2", "eu-west-3", "eu-north-1"],
   services: [
     {
       name: "ast-flow-publisher",
@@ -59,37 +62,49 @@ let configeureNau = {
 };
 
 function Config_nautilus_cli() {
+  ////up ast path
   //check if a file exists
-
   const homeDirectory = os.homedir();
-  const checkPath = `${homeDirectory}/.nautilus-cli/configFile.json`;
-  if (fs.existsSync(checkPath)) {
-    console.log(
-      chalk.green("you heve alredy '.nautilus-cli/configFile.json' file")
-    );
-    return;
-  }
-  console.log(chalk.green("We will create a directory named .nautilus-cli"));
 
-  console.log("Please enter the 'ast' path \n");
+  const checkPath = `${homeDirectory}/.nautilus-cli/configFile.json`;
+
+  if (fs.existsSync(checkPath)) {
+    const dir = `${homeDirectory}/.nautilus-cli`;
+    // delete directory recursively
+    fs.rmdir(dir, { recursive: true }, (err) => {
+      if (err) {
+        throw err;
+      }
+      console.log(`${dir} is deleted!`);
+    });
+  }
+
+  console.log(chalk.blue("Please enter the 'ast' path \n"));
   let path = prompt();
   while (!fs.existsSync(path)) {
-    console.log("path not exists \n");
-    console.log("Please  a valid 'ast' path \n");
+    console.log(chalk.red("path not exists"));
+    console.log(chalk.blue("Please  a valid 'ast' path \n"));
     path = prompt();
   }
   configeureNau.astPath = path;
+
+  console.log(chalk.blue("Please enter the 'yourname@checkmarx.com' \n"));
+  let yourname = prompt();
+  configeureNau.username = yourname;
+
+  console.log(chalk.blue("Please enter the 'password <you-jfrog-token>' \n"));
+  let jfrog_token = prompt();
+  configeureNau.jfrogToken = jfrog_token;
 
   fs.mkdir(`${homeDirectory}/.nautilus-cli`, (err) => {
     if (err) throw err;
     fs.writeFile(
       `${homeDirectory}/.nautilus-cli/configFile.json`,
       `${JSON.stringify(configeureNau)}`,
-
       (err) => {
         if (err) throw err;
         fs.readdir("${homeDirectory}/.nautilus-cli", (err, result) => {
-          console.log(result);
+          //console.log(result);
           console.log("Created directory!");
         });
       }
@@ -98,6 +113,7 @@ function Config_nautilus_cli() {
 
   console.log();
 }
+
 module.exports = { Config_nautilus_cli };
 
 // function printData(child) {
