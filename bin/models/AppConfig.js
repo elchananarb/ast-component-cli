@@ -1,24 +1,30 @@
-const nautilus1 = require("commander");
-const path = require("path");
 const chalk = require("chalk");
 const clear = require("clear");
 const figlet = require("figlet");
 const prompt = require("prompt-sync")({ sigint: true });
 var spawn = require("child_process").execFileSync,
   child;
-var rimraf = require("rimraf");
+const printData = require("./printData.js");
 
 const os = require("os");
-const util = require("util");
-const dns = require("dns");
+
 const fs = require("fs");
 
-const ind = require("../index");
+const homeDirectory = os.homedir();
+const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
+const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
 
 let configeureNau = {
   astPath: "C:/Users/elchanana/IdeaProjects/ast/helm",
   username: "elchanan.arbiv@checkmarx.com",
   jfrogToken: "",
+
+  astOperator: "",
+  astComponents: "",
+  componenIntegration: "",
+  componentAstMetrics: "",
+  componentPolicyManagement: "",
+
   region: "eu-west-3",
   devName: "",
   teamName: "",
@@ -61,60 +67,204 @@ let configeureNau = {
   ],
 };
 
-function Config_nautilus_cli() {
-  ////up ast path
-  //check if a file exists
-  const homeDirectory = os.homedir();
+function Login_to_Docker() {
+  try {
+    //const fileContents = fs.readFileSync("./configFile.json", "utf8");
+    const fileContents = fs.readFileSync(
+      `${homeDirectory}/.nautilus-cli/configFile.json`,
+      "utf8"
+    );
+    ////take from the file config
+    const data = JSON.parse(fileContents);
 
-  const checkPath = `${homeDirectory}/.nautilus-cli/configFile.json`;
+    ////take cluster name from the file config
+    const username = data.username;
+    const jfrogToken = data.jfrogToken;
 
-  if (fs.existsSync(checkPath)) {
-    const dir = `${homeDirectory}/.nautilus-cli`;
-    // delete directory recursively
-    fs.rmdir(dir, { recursive: true }, (err) => {
-      if (err) {
-        throw err;
-      }
-      console.log(`${dir} is deleted!`);
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", [
+      `docker login --username ${username} --password ${jfrogToken} https://checkmarx.jfrog.io/artifactory/docker/ast-metrics;`,
+    ]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+  console.log(
+    chalk.magenta(
+      "check!!! the other command" +
+        "helm repo add ast https://checkmarx.jfrog.io/artifactory/ast-helm/ --username <yourname@checkmarx.com> --password <you-jfrog-token> "
+    )
+  );
+}
+function create_dir_nautilus_cli() {
+  fs.mkdir(nautilus_cli_dir_path, (err) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log(chalk.green("We create a directory named .na66666666"));
+    }
+  });
+}
+function create_file_config(configeureNau) {
+  fs.writeFile(config_file_path, `${JSON.stringify(configeureNau)}`, (err) => {
+    if (err) throw err;
+    fs.readdir(config_file_path, (err, result) => {
+      //console.log(result);
+      console.log("Created directory!");
     });
-  }
+  });
+}
 
-  console.log(chalk.blue("Please enter the 'ast' path \n"));
-  let path = prompt();
-  while (!fs.existsSync(path)) {
-    console.log(chalk.red("path not exists"));
-    console.log(chalk.blue("Please  a valid 'ast' path \n"));
-    path = prompt();
+function Config_nautilus_cli() {
+  //check if a dir exists
+  if (!fs.existsSync(nautilus_cli_dir_path)) {
+    create_dir_nautilus_cli();
   }
-  configeureNau.astPath = path;
 
   console.log(chalk.blue("Please enter the 'yourname@checkmarx.com' \n"));
   let yourname = prompt();
+  yourname = remove_spaces(yourname);
   configeureNau.username = yourname;
 
   console.log(chalk.blue("Please enter the 'password <you-jfrog-token>' \n"));
   let jfrog_token = prompt();
+  jfrog_token = remove_spaces(jfrog_token);
   configeureNau.jfrogToken = jfrog_token;
 
-  fs.mkdir(`${homeDirectory}/.nautilus-cli`, (err) => {
-    if (err) throw err;
-    fs.writeFile(
-      `${homeDirectory}/.nautilus-cli/configFile.json`,
-      `${JSON.stringify(configeureNau)}`,
-      (err) => {
-        if (err) throw err;
-        fs.readdir("${homeDirectory}/.nautilus-cli", (err, result) => {
-          //console.log(result);
-          console.log("Created directory!");
-        });
-      }
-    );
-  });
+  let flag_path_exist = false;
 
+  let astOperator = "";
+  let astComponents = "";
+  let componenIntegration = "";
+  let componentAstMetrics = "";
+  let componentPolicyManagement = "";
+
+  while (!flag_path_exist) {
+    flag_path_exist = true;
+
+    console.log(
+      chalk.blue(
+        "Please enter the Base of AST components For example 'C:Users//elchanana//IdeaProjects' \n"
+      )
+    );
+    let baseComponent = prompt();
+    baseComponent = remove_spaces(baseComponent);
+
+    astOperator = `${baseComponent}\\ast-operator`;
+    astComponents = `${baseComponent}\\ast-Components`;
+    componenIntegration = `${baseComponent}\\component-integration`;
+    componentAstMetrics = `${baseComponent}\\component-ast-metrics`;
+    componentPolicyManagement = `${baseComponent}\\component-policy-management`;
+
+    const paths = new Array(
+      astOperator,
+      astComponents,
+      componenIntegration,
+      componentAstMetrics,
+      componentPolicyManagement
+    );
+    paths.forEach(myFunction);
+    function myFunction(value, index, array) {
+      if (!fs.existsSync(value)) {
+        flag_path_exist = false;
+        console.log(chalk.blue(`the path "${value}"`));
+        console.log(chalk.red(`not exist try again\n`));
+      }
+    }
+  }
+
+  configeureNau.astOperator = astOperator;
+  configeureNau.astComponents = astComponents;
+  configeureNau.componenIntegration = componenIntegration;
+  configeureNau.componentAstMetrics = componentAstMetrics;
+  configeureNau.componentPolicyManagement = componentPolicyManagement;
+  configeureNau.username = yourname;
+  configeureNau.jfrogToken = jfrog_token;
+
+  create_file_config(configeureNau);
   console.log();
 }
 
-module.exports = { Config_nautilus_cli };
+function remove_spaces(el) {
+  var val = el.replace(/\s/g, "");
+  return val;
+}
+
+module.exports.Config_nautilus_cli = Config_nautilus_cli;
+module.exports.Login_to_Docker = Login_to_Docker;
+
+// module.exports = { Config_nautilus_cli };
+// module.exports = { Login_to_Docker };
+
+//path to ast-operator /ast-components /component-integration /component-ast-metrics /component-policy-managementast-operator
+
+//ast
+// console.log(chalk.blue("Please enter the 'ast' path \n"));
+// let path = prompt();
+// while (!fs.existsSync(path)) {
+//   console.log(chalk.red("path not exists"));
+//   console.log(chalk.blue("Please  a valid 'ast' path \n"));
+//   path = prompt();
+// }
+// configeureNau.astPath = path;
+
+// //ast-operator
+// console.log(chalk.blue("Please enter the 'ast-operator' path \n"));
+// let astOperator = prompt();
+// while (!fs.existsSync(path)) {
+//   console.log(chalk.red("path not exists"));
+//   console.log(chalk.blue("Please  a valid 'ast-operator' path \n"));
+//   path = prompt();
+// }
+// configeureNau.astOperator = astOperator;
+
+// //ast-components
+// console.log(chalk.blue("Please enter the 'ast-components' path \n"));
+// let astComponents = prompt();
+// while (!fs.existsSync(path)) {
+//   console.log(chalk.red("path not exists"));
+//   console.log(chalk.blue("Please  a valid 'ast' path \n"));
+//   path = prompt();
+// }
+// configeureNau.astComponents = astComponents;
+
+// //component-integration
+// console.log(chalk.blue("Please enter the 'component-integration' path \n"));
+// let componenIntegration = prompt();
+// while (!fs.existsSync(path)) {
+//   console.log(chalk.red("path not exists"));
+//   console.log(chalk.blue("Please  a valid 'ast' path \n"));
+//   path = prompt();
+// }
+// configeureNau.componenIntegration = componenIntegration;
+
+// //component-ast-metrics
+// console.log(chalk.blue("Please enter the 'component-ast-metrics' path \n"));
+// let componentAstMetrics = prompt();
+// while (!fs.existsSync(path)) {
+//   console.log(chalk.red("path not exists"));
+//   console.log(chalk.blue("Please  a valid 'ast' path \n"));
+//   path = prompt();
+// }
+// configeureNau.componentAstMetrics = componentAstMetrics;
+
+// //component-policy-management
+// console.log(
+//   chalk.blue("Please enter the 'component-policy-management' path \n")
+// );
+// let componentPolicyManagement = prompt();
+// while (!fs.existsSync(path)) {
+//   console.log(chalk.red("path not exists"));
+//   console.log(
+//     chalk.blue("Please  a valid 'component-policy-managementst' path \n")
+//   );
+//   path = prompt();
+// }
+// configeureNau.componentPolicyManagement = componentPolicyManagement;
+
+//path to ast-operator /ast-components /component-integration /component-ast-metrics /component-policy-managementast-operator
+//######################################################
 
 // function printData(child) {
 //   var scriptOutput = "";

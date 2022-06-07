@@ -1,20 +1,16 @@
 #!/usr/bin/env node
 const nautilus = require("commander");
-const path = require("path");
 const chalk = require("chalk");
 const clear = require("clear");
-const figlet = require("figlet");
 const prompt = require("prompt-sync")({ sigint: true });
 var spawn = require("child_process").execFileSync,
   child;
 const os = require("os");
 
-const util = require("util");
-const dns = require("dns");
 const fs = require("fs");
+//const AppConfig = require("./models/AppConfig");
 const AppConfig = require("./models/AppConfig");
 const printData = require("./models/printData.js");
-const { Console } = require("console");
 
 console.log(
   chalk.red((child = spawn("powershell.exe", ["figlet 'NAUTILUS'"])), {
@@ -315,14 +311,23 @@ nautilus
     AppConfig.Config_nautilus_cli();
   });
 
-// nautilus
-//   .command("Login-to-Docker")
-//   .alias("ltd")
-//   .description("Login to Docker")
-//   .action(() => {
-//     clear();
-//     AppConfig.Config_nautilus_cli();
-//   });
+nautilus
+  .command("Install-Operator")
+  .alias("io")
+  .description("Install Ast Operator")
+  .action(() => {
+    clear();
+    AppConfig.Config_nautilus_cli();
+  });
+
+nautilus
+  .command("Login-to-Docker")
+  .alias("ltd")
+  .description("Login to Docker")
+  .action(() => {
+    clear();
+    AppConfig.Login_to_Docker();
+  });
 
 nautilus
   .command("delete-cluster-gui")

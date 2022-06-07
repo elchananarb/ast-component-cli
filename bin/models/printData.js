@@ -19,7 +19,6 @@ function printData(child) {
   child.stdout.on("data", function (data) {
     //Here is where the output goes
     console.log(chalk.green(data));
-
     data = data.toString();
     scriptOutput += data;
   });
@@ -27,15 +26,13 @@ function printData(child) {
   child.stderr.setEncoding("utf8");
   child.stderr.on("data", function (data) {
     //Here is where the error output goes
-
-    console.log("stderr: " + data);
-
+    console.log(chalk.red("stderr: " + data));
     data = data.toString();
     scriptOutput += data;
   });
 
-  child.stdout.on("exit", function () {
-    console.log("Powershell Script finished");
+  child.on("exit", function () {
+    console.log(chalk.magenta("Powershell Script finished"));
   });
   child.stdin.end();
 }
