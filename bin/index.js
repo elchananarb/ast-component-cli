@@ -8,9 +8,12 @@ var spawn = require("child_process").execFileSync,
 const os = require("os");
 
 const fs = require("fs");
-//const AppConfig = require("./models/AppConfig");
 const AppConfig = require("./models/AppConfig");
 const printData = require("./models/printData.js");
+
+const homeDirectory = os.homedir();
+const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
+const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
 
 console.log(
   chalk.red((child = spawn("powershell.exe", ["figlet 'NAUTILUS'"])), {
@@ -23,11 +26,7 @@ nautilus
   .alias("au")
   .description("Ast Upgrade")
   .action(() => {
-    const homeDirectory = os.homedir();
-    const fileContents = fs.readFileSync(
-      `${homeDirectory}/.nautilus-cli/configFile.json`,
-      "utf8"
-    );
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
     try {
       ////take from the file config
       const data = JSON.parse(fileContents);
@@ -52,11 +51,7 @@ nautilus
   .alias("bc")
   .description("Build Cluster in Aws")
   .action(() => {
-    const homeDirectory = os.homedir();
-    const fileContents = fs.readFileSync(
-      `${homeDirectory}/.nautilus-cli/configFile.json`,
-      "utf8"
-    );
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
     try {
       ////take from the file config
       const data = JSON.parse(fileContents);
@@ -84,12 +79,8 @@ nautilus
   .alias("conc")
   .description("connect to Cluster in Aws")
   .action(() => {
-    const homeDirectory = os.homedir();
     //const fileContents = fs.readFileSync("./configFile.json", "utf8");
-    const fileContents = fs.readFileSync(
-      `${homeDirectory}/.nautilus-cli/configFile.json`,
-      "utf8"
-    );
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
     try {
       ////take from the file config
       const data = JSON.parse(fileContents);
@@ -128,12 +119,8 @@ nautilus
   .alias("crec")
   .description("create a new cluster in Aws")
   .action(() => {
-    const homeDirectory = os.homedir();
     //const fileContents = fs.readFileSync("./configFile.json", "utf8");
-    const fileContents = fs.readFileSync(
-      `${homeDirectory}/.nautilus-cli/configFile.json`,
-      "utf8"
-    );
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
     try {
       ////take from the file config
       const data = JSON.parse(fileContents);
@@ -174,12 +161,8 @@ nautilus
   .description("delete a cluster in Aws")
   .alias("dc")
   .action(() => {
-    const homeDirectory = os.homedir();
     //const fileContents = fs.readFileSync("./configFile.json", "utf8");
-    const fileContents = fs.readFileSync(
-      `${homeDirectory}/.nautilus-cli/configFile.json`,
-      "utf8"
-    );
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
     try {
       ////take from the file config
       const data = JSON.parse(fileContents);
@@ -220,12 +203,8 @@ nautilus
   .description("Delete Service")
   .alias("dels")
   .action(() => {
-    const homeDirectory = os.homedir();
     //const fileContents = fs.readFileSync("./configFile.json", "utf8");
-    const fileContents = fs.readFileSync(
-      `${homeDirectory}/.nautilus-cli/configFile.json`,
-      "utf8"
-    );
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
     try {
       ////take from the file config
       const data = JSON.parse(fileContents);
@@ -264,10 +243,10 @@ nautilus
   .alias("deps")
   .action(() => {
     console.log("in construction");
-    // const homeDirectory = os.homedir();
+    //
     // //const fileContents = fs.readFileSync("./configFile.json", "utf8");
     // const fileContents = fs.readFileSync(
-    //   `${homeDirectory}/.nautilus-cli/configFile.json`,
+    //   config_file_path,
     //   "utf8"
     // );
     // try {
@@ -430,10 +409,10 @@ if (!nautilus.args.length) {
 //   .command("create-cluster3")
 //   .description("create a new cluster in Aws")
 //   .action(() => {
-//     const homeDirectory = os.homedir();
+//
 //     //const fileContents = fs.readFileSync("./configFile.json", "utf8");
 //     const fileContents = fs.readFileSync(
-//       `${homeDirectory}/.nautilus-cli/configFile.json`,
+//       config_file_path,
 //       "utf8"
 //     );
 //     try {
