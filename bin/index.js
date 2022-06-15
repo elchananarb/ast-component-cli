@@ -9,16 +9,17 @@ const os = require("os");
 
 const fs = require("fs");
 const AppConfig = require("./models/AppConfig");
+const eksctl_commands = require("./commands/eksctl_commands");
+const edit_yaml_file = require("./edit-files/edit_yaml_file");
 const printData = require("./models/printData.js");
+const commands_init = require("./commands/commands_init");
 
 const homeDirectory = os.homedir();
 const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
 const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
 
 console.log(
-  chalk.red((child = spawn("powershell.exe", ["figlet 'NAUTILUS'"])), {
-    horizontalLayout: "full",
-  })
+  chalk.red((child = spawn("powershell.exe", ["figlet 'NAUTILUS'"])))
 );
 
 nautilus
@@ -29,9 +30,10 @@ nautilus
     const fileContents = fs.readFileSync(config_file_path, "utf8");
     try {
       ////take from the file config
-      const data = JSON.parse(fileContents);
-      ////take astPath from the data from the file config
-      const astPath = data.astPath;
+      const data_configFile = JSON.parse(fileContents);
+
+      ////take astPath from the data_configFile from the file config
+      const astPath = data_configFile.astPath;
       ////Change the directory
       process.chdir(astPath);
       // //after Change the directory can be input command in new directory
@@ -54,9 +56,9 @@ nautilus
     const fileContents = fs.readFileSync(config_file_path, "utf8");
     try {
       ////take from the file config
-      const data = JSON.parse(fileContents);
-      ////take astPath from the data from the file config
-      const astPath = data.astPath;
+      const data_configFile = JSON.parse(fileContents);
+      ////take astPath from the data_configFile from the file config
+      const astPath = data_configFile.astPath;
       console.log(astPath);
       ////Change the directory
       //process.chdir("C:/Users/elchanana/IdeaProjects/ast/helm");
@@ -83,18 +85,18 @@ nautilus
     const fileContents = fs.readFileSync(config_file_path, "utf8");
     try {
       ////take from the file config
-      const data = JSON.parse(fileContents);
+      const data_configFile = JSON.parse(fileContents);
       ////take cluster name from the file config
-      const clusters = data.clusters;
-      console.log(chalk.green("Please coose the cluster to Connect \n"));
+      const clusters = data_configFile.clusters;
+      console.log(chalk.green("Please choose the cluster to Connect \n"));
       clusters.forEach(myFunction);
       function myFunction(item, index, arr) {
         console.log(chalk.blue(`Connect to a cluster ${item} enter ${index}`));
       }
       let cluster = prompt();
 
-      const regions = data.regions;
-      console.log(chalk.green("Please coose  region \n"));
+      const regions = data_configFile.regions;
+      console.log(chalk.green("Please choose  region \n"));
       regions.forEach(myFunction);
       function myFunction(item, index, arr) {
         console.log(
@@ -106,7 +108,7 @@ nautilus
       var spawn = require("child_process").spawn,
         child;
       child = spawn("powershell.exe", [
-        `eksctl utils write-kubeconfig --cluster=${clusters[cluster]} --region ${regions[region]} `,
+        `eksctl utils write-kubeconfig --cluster=${clusters[cluster]} --region ${regions[region]} --profile default`,
       ]);
     } catch (err) {
       console.error(err);
@@ -119,41 +121,44 @@ nautilus
   .alias("crec")
   .description("create a new cluster in Aws")
   .action(() => {
-    //const fileContents = fs.readFileSync("./configFile.json", "utf8");
-    const fileContents = fs.readFileSync(config_file_path, "utf8");
-    try {
-      ////take from the file config
-      const data = JSON.parse(fileContents);
+    clear();
+    eksctl_commands.create_cluster();
 
-      ////take cluster name from the file config
-      const clusters = data.clusters;
-      console.log(chalk.green("Please coose the cluster to create \n"));
-      clusters.forEach(myFunction);
-      function myFunction(item, index, arr) {
-        console.log(
-          chalk.blue(`To create a cluster for ${item} enter ${index}`)
-        );
-      }
-      let cluster = prompt();
-      const regions = data.regions;
-      console.log(chalk.green("Please coose  region \n"));
-      regions.forEach(myFunction);
-      function myFunction(item, index, arr) {
-        console.log(
-          chalk.blue(`To create a cluster name ${item} enter ${index}`)
-        );
-      }
-      let region = prompt();
+    // //const fileContents = fs.readFileSync("./configFile.json", "utf8");
+    // const fileContents = fs.readFileSync(config_file_path, "utf8");
+    // try {
+    //   ////take from the file config
+    //   const data_configFile = JSON.parse(fileContents);
 
-      var spawn = require("child_process").spawn,
-        child;
-      child = spawn("powershell.exe", [
-        `eksctl create cluster --name ${clusters[cluster]} --region ${regions[region]} --node-type t3.large --nodes 2 --nodes-min 1 --nodes-max 3`,
-      ]);
-    } catch (err) {
-      console.error(err);
-    }
-    printData.printData(child);
+    //   ////take cluster name from the file config
+    //   const clusters = data_configFile.clusters;
+    //   console.log(chalk.green("Please choose the cluster to create \n"));
+    //   clusters.forEach(myFunction);
+    //   function myFunction(item, index, arr) {
+    //     console.log(
+    //       chalk.blue(`To create a cluster for ${item} enter ${index}`)
+    //     );
+    //   }
+    //   let cluster = prompt();
+    //   const regions = data_configFile.regions;
+    //   console.log(chalk.green("Please choose  region \n"));
+    //   regions.forEach(myFunction);
+    //   function myFunction(item, index, arr) {
+    //     console.log(
+    //       chalk.blue(`To create a cluster name ${item} enter ${index}`)
+    //     );
+    //   }
+    //   let region = prompt();
+
+    //   var spawn = require("child_process").spawn,
+    //     child;
+    //   child = spawn("powershell.exe", [
+    //     `eksctl create cluster --name ${clusters[cluster]} --region ${regions[region]} --node-type t3.large --nodes 2 --nodes-min 1 --nodes-max 3 --profile default `,
+    //   ]);
+    // } catch (err) {
+    //   console.error(err);
+    // }
+    // printData.printData(child);
   });
 
 nautilus
@@ -165,10 +170,10 @@ nautilus
     const fileContents = fs.readFileSync(config_file_path, "utf8");
     try {
       ////take from the file config
-      const data = JSON.parse(fileContents);
+      const data_configFile = JSON.parse(fileContents);
       ////take cluster name from the file config
-      const clusters = data.clusters;
-      console.log(chalk.green("Please coose the cluster to delete \n"));
+      const clusters = data_configFile.clusters;
+      console.log(chalk.green("Please choose the cluster to delete \n"));
       clusters.forEach(myFunction);
       function myFunction(item, index, arr) {
         console.log(
@@ -177,8 +182,8 @@ nautilus
       }
       let cluster = prompt();
 
-      const regions = data.regions;
-      console.log(chalk.green("Please coose  region \n"));
+      const regions = data_configFile.regions;
+      console.log(chalk.green("Please choose  region \n"));
       regions.forEach(myFunction);
       function myFunction(item, index, arr) {
         console.log(
@@ -190,7 +195,7 @@ nautilus
       var spawn = require("child_process").spawn,
         child;
       child = spawn("powershell.exe", [
-        `eksctl delete cluster -n ${clusters[cluster]} -r ${regions[region]}`,
+        `eksctl delete cluster -n ${clusters[cluster]} -r ${regions[region]} --profile default`,
       ]);
     } catch (err) {
       console.error(err);
@@ -207,9 +212,9 @@ nautilus
     const fileContents = fs.readFileSync(config_file_path, "utf8");
     try {
       ////take from the file config
-      const data = JSON.parse(fileContents);
+      const data_configFile = JSON.parse(fileContents);
       ////take Service name from the file config
-      const services = data.services;
+      const services = data_configFile.services;
       const services_arry = Object(services);
 
       //console.log(typeof services_arry);
@@ -251,9 +256,9 @@ nautilus
     // );
     // try {
     //   ////take from the file config
-    //   const data = JSON.parse(fileContents);
-    //   ////take astPath from the data from the file config
-    //   const services = data.services;
+    //   const data_configFile = JSON.parse(fileContents);
+    //   ////take astPath from the data_configFile from the file config
+    //   const services = data_configFile.services;
     //   const services_arry = Object(services);
 
     //   console.log(typeof services_arry);
@@ -291,12 +296,64 @@ nautilus
   });
 
 nautilus
+  .command("Operator-values-Tag")
+  .alias("ovt")
+  .description("Change Operator values Tag")
+  .action(() => {
+    clear();
+    edit_yaml_file.Change_Operator_values_Tag();
+  });
+
+nautilus
   .command("Install-Operator")
   .alias("io")
   .description("Install Ast Operator")
   .action(() => {
     clear();
-    AppConfig.Config_nautilus_cli();
+    commands_init.Install_Operator();
+  });
+nautilus
+  .command("Install-Ast-Components")
+  .alias("iac")
+  .description("Install Ast Components")
+  .action(() => {
+    clear();
+    commands_init.Install_Ast_Components();
+  });
+
+nautilus
+  .command("Install-Metrics-Components")
+  .alias("imc")
+  .description("Install Metrics Components")
+  .action(() => {
+    clear();
+    commands_init.Install_Metrics_Components();
+  });
+nautilus
+  .command("Install_the_Policy_Management_Component")
+  .alias("ipm")
+  .description("nstall the Policy Management Component")
+  .action(() => {
+    clear();
+    commands_init.Install_the_Policy_Management_Component();
+  });
+
+nautilus
+  .command("Get_Traefik_url")
+  .alias("gtu")
+  .description("Get_Traefik_url")
+  .action(() => {
+    clear();
+    commands_init.Get_Traefik_url();
+  });
+
+nautilus
+  .command("Update_Url_in_all_components_tags")
+  .alias("uuc")
+  .description("Update Url in all components tags")
+  .action(() => {
+    clear();
+    commands_init.Update_Url_in_all_components_tags();
   });
 
 nautilus
@@ -307,6 +364,14 @@ nautilus
     clear();
     AppConfig.Login_to_Docker();
   });
+// nautilus
+//   .command("switched-context")
+//   .alias("sc")
+//   .description("Switched to another context kubectl")
+//   .action(() => {
+//     clear();
+//     eksctl_commands............();
+//   });
 
 nautilus
   .command("delete-cluster-gui")
@@ -323,6 +388,7 @@ nautilus
     child = spawn("powershell.exe", [`${temp}`]);
     printData.printData(child);
   });
+
 nautilus
   .command("-help")
   .description("display help for command")
@@ -417,9 +483,9 @@ if (!nautilus.args.length) {
 //     );
 //     try {
 //       ////take from the file config
-//       const data = JSON.parse(fileContents);
+//       const data_configFile = JSON.parse(fileContents);
 ////take cluster name from the file config
-//       const clusters = data.clusters;
+//       const clusters = data_configFile.clusters;
 //       console.log("Please enter the command \n");
 //       clusters.forEach(myFunction);
 //       function myFunction(item, index, arr) {

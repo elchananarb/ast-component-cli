@@ -17,7 +17,7 @@ const { Console } = require("console");
 var spawn = require("child_process").spawn,
   child;
 child = spawn("powershell.exe", [
-  "eksctl delete cluster -n N-Ely -r eu-north-1",
+  "eksctl delete cluster -n N-Ely -r eu-north-1 --profile default",
 ]);
 
 var scriptOutput = "";

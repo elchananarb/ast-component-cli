@@ -22,7 +22,7 @@ let configeureNau = {
   astOperator: "",
   astComponents: "",
   componenIntegration: "",
-  componentAstMetrics: "",
+  componentMetrics: "",
   componentPolicyManagement: "",
 
   region: "eu-west-3",
@@ -84,7 +84,9 @@ function Login_to_Docker() {
     var spawn = require("child_process").spawn,
       child;
     child = spawn("powershell.exe", [
-      `docker login --username ${username} --password ${jfrogToken} https://checkmarx.jfrog.io/artifactory/docker/ast-metrics;`,
+      `docker login --username ${username} --password ${jfrogToken} https://checkmarx.jfrog.io/artifactory/docker ;
+       helm repo add ast https://checkmarx.jfrog.io/artifactory/ast-helm/ --username ${username} --password ${jfrogToken} ;
+      helm repo update`,
     ]);
   } catch (err) {
     console.error(err);
@@ -137,7 +139,7 @@ function Config_nautilus_cli() {
   let astOperator = "";
   let astComponents = "";
   let componenIntegration = "";
-  let componentAstMetrics = "";
+  let componentMetrics = "";
   let componentPolicyManagement = "";
 
   while (!flag_path_exist) {
@@ -154,14 +156,15 @@ function Config_nautilus_cli() {
     astOperator = `${baseComponent}\\ast-operator`;
     astComponents = `${baseComponent}\\ast-Components`;
     componenIntegration = `${baseComponent}\\component-integration`;
-    componentAstMetrics = `${baseComponent}\\component-ast-metrics`;
+    //componentMetrics = `${baseComponent}\\component-ast-metrics`;
+    componentMetrics = `${baseComponent}\\component-metrics`;
     componentPolicyManagement = `${baseComponent}\\component-policy-management`;
 
     const paths = new Array(
       astOperator,
       astComponents,
       componenIntegration,
-      componentAstMetrics,
+      componentMetrics,
       componentPolicyManagement
     );
     paths.forEach(myFunction);
@@ -177,7 +180,7 @@ function Config_nautilus_cli() {
   configeureNau.astOperator = astOperator;
   configeureNau.astComponents = astComponents;
   configeureNau.componenIntegration = componenIntegration;
-  configeureNau.componentAstMetrics = componentAstMetrics;
+  configeureNau.componentMetrics = componentMetrics;
   configeureNau.componentPolicyManagement = componentPolicyManagement;
   configeureNau.username = yourname;
   configeureNau.jfrogToken = jfrog_token;
@@ -197,7 +200,7 @@ module.exports.Login_to_Docker = Login_to_Docker;
 // module.exports = { Config_nautilus_cli };
 // module.exports = { Login_to_Docker };
 
-//path to ast-operator /ast-components /component-integration /component-ast-metrics /component-policy-managementast-operator
+//path to ast-operator /ast-components /component-integration /component-metrics /component-policy-managementast-operator
 
 //ast
 // console.log(chalk.blue("Please enter the 'ast' path \n"));
@@ -239,15 +242,15 @@ module.exports.Login_to_Docker = Login_to_Docker;
 // }
 // configeureNau.componenIntegration = componenIntegration;
 
-// //component-ast-metrics
-// console.log(chalk.blue("Please enter the 'component-ast-metrics' path \n"));
-// let componentAstMetrics = prompt();
+// //component-metrics
+// console.log(chalk.blue("Please enter the 'component-metrics' path \n"));
+// let componentMetrics = prompt();
 // while (!fs.existsSync(path)) {
 //   console.log(chalk.red("path not exists"));
 //   console.log(chalk.blue("Please  a valid 'ast' path \n"));
 //   path = prompt();
 // }
-// configeureNau.componentAstMetrics = componentAstMetrics;
+// configeureNau.componentMetrics = componentMetrics;
 
 // //component-policy-management
 // console.log(
@@ -263,7 +266,7 @@ module.exports.Login_to_Docker = Login_to_Docker;
 // }
 // configeureNau.componentPolicyManagement = componentPolicyManagement;
 
-//path to ast-operator /ast-components /component-integration /component-ast-metrics /component-policy-managementast-operator
+//path to ast-operator /ast-components /component-integration /component-metrics /component-policy-managementast-operator
 //######################################################
 
 // function printData(child) {
