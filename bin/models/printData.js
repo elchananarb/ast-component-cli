@@ -16,10 +16,10 @@ const fs = require("fs");
 const ind = require("../index");
 
 function printData(child) {
-  const bar = new ProgressBar(":bar", { total: 20 });
-  const timer = setInterval(() => {
-    bar.tick();
-  }, 800);
+  // const bar = new ProgressBar(":bar", { total: 20 });
+  // const timer = setInterval(() => {
+  //   bar.tick();
+  // }, 800);
 
   var scriptOutput = "";
   child.stdout.setEncoding("utf8");
@@ -40,7 +40,7 @@ function printData(child) {
 
   child.on("exit", function () {
     console.log(chalk.magenta("Powershell Script finished"));
-    clearInterval(timer);
+    // clearInterval(timer);
   });
   child.stdin.end();
 }

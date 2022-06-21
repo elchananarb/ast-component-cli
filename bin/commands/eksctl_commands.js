@@ -20,7 +20,7 @@ const regions = data_configFile.regions;
 let cluster;
 let region;
 
-function Switched_context() {
+function Switched_context_sso() {
   try {
     ////take from the file config
     ////take cluster name from the file config
@@ -51,7 +51,7 @@ function Switched_context() {
   printData.printData(child);
 }
 
-async function create_cluster() {
+async function create_cluster_sso() {
   try {
     console.log(chalk.green("Please choose the cluster to create \n"));
     clusters.forEach(myFunction);
@@ -76,7 +76,6 @@ async function create_cluster() {
   } catch (err) {
     console.error(err);
   }
-
   printData.printData_try_promise(child).then((result) => {
     if (result.includes("AWS STS access")) {
       console.log(
@@ -90,19 +89,150 @@ async function create_cluster() {
       printData.printData();
     }
   });
-  //printData.printData_try_promise(child);
-  // console.log(scriptOutput);
-
-  //   if (scriptOutput.includes("checking AWS STS access")) {
-  //     console.log("pppppppppppppppppppp");
-  //   }
 }
 
-// function myFunction(item, index, arr) {
-//   if (item.includes("@")) {
-//     //console.log(index + "for" + item);
-//     arry_context += item;
-//   }
-// }
-module.exports.Switched_context = Switched_context;
+async function delete_cluster_sso() {
+  //const fileContents = fs.readFileSync("./configFile.json", "utf8");
+  try {
+    ////take from the file config
+
+    console.log(chalk.green("Please choose the cluster to delete \n"));
+    clusters.forEach(myFunction);
+    function myFunction(item, index, arr) {
+      console.log(chalk.blue(`To delete a cluster for ${item} enter ${index}`));
+    }
+    let cluster = prompt();
+
+    const regions = data_configFile.regions;
+    console.log(chalk.green("Please choose  region \n"));
+    regions.forEach(myFunction);
+    function myFunction(item, index, arr) {
+      console.log(chalk.blue(`To delete a cluster in ${item} enter ${index}`));
+    }
+    let region = prompt();
+
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", [
+      `eksctl delete cluster -n ${clusters[cluster]} -r ${regions[region]} --profile default`,
+    ]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData_try_promise(child).then((result) => {
+    if (result.includes("AWS STS access")) {
+      console.log(
+        "Need to take CREDENTIALS for this action 'AWS' Please confirm taking a token"
+      );
+      var spawn = require("child_process").spawn,
+        child;
+      child = spawn("powershell.exe", [
+        `aws sso login --profile default; eksctl delete cluster -n ${clusters[cluster]} -r ${regions[region]} --profile default `,
+      ]);
+      printData.printData();
+    } else {
+      console.log(result);
+    }
+  });
+}
+
+function create_cluster() {
+  //const fileContents = fs.readFileSync("./configFile.json", "utf8");
+  try {
+    console.log(chalk.green("Please choose the cluster to create \n"));
+    clusters.forEach(myFunction);
+    function myFunction(item, index, arr) {
+      console.log(chalk.blue(`To create a cluster for ${item} enter ${index}`));
+    }
+    let cluster = prompt();
+    const regions = data_configFile.regions;
+    console.log(chalk.green("Please choose  region \n"));
+    regions.forEach(myFunction);
+    function myFunction(item, index, arr) {
+      console.log(
+        chalk.blue(`To create a cluster name ${item} enter ${index}`)
+      );
+    }
+    let region = prompt();
+
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", [
+      `eksctl create cluster --name ${clusters[cluster]} --region ${regions[region]} --node-type t3.large --nodes 2 --nodes-min 1 --nodes-max 3`,
+    ]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+}
+
+function delete_cluster() {
+  //const fileContents = fs.readFileSync("./configFile.json", "utf8");
+  const fileContents = fs.readFileSync(config_file_path, "utf8");
+  try {
+    ////take from the file config
+    const data_configFile = JSON.parse(fileContents);
+    ////take cluster name from the file config
+    const clusters = data_configFile.clusters;
+    console.log(chalk.green("Please choose the cluster to delete \n"));
+    clusters.forEach(myFunction);
+    function myFunction(item, index, arr) {
+      console.log(chalk.blue(`To delete a cluster for ${item} enter ${index}`));
+    }
+    let cluster = prompt();
+
+    const regions = data_configFile.regions;
+    console.log(chalk.green("Please choose  region \n"));
+    regions.forEach(myFunction);
+    function myFunction(item, index, arr) {
+      console.log(chalk.blue(`To delete a cluster in ${item} enter ${index}`));
+    }
+    let region = prompt();
+
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", [
+      `eksctl delete cluster -n ${clusters[cluster]} -r ${regions[region]}`,
+    ]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+}
+
+function Get_current_context() {
+  //const fileContents = fs.readFileSync("./configFile.json", "utf8");
+  const fileContents = fs.readFileSync(config_file_path, "utf8");
+  try {
+    ////take from the file config
+
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", [`kubectl config current-context`]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+}
+
+function get_contexts() {
+  //const fileContents = fs.readFileSync("./configFile.json", "utf8");
+  const fileContents = fs.readFileSync(config_file_path, "utf8");
+  try {
+    ////take from the file config
+
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", [`kubectl config get-contexts`]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+}
+module.exports.Switched_context_sso = Switched_context_sso;
+module.exports.create_cluster_sso = create_cluster_sso;
+module.exports.delete_cluster_sso = delete_cluster_sso;
 module.exports.create_cluster = create_cluster;
+module.exports.delete_cluster = delete_cluster;
+module.exports.Get_current_context = Get_current_context;
+module.exports.get_contexts = get_contexts;

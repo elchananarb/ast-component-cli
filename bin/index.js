@@ -9,10 +9,13 @@ const os = require("os");
 
 const fs = require("fs");
 const AppConfig = require("./models/AppConfig");
+const Switch = require("./commands/switch");
+
 const eksctl_commands = require("./commands/eksctl_commands");
 const edit_yaml_file = require("./edit-files/edit_yaml_file");
 const printData = require("./models/printData.js");
 const commands_init = require("./commands/commands_init");
+const { option } = require("commander");
 
 const homeDirectory = os.homedir();
 const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
@@ -21,6 +24,98 @@ const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
 console.log(
   chalk.red((child = spawn("powershell.exe", ["figlet 'NAUTILUS'"])))
 );
+
+//nautilus.usage("<command>");
+//nautilus.usage("<command> <option> <name>");
+
+nautilus
+  .version("0.1.0")
+  .command("switch")
+  .usage("<command> <option> <name>")
+  .alias("s")
+  .option("-r, --remote <name>", "command to switch to remote")
+  .option("-l, --local <name>", "command to switch to local")
+  .action((option) => {
+    if (option.remote) {
+      console.log("remote:", option.remote);
+      Switch.switch_to_remote(option);
+    }
+    if (option.local) {
+      console.log("local:", option.local);
+      Switch.switch_to_local(option);
+    }
+    //console.log(program);
+  });
+
+nautilus
+  .command("Login-to-Docker")
+  .alias("ltd")
+  .description("Login to Docker")
+  .action(() => {
+    clear();
+    AppConfig.Login_to_Docker();
+  });
+
+nautilus
+  .command("Operator-values-Tag")
+  .alias("ovt")
+  .description("Change Operator values Tag")
+  .action(() => {
+    clear();
+    edit_yaml_file.Change_Operator_values_Tag();
+  });
+
+nautilus
+  .command("Install-Operator")
+  .alias("io")
+  .description("Install Ast Operator")
+  .action(() => {
+    clear();
+    commands_init.Install_Operator();
+  });
+nautilus
+  .command("Install-Ast-Components")
+  .alias("iac")
+  .description("Install Ast Components")
+  .action(() => {
+    clear();
+    commands_init.Install_Ast_Components();
+  });
+
+nautilus
+  .command("Install-Metrics-Components")
+  .alias("imc")
+  .description("Install Metrics Components")
+  .action(() => {
+    clear();
+    commands_init.Install_Metrics_Components();
+  });
+nautilus
+  .command("Install_the_Policy_Management_Component")
+  .alias("ipm")
+  .description("nstall the Policy Management Component")
+  .action(() => {
+    clear();
+    commands_init.Install_the_Policy_Management_Component();
+  });
+
+nautilus
+  .command("Get_Traefik_url")
+  .alias("gtu")
+  .description("Get_Traefik_url")
+  .action(() => {
+    clear();
+    commands_init.Get_Traefik_url();
+  });
+
+nautilus
+  .command("Update_Url_in_all_components_tags")
+  .alias("uuc")
+  .description("Update Url in all components tags")
+  .action(() => {
+    clear();
+    commands_init.Update_Url_in_all_components_tags();
+  });
 
 nautilus
   .command("Ast-Upgrade")
@@ -108,7 +203,7 @@ nautilus
       var spawn = require("child_process").spawn,
         child;
       child = spawn("powershell.exe", [
-        `eksctl utils write-kubeconfig --cluster=${clusters[cluster]} --region ${regions[region]} --profile default`,
+        `eksctl utils write-kubeconfig --cluster=${clusters[cluster]} --region ${regions[region]}`,
       ]);
     } catch (err) {
       console.error(err);
@@ -123,42 +218,6 @@ nautilus
   .action(() => {
     clear();
     eksctl_commands.create_cluster();
-
-    // //const fileContents = fs.readFileSync("./configFile.json", "utf8");
-    // const fileContents = fs.readFileSync(config_file_path, "utf8");
-    // try {
-    //   ////take from the file config
-    //   const data_configFile = JSON.parse(fileContents);
-
-    //   ////take cluster name from the file config
-    //   const clusters = data_configFile.clusters;
-    //   console.log(chalk.green("Please choose the cluster to create \n"));
-    //   clusters.forEach(myFunction);
-    //   function myFunction(item, index, arr) {
-    //     console.log(
-    //       chalk.blue(`To create a cluster for ${item} enter ${index}`)
-    //     );
-    //   }
-    //   let cluster = prompt();
-    //   const regions = data_configFile.regions;
-    //   console.log(chalk.green("Please choose  region \n"));
-    //   regions.forEach(myFunction);
-    //   function myFunction(item, index, arr) {
-    //     console.log(
-    //       chalk.blue(`To create a cluster name ${item} enter ${index}`)
-    //     );
-    //   }
-    //   let region = prompt();
-
-    //   var spawn = require("child_process").spawn,
-    //     child;
-    //   child = spawn("powershell.exe", [
-    //     `eksctl create cluster --name ${clusters[cluster]} --region ${regions[region]} --node-type t3.large --nodes 2 --nodes-min 1 --nodes-max 3 --profile default `,
-    //   ]);
-    // } catch (err) {
-    //   console.error(err);
-    // }
-    // printData.printData(child);
   });
 
 nautilus
@@ -166,41 +225,21 @@ nautilus
   .description("delete a cluster in Aws")
   .alias("dc")
   .action(() => {
-    //const fileContents = fs.readFileSync("./configFile.json", "utf8");
-    const fileContents = fs.readFileSync(config_file_path, "utf8");
-    try {
-      ////take from the file config
-      const data_configFile = JSON.parse(fileContents);
-      ////take cluster name from the file config
-      const clusters = data_configFile.clusters;
-      console.log(chalk.green("Please choose the cluster to delete \n"));
-      clusters.forEach(myFunction);
-      function myFunction(item, index, arr) {
-        console.log(
-          chalk.blue(`To delete a cluster for ${item} enter ${index}`)
-        );
-      }
-      let cluster = prompt();
-
-      const regions = data_configFile.regions;
-      console.log(chalk.green("Please choose  region \n"));
-      regions.forEach(myFunction);
-      function myFunction(item, index, arr) {
-        console.log(
-          chalk.blue(`To delete a cluster in ${item} enter ${index}`)
-        );
-      }
-      let region = prompt();
-
-      var spawn = require("child_process").spawn,
-        child;
-      child = spawn("powershell.exe", [
-        `eksctl delete cluster -n ${clusters[cluster]} -r ${regions[region]} --profile default`,
-      ]);
-    } catch (err) {
-      console.error(err);
-    }
-    printData.printData(child);
+    eksctl_commands.delete_cluster();
+  });
+nautilus
+  .command("Get_current_context")
+  .description("Get current context")
+  .alias("gcc")
+  .action(() => {
+    eksctl_commands.Get_current_context();
+  });
+nautilus
+  .command("get-contexts")
+  .description("kubectl config get-contexts")
+  .alias("gcg")
+  .action(() => {
+    eksctl_commands.get_contexts();
   });
 
 nautilus
@@ -294,76 +333,15 @@ nautilus
     clear();
     AppConfig.Config_nautilus_cli();
   });
+// nautilus
+//   .command("rmdir")
+//   .argument("<username>", "user to login")
+//   .argument("[password]", "password for user, if required", "no password given")
+//   .action((username, password) => {
+//     console.log("username:", username);
+//     console.log("password:", password);
+//   });
 
-nautilus
-  .command("Operator-values-Tag")
-  .alias("ovt")
-  .description("Change Operator values Tag")
-  .action(() => {
-    clear();
-    edit_yaml_file.Change_Operator_values_Tag();
-  });
-
-nautilus
-  .command("Install-Operator")
-  .alias("io")
-  .description("Install Ast Operator")
-  .action(() => {
-    clear();
-    commands_init.Install_Operator();
-  });
-nautilus
-  .command("Install-Ast-Components")
-  .alias("iac")
-  .description("Install Ast Components")
-  .action(() => {
-    clear();
-    commands_init.Install_Ast_Components();
-  });
-
-nautilus
-  .command("Install-Metrics-Components")
-  .alias("imc")
-  .description("Install Metrics Components")
-  .action(() => {
-    clear();
-    commands_init.Install_Metrics_Components();
-  });
-nautilus
-  .command("Install_the_Policy_Management_Component")
-  .alias("ipm")
-  .description("nstall the Policy Management Component")
-  .action(() => {
-    clear();
-    commands_init.Install_the_Policy_Management_Component();
-  });
-
-nautilus
-  .command("Get_Traefik_url")
-  .alias("gtu")
-  .description("Get_Traefik_url")
-  .action(() => {
-    clear();
-    commands_init.Get_Traefik_url();
-  });
-
-nautilus
-  .command("Update_Url_in_all_components_tags")
-  .alias("uuc")
-  .description("Update Url in all components tags")
-  .action(() => {
-    clear();
-    commands_init.Update_Url_in_all_components_tags();
-  });
-
-nautilus
-  .command("Login-to-Docker")
-  .alias("ltd")
-  .description("Login to Docker")
-  .action(() => {
-    clear();
-    AppConfig.Login_to_Docker();
-  });
 // nautilus
 //   .command("switched-context")
 //   .alias("sc")
@@ -403,6 +381,23 @@ nautilus
       child;
 
     child = spawn("powershell.exe", [`${temp}`]);
+    printData.printData(child);
+  });
+
+nautilus
+  .command("aaaa")
+  .description("display help for command")
+  .alias("a")
+  .action(() => {
+    console.log("pppp");
+    const os = require("os");
+    temp = `${process.cwd()}/powerShellScript/deleteCluster.ps1`;
+    console.log(temp);
+
+    var spawn = require("child_process").spawn,
+      child;
+
+    child = spawn("powershell.exe", ["ls"]);
     printData.printData(child);
   });
 
