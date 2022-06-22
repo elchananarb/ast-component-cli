@@ -67,7 +67,27 @@ let configeureNau = {
   ],
 };
 
+let aws_sso = {
+  astPath: "C:/Users/elchanana/IdeaProjects/ast/helm",
+  username: "elchanan.arbiv@checkmarx.com",
+  jfrogToken: "",
+
+  astOperator: "",
+  astComponents: "",
+  componenIntegration: "",
+  componentMetrics: "",
+  componentPolicyManagement: "",
+
+  region: "eu-west-3",
+  devName: "",
+  teamName: "",
+  clusters: ["Nautilus-Igor"],
+};
+
+function get_aws_credentials() {}
+
 function Login_to_Docker() {
+  //problem if not exisit
   try {
     //const fileContents = fs.readFileSync("./configFile.json", "utf8");
     const fileContents = fs.readFileSync(
@@ -104,7 +124,7 @@ function create_dir_nautilus_cli() {
     if (err) {
       console.error(err);
     } else {
-      console.log(chalk.green("We create a directory named .na66666666"));
+      console.log(chalk.green("We create a directory named .nautilus-cli"));
     }
   });
 }
@@ -196,6 +216,7 @@ function remove_spaces(el) {
 
 module.exports.Config_nautilus_cli = Config_nautilus_cli;
 module.exports.Login_to_Docker = Login_to_Docker;
+module.exports.get_aws_credentials = get_aws_credentials;
 
 // module.exports = { Config_nautilus_cli };
 // module.exports = { Login_to_Docker };

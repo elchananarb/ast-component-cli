@@ -27,6 +27,7 @@ console.log(
 
 //nautilus.usage("<command>");
 //nautilus.usage("<command> <option> <name>");
+////node .\bin\index.js
 
 nautilus
   .version("0.1.0")
@@ -51,6 +52,14 @@ nautilus
   .command("Login-to-Docker")
   .alias("ltd")
   .description("Login to Docker")
+  .action(() => {
+    clear();
+    AppConfig.Login_to_Docker();
+  });
+nautilus
+  .command("morning")
+  .alias("m")
+  .description("get aws credentials That are renewed every day")
   .action(() => {
     clear();
     AppConfig.Login_to_Docker();

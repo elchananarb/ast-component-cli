@@ -92,8 +92,6 @@ function Install_the_Policy_Management_Component() {
 }
 
 function Get_Traefik_url() {
-  console.log("jhhrrrrrrrrrrrrrrr");
-
   try {
     var spawn = require("child_process").spawn,
       child;
