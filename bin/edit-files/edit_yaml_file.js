@@ -17,12 +17,11 @@ const homeDirectory = os.homedir();
 const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
 const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
 
-const fileContents = fs.readFileSync(config_file_path, "utf8");
-////take from the file config
-const data_configFile = JSON.parse(fileContents);
-
 ////take cluster name from the file config
 function Change_Operator_values_Tag() {
+  const fileContents = fs.readFileSync(config_file_path, "utf8");
+  ////take from the file config
+  const data_configFile = JSON.parse(fileContents);
   const path_astOperator = data_configFile.astOperator;
   const tag = "operator-namespaced-stable-v35";
   const port = "8080";

@@ -30,6 +30,23 @@ console.log(
 ////node .\bin\index.js
 
 nautilus
+  .command("up_cli_config")
+  .alias("upcli")
+  .description("update config file cli e.g add region or name cluster")
+  .action(() => {
+    clear();
+    AppConfig.write_to_file_credentials_for_sso_login();
+  });
+nautilus
+  .command("morning")
+  .alias("m")
+  .description("get aws credentials That are renewed every day")
+  .action(() => {
+    clear();
+    AppConfig.write_to_file_credentials_for_sso_login();
+  });
+
+nautilus
   .version("0.1.0")
   .command("switch")
   .usage("<command> <option> <name>")
@@ -49,17 +66,48 @@ nautilus
   });
 
 nautilus
+  .command("set_Env")
+  .usage("<command> -n <name> -v <value>")
+  .alias("senv")
+  .option("-n, --name_env <name env>", "name env")
+  .option("-v, --value <value env>", "value env")
+  .description("set env for switch from local to remote & -1")
+  .action((option) => {
+    //pr(option);
+    if (option.name_env) {
+      //console.log("name:", option.name_env);
+    } else {
+      console.log("option '-n, --name_env <name env>' argument missing");
+      process.exit(1);
+    }
+    if (option.value) {
+      //console.log("value:", option.value);
+    } else {
+      console.log("option '-v, --value <value env>' argument missing");
+      process.exit(1);
+    }
+    Switch.set_Env(option);
+  });
+nautilus
+  .command("remove_Env")
+  .alias("renv")
+  .option("-n, --name_env <name env to remove>", "name env")
+  .description("remov env")
+  .action((option) => {
+    //pr(option);
+    if (option.name_env) {
+    } else {
+      console.log("option '-n, --name_env <name env>' argument missing");
+      process.exit(1);
+    }
+
+    Switch.remove_Env(option);
+  });
+
+nautilus
   .command("Login-to-Docker")
   .alias("ltd")
   .description("Login to Docker")
-  .action(() => {
-    clear();
-    AppConfig.Login_to_Docker();
-  });
-nautilus
-  .command("morning")
-  .alias("m")
-  .description("get aws credentials That are renewed every day")
   .action(() => {
     clear();
     AppConfig.Login_to_Docker();

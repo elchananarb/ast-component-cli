@@ -12,16 +12,17 @@ const printData = require("../models/printData");
 const homeDirectory = os.homedir();
 const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
 const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
-const fileContents = fs.readFileSync(config_file_path, "utf8");
-////take from the file config
-const data_configFile = JSON.parse(fileContents);
-const clusters = data_configFile.clusters;
-const regions = data_configFile.regions;
+
 let cluster;
 let region;
 
 function Switched_context_sso() {
   try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    const data_configFile = JSON.parse(fileContents);
+    const clusters = data_configFile.clusters;
+    const regions = data_configFile.regions;
     ////take from the file config
     ////take cluster name from the file config
     console.log(chalk.green("Please choose the cluster to context \n"));
@@ -53,6 +54,11 @@ function Switched_context_sso() {
 
 async function create_cluster_sso() {
   try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    const data_configFile = JSON.parse(fileContents);
+    const clusters = data_configFile.clusters;
+    const regions = data_configFile.regions;
     console.log(chalk.green("Please choose the cluster to create \n"));
     clusters.forEach(myFunction);
     function myFunction(item, index, arr) {
@@ -77,6 +83,11 @@ async function create_cluster_sso() {
     console.error(err);
   }
   printData.printData_try_promise(child).then((result) => {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    const data_configFile = JSON.parse(fileContents);
+    const clusters = data_configFile.clusters;
+    const regions = data_configFile.regions;
     if (result.includes("AWS STS access")) {
       console.log(
         "Need to take CREDENTIALS for this action 'AWS' Please confirm taking a token"
@@ -92,6 +103,11 @@ async function create_cluster_sso() {
 }
 
 async function delete_cluster_sso() {
+  const fileContents = fs.readFileSync(config_file_path, "utf8");
+  ////take from the file config
+  const data_configFile = JSON.parse(fileContents);
+  const clusters = data_configFile.clusters;
+  const regions = data_configFile.regions;
   //const fileContents = fs.readFileSync("./configFile.json", "utf8");
   try {
     ////take from the file config
@@ -120,6 +136,11 @@ async function delete_cluster_sso() {
     console.error(err);
   }
   printData.printData_try_promise(child).then((result) => {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    const data_configFile = JSON.parse(fileContents);
+    const clusters = data_configFile.clusters;
+    const regions = data_configFile.regions;
     if (result.includes("AWS STS access")) {
       console.log(
         "Need to take CREDENTIALS for this action 'AWS' Please confirm taking a token"
@@ -139,6 +160,10 @@ async function delete_cluster_sso() {
 function create_cluster() {
   //const fileContents = fs.readFileSync("./configFile.json", "utf8");
   try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    const data_configFile = JSON.parse(fileContents);
+    const clusters = data_configFile.clusters;
     console.log(chalk.green("Please choose the cluster to create \n"));
     clusters.forEach(myFunction);
     function myFunction(item, index, arr) {
@@ -168,12 +193,13 @@ function create_cluster() {
 
 function delete_cluster() {
   //const fileContents = fs.readFileSync("./configFile.json", "utf8");
-  const fileContents = fs.readFileSync(config_file_path, "utf8");
   try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
     ////take from the file config
     const data_configFile = JSON.parse(fileContents);
-    ////take cluster name from the file config
     const clusters = data_configFile.clusters;
+    const regions = data_configFile.regions;
+    ////take cluster name from the file config
     console.log(chalk.green("Please choose the cluster to delete \n"));
     clusters.forEach(myFunction);
     function myFunction(item, index, arr) {
@@ -181,7 +207,6 @@ function delete_cluster() {
     }
     let cluster = prompt();
 
-    const regions = data_configFile.regions;
     console.log(chalk.green("Please choose  region \n"));
     regions.forEach(myFunction);
     function myFunction(item, index, arr) {
@@ -201,9 +226,12 @@ function delete_cluster() {
 }
 
 function Get_current_context() {
-  //const fileContents = fs.readFileSync("./configFile.json", "utf8");
-  const fileContents = fs.readFileSync(config_file_path, "utf8");
   try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    const data_configFile = JSON.parse(fileContents);
+    const clusters = data_configFile.clusters;
+    const regions = data_configFile.regions;
     ////take from the file config
 
     var spawn = require("child_process").spawn,
@@ -217,8 +245,12 @@ function Get_current_context() {
 
 function get_contexts() {
   //const fileContents = fs.readFileSync("./configFile.json", "utf8");
-  const fileContents = fs.readFileSync(config_file_path, "utf8");
   try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    const data_configFile = JSON.parse(fileContents);
+    const clusters = data_configFile.clusters;
+    const regions = data_configFile.regions;
     ////take from the file config
 
     var spawn = require("child_process").spawn,

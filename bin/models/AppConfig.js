@@ -5,14 +5,27 @@ const prompt = require("prompt-sync")({ sigint: true });
 var spawn = require("child_process").execFileSync,
   child;
 const printData = require("./printData.js");
-
 const os = require("os");
-
 const fs = require("fs");
 
 const homeDirectory = os.homedir();
 const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
+const aws_file_credentials = `${homeDirectory}/.aws`;
 const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
+
+function up_cli_config(params) {}
+
+let sso_format_login = {
+  sso_account_id: "822112283600",
+  sso_role_name: "AdministratorAccess",
+  sso_region: "eu-west-1",
+  sso_access_token: "",
+};
+let credentials_file_format_login = {
+  accessKeyId: "",
+  secretAccessKey: "",
+  sessionToken: "",
+};
 
 let configeureNau = {
   astPath: "C:/Users/elchanana/IdeaProjects/ast/helm",
@@ -67,24 +80,182 @@ let configeureNau = {
   ],
 };
 
-let aws_sso = {
+let aws_credentials_ = {
   astPath: "C:/Users/elchanana/IdeaProjects/ast/helm",
   username: "elchanan.arbiv@checkmarx.com",
   jfrogToken: "",
-
-  astOperator: "",
-  astComponents: "",
-  componenIntegration: "",
-  componentMetrics: "",
-  componentPolicyManagement: "",
-
-  region: "eu-west-3",
-  devName: "",
-  teamName: "",
-  clusters: ["Nautilus-Igor"],
 };
 
-function get_aws_credentials() {}
+//##########number 1
+function write_to_file_credentials_for_sso_login() {
+  const aws_file_credentials = `${homeDirectory}/.aws/credentials`;
+  var sso_log_credentials =
+    "[default]\nsso_start_url=https://d-93670137ee.awsapps.com/start#/\nsso_region=eu-west-1\nsso_account_id=822112283600\nsso_role_name=AdministratorAccess";
+
+  fs.writeFile(aws_file_credentials, `${sso_log_credentials}`, (err) => {
+    if (err) throw err;
+    fs.readdir(aws_file_credentials, (err, result) => {
+      //console.log(result);
+      console.log("Created directory sso!");
+      crete_token_sso_in_cache();
+    });
+  });
+}
+////######number 2
+function crete_token_sso_in_cache() {
+  try {
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", ["aws sso login --profile default"]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+  get_aws_accessToken_from_cache();
+}
+
+////######number 3
+function get_aws_accessToken_from_cache() {
+  const aws_file_credentials = `${homeDirectory}/.aws/sso/cache/5206c3e1f5b52c87e9557fbff4d6953b0b424bcb.json`;
+  //dataa = "";
+  const fileContents = fs.readFileSync(aws_file_credentials, "utf8");
+  ////take from the config sso
+  const data_configFile_sso = JSON.parse(fileContents);
+
+  printdata(data_configFile_sso);
+}
+//##folowo to number3
+function printdata(sso_file_cache) {
+  // console.log(dataa);
+  // console.log(sso_file_cache.startUrl);
+  // console.log(sso_file_cache.region);
+  // console.log(sso_file_cache.accessToken);
+  write_to_file_config_for_sso_login(sso_file_cache);
+}
+
+//#####number 4### set in .aws config file adminstrtor
+function write_to_file_config_for_sso_login(sso_file_cache) {
+  const aws_file_credentials = `${homeDirectory}/.aws/config`;
+  var sso_log_config =
+    "[profile 822112283600_AdministratorAccess]\nregion = eu-west-1\noutput = json";
+  fs.writeFile(aws_file_credentials, `${sso_log_config}`, (err) => {
+    if (err) throw err;
+    fs.readdir(aws_file_credentials, (err, result) => {
+      //console.log(result);
+      console.log("Created directory sso_config!");
+      //??????crete_token_sso_in_cache();
+      get_aws_sso_temporary_credentials(sso_file_cache);
+    });
+  });
+}
+
+//#####number 5### #aws sso get-role..
+function get_aws_sso_temporary_credentials(sso_file_cache) {
+  //set to sso config token from the cache
+  sso_format_login.sso_access_token = sso_file_cache.accessToken;
+
+  try {
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", [
+      //`eksctl create cluster --name ${clusters[cluster]} --region ${regions[region]} --node-type t3.large --nodes 2 --nodes-min 1 --nodes-max 3`,
+      `aws sso get-role-credentials --account-id ${sso_format_login.sso_account_id} --role-name ${sso_format_login.sso_role_name} --access-token ${sso_format_login.sso_access_token} --region ${sso_format_login.sso_region}`,
+    ]);
+  } catch (err) {
+    console.error(err);
+  }
+  //printData.printData(child);
+  Data_for_sso_credenials(child);
+}
+
+//#####number 6 set in .aws credentials ################
+//###number 6A ## rade the data from
+const credentials_arry = ["", "", ""];
+var credentials = "";
+var arry_context = [];
+var credentials_end = "";
+function Data_for_sso_credenials(child) {
+  child.stdout.setEncoding("utf8");
+  child.stdout.on("data", function (data) {
+    credentials += data;
+    arry_context += data;
+  });
+
+  child.stderr.setEncoding("utf8");
+  child.stderr.on("data", function (data) {
+    console.log("stderr: " + data);
+    data = data.toString();
+    credentials += data;
+  });
+
+  child.on("exit", function () {
+    credentials_end = credentials;
+    get_crede_s_k_t(credentials_end);
+  });
+  child.stdin.end();
+}
+//###number 6b ## Extract the data certificates
+function get_crede_s_k_t(credentials_end) {
+  let pattern1 = /"[^"]*(?=",)/g;
+  let result1 = credentials_end.match(pattern1);
+  console.log(result1);
+
+  let itemsProcessed = 0;
+
+  result1.forEach(deletegrshim);
+
+  function deletegrshim(item, index, arr) {
+    a = item;
+    var aa = a.replace(/"/g, "");
+    credentials_arry[index] = aa;
+    itemsProcessed += 1;
+    console.log(itemsProcessed);
+
+    if (itemsProcessed === arr.length) {
+      write_to_aws_credentials_file_login_format(credentials_arry);
+      //credentials_arry.forEach(simplePrint);
+      // console.log(arr.length);
+    }
+  }
+
+  function simplePrint(item, index, arr) {
+    console.log(index + "for" + item);
+  }
+}
+
+/// 6C#### write to aws credentials Mfile login format
+function write_to_aws_credentials_file_login_format(credentials_arry) {
+  console.log(credentials_arry);
+  const aws_file_credentials = `${homeDirectory}/.aws/credentials`;
+  var sso_log_config = `[822112283600_AdministratorAccess]\naws_access_key_id=${credentials_arry[0]}\naws_secret_access_key= ${credentials_arry[1]}\naws_session_token= ${credentials_arry[2]}`;
+  fs.writeFile(aws_file_credentials, `${sso_log_config}`, (err) => {
+    if (err) throw err;
+    fs.readdir(aws_file_credentials, (err, result) => {
+      console.log(result);
+      console.log("Created directory sso_config!");
+      //??????crete_token_sso_in_cache();
+      //get_aws_sso_temporary_credentials(sso_file_cache);
+    });
+  });
+}
+
+// function write_to_aws_credentials_file_sso_login_format(sso_format_login) {
+//   fs.writeFile(aws_file_credentials, `${JSON.stringify(sso_format_login)}`, (err) => {
+//     if (err) throw err;
+//     fs.readdir(aws_file_credentials, (err, result) => {
+//       //console.log(result);
+//       console.log("change aws file credentials to sso login");
+//     });
+//   });
+// }
+
+// function read_aws_credentials_file() {
+
+//   fs.readdir(aws_file_credentials, (err, result) => {
+//     //console.log(result);
+//     console.log("change aws file credentials to sso login");
+//   });
+// };
 
 function Login_to_Docker() {
   //problem if not exisit
@@ -119,15 +290,8 @@ function Login_to_Docker() {
     )
   );
 }
-function create_dir_nautilus_cli() {
-  fs.mkdir(nautilus_cli_dir_path, (err) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log(chalk.green("We create a directory named .nautilus-cli"));
-    }
-  });
-}
+//######### from here done
+
 function create_file_config(configeureNau) {
   fs.writeFile(config_file_path, `${JSON.stringify(configeureNau)}`, (err) => {
     if (err) throw err;
@@ -135,6 +299,16 @@ function create_file_config(configeureNau) {
       //console.log(result);
       console.log("Created directory!");
     });
+  });
+}
+
+function create_dir_nautilus_cli() {
+  fs.mkdir(nautilus_cli_dir_path, (err) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log(chalk.green("We create a directory named .nautilus-cli"));
+    }
   });
 }
 
@@ -216,7 +390,13 @@ function remove_spaces(el) {
 
 module.exports.Config_nautilus_cli = Config_nautilus_cli;
 module.exports.Login_to_Docker = Login_to_Docker;
-module.exports.get_aws_credentials = get_aws_credentials;
+module.exports.get_aws_sso_temporary_credentials =
+  get_aws_sso_temporary_credentials;
+module.exports.get_aws_accessToken_from_cache = get_aws_accessToken_from_cache;
+module.exports.write_to_file_credentials_for_sso_login =
+  write_to_file_credentials_for_sso_login;
+
+module.exports.up_cli_config = up_cli_config;
 
 // module.exports = { Config_nautilus_cli };
 // module.exports = { Login_to_Docker };

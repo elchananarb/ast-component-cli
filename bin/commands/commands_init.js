@@ -16,12 +16,13 @@ const homeDirectory = os.homedir();
 const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
 const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
 
-const fileContents = fs.readFileSync(config_file_path, "utf8");
 ////take from the file config
-const data_configFile = JSON.parse(fileContents);
 
 function Install_Operator() {
   try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    const data_configFile = JSON.parse(fileContents);
+
     ////take path_astOperator from the data_configFile from the file config
     const path_astOperator = data_configFile.astOperator;
     ////Change the directory
@@ -40,6 +41,9 @@ function Install_Operator() {
 
 function Install_Ast_Components() {
   try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    const data_configFile = JSON.parse(fileContents);
+
     ////take path_astComponents from the data_configFile from the file config
     const path_astComponents = data_configFile.astComponents;
     ////Change the directory
@@ -58,6 +62,9 @@ function Install_Ast_Components() {
 
 function Install_Metrics_Components() {
   try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    const data_configFile = JSON.parse(fileContents);
+
     ////take path_componentMetrics from the data_configFile from the file config
     const path_componentMetrics = data_configFile.componentMetrics;
     ////Change the directory
@@ -74,6 +81,9 @@ function Install_Metrics_Components() {
 
 function Install_the_Policy_Management_Component() {
   try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    const data_configFile = JSON.parse(fileContents);
+
     ////take path_componentPolicyManagement from the data_configFile from the file config
     const path_componentPolicyManagement =
       data_configFile.componentPolicyManagement;
@@ -93,6 +103,9 @@ function Install_the_Policy_Management_Component() {
 
 function Get_Traefik_url() {
   try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    const data_configFile = JSON.parse(fileContents);
+
     var spawn = require("child_process").spawn,
       child;
     child = spawn("powershell.exe", ["kubectl get svc | findstr traefik"]);
@@ -106,6 +119,9 @@ function Update_Url_in_all_components_tags() {
   var scriptOutput = "";
   console.log("jhh");
   try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    const data_configFile = JSON.parse(fileContents);
+
     var spawn = require("child_process").spawn,
       child;
 
@@ -141,6 +157,9 @@ function Update_Url_in_all_components_tags() {
 }
 
 function after() {
+  const fileContents = fs.readFileSync(config_file_path, "utf8");
+  const data_configFile = JSON.parse(fileContents);
+
   var spawn = require("child_process").spawn,
     child;
   child = spawn("powershell.exe", ["kubectl get svc | findstr traefik"]);
