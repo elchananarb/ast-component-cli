@@ -30,13 +30,101 @@ console.log(
 ////node .\bin\index.js
 
 nautilus
-  .command("up_cli_config")
-  .alias("upcli")
-  .description("update config file cli e.g add region or name cluster")
+  .command("init_B")
+  .alias("ib")
+  .description("version B create a directory named .nautilus-cli")
   .action(() => {
     clear();
-    AppConfig.write_to_file_credentials_for_sso_login();
+    AppConfig.init_B();
   });
+
+nautilus
+  .command("test_delete_re_af_up_cli_config")
+  .alias("dupcon")
+  .action(() => {
+    AppConfig.delete_from_config_file("", "astPath");
+  });
+nautilus
+  .command("test_add_re_af_up_cli_config")
+  .alias("aupcon")
+  .action(() => {
+    const where = "astOperator2";
+    const value = "efdscdxz22";
+    AppConfig.add_to_config_file(where, value);
+  });
+nautilus
+  .command("test_up_and_change_re_af_up_cli_config")
+  .alias("uupcon")
+  .action(() => {
+    const where = "astPath";
+    const value = "efdscdx111";
+    AppConfig.up_and_change_re_af_up_cli_config(where, value);
+  });
+
+nautilus
+  .command("up_cli_config")
+  .usage("<command> -n <name> -v <value>")
+  .alias("upcli")
+  .option("-w, --where <name>", "name")
+  .option("-v, --value <value>", "value")
+  .option("-r, --remove [remove]", "remove")
+  .option("-a, --add [add]", "add")
+  //צריך לסיים כאם את האופציה של up
+  //.option("-u, --up [up]", "up")
+  .description("set env for switch from local to remote & -1")
+  .action((option) => {
+    //pr(option);
+    if (!option.where) {
+      console.log("option '-w, --where <where>' argument missing");
+      process.exit(1);
+    }
+    if (!option.value) {
+      console.log("option '-v, --value <value>' argument missing");
+      process.exit(1);
+    }
+    if (!option.remove && !option.add) {
+      console.log("option '-r or -a  argument missing");
+      process.exit(1);
+    }
+    AppConfig.up_cli_config(option);
+  });
+
+// nautilus
+//   .command("up_cli_config")
+//   .usage("<command> -n <name> -v <value>")
+//   .alias("upcli")
+//   .option("-n, --name_env <name env>", "name env")
+
+//   // .option("-v, --value <value>", "value")
+//   // .option("-r, --remove")
+//   // .option("-a, --add")
+//   .description("update config file cli e.g add region or name cluster")
+//   .action(() => {
+//     // if (option.where_to_up) {
+//     //   //console.log("name:", option.name_env);
+//     // } else {
+//     //   console.log(
+//     //     "option '-w, --where_to_up <clusters || region>' argument missing"
+//     //   );
+//     //   process.exit(1);
+//     // }
+//     if (option.name_env) {
+//       //console.log("value:", option.value);
+//     } else {
+//       console.log("option '-v, --value <value>' argument missing");
+//       process.exit(1);
+//     }
+//     AppConfig.up_cli_config(option);
+//   });
+nautilus
+  .command("delete_from_config")
+  .alias("dfc")
+  .description("delete_from_config if is arry lebntim.....")
+  .action(() => {
+    clear();
+    AppConfig.delete_from_config_file("clusters", "N-Ely");
+  });
+
 nautilus
   .command("morning")
   .alias("m")
@@ -88,6 +176,7 @@ nautilus
     }
     Switch.set_Env(option);
   });
+
 nautilus
   .command("remove_Env")
   .alias("renv")

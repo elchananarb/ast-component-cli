@@ -8,6 +8,7 @@ var spawn = require("child_process").execFileSync,
   child;
 const os = require("os");
 const printData = require("../models/printData");
+const { exit } = require("process");
 
 const homeDirectory = os.homedir();
 const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
@@ -26,8 +27,8 @@ function Switched_context_sso() {
     ////take from the file config
     ////take cluster name from the file config
     console.log(chalk.green("Please choose the cluster to context \n"));
-    clusters.forEach(myFunction);
-    function myFunction(item, index, arr) {
+    clusters.forEach(myFunction_choose_cluster);
+    function myFunction_choose_cluster(item, index, arr) {
       console.log(
         chalk.blue(`To context a cluster for ${item} enter ${index}`)
       );
@@ -35,8 +36,8 @@ function Switched_context_sso() {
     let cluster = prompt();
 
     console.log(chalk.green("Please choose  region \n"));
-    regions.forEach(myFunction);
-    function myFunction(item, index, arr) {
+    regions.forEach(myFunction_choose_region);
+    function myFunction_choose_region(item, index, arr) {
       console.log(chalk.blue(`To context a cluster in ${item} enter ${index}`));
     }
     let region = prompt();
@@ -60,14 +61,14 @@ async function create_cluster_sso() {
     const clusters = data_configFile.clusters;
     const regions = data_configFile.regions;
     console.log(chalk.green("Please choose the cluster to create \n"));
-    clusters.forEach(myFunction);
-    function myFunction(item, index, arr) {
+    clusters.forEach(myFunction_choose_cluster);
+    function myFunction_choose_cluster(item, index, arr) {
       console.log(chalk.blue(`To create a cluster for ${item} enter ${index}`));
     }
     cluster = prompt();
     console.log(chalk.green("Please choose  region \n"));
-    regions.forEach(myFunction);
-    function myFunction(item, index, arr) {
+    regions.forEach(myFunction_choose_region);
+    function myFunction_choose_region(item, index, arr) {
       console.log(
         chalk.blue(`To create a cluster name ${item} enter ${index}`)
       );
@@ -113,16 +114,16 @@ async function delete_cluster_sso() {
     ////take from the file config
 
     console.log(chalk.green("Please choose the cluster to delete \n"));
-    clusters.forEach(myFunction);
-    function myFunction(item, index, arr) {
+    clusters.forEach(myFunction_choose_cluster);
+    function myFunction_choose_cluster(item, index, arr) {
       console.log(chalk.blue(`To delete a cluster for ${item} enter ${index}`));
     }
     let cluster = prompt();
 
     const regions = data_configFile.regions;
     console.log(chalk.green("Please choose  region \n"));
-    regions.forEach(myFunction);
-    function myFunction(item, index, arr) {
+    regions.forEach(myFunction_choose_region);
+    function myFunction_choose_region(item, index, arr) {
       console.log(chalk.blue(`To delete a cluster in ${item} enter ${index}`));
     }
     let region = prompt();
@@ -156,34 +157,52 @@ async function delete_cluster_sso() {
     }
   });
 }
+let itemsProcessed_name_cluster = 0;
 
 function create_cluster() {
-  //const fileContents = fs.readFileSync("./configFile.json", "utf8");
   try {
     const fileContents = fs.readFileSync(config_file_path, "utf8");
     ////take from the file config
     const data_configFile = JSON.parse(fileContents);
     const clusters = data_configFile.clusters;
     console.log(chalk.green("Please choose the cluster to create \n"));
-    clusters.forEach(myFunction);
-    function myFunction(item, index, arr) {
-      console.log(chalk.blue(`To create a cluster for ${item} enter ${index}`));
+    clusters.forEach(myFunction_choose_cluster);
+
+    function myFunction_choose_cluster(item, index, arr) {
+      console.log(
+        chalk.blue(`To createggg a cluster for ${item} enter ${index}`)
+      );
+      itemsProcessed_name_cluster += 1;
+      //console.log(itemsProcessed_name_cluster);
+      //console.log(arr.length);
+
+      if (itemsProcessed_name_cluster === arr.length) {
+        console.log(
+          chalk.green(`To add a new "cluster name" enter ${index + 1}`)
+        );
+      }
     }
-    let cluster = prompt();
+    let index_cluster = prompt();
+    let name_cluster = clusters[index_cluster];
+    if (index_cluster == clusters.length) {
+      console.log(chalk.blue(`Please enter the name of cluster`));
+      name_cluster = prompt();
+    }
+    // console.log("llllllllllllll");
+    // console.log(name_cluster);
+
     const regions = data_configFile.regions;
     console.log(chalk.green("Please choose  region \n"));
-    regions.forEach(myFunction);
-    function myFunction(item, index, arr) {
-      console.log(
-        chalk.blue(`To create a cluster name ${item} enter ${index}`)
-      );
+    regions.forEach(myFunction_choose_region);
+    function myFunction_choose_region(item, index, arr) {
+      console.log(chalk.blue(`To create a cluster in ${item} enter ${index}`));
     }
     let region = prompt();
 
     var spawn = require("child_process").spawn,
       child;
     child = spawn("powershell.exe", [
-      `eksctl create cluster --name ${clusters[cluster]} --region ${regions[region]} --node-type t3.large --nodes 2 --nodes-min 1 --nodes-max 3`,
+      `eksctl create cluster --name ${name_cluster} --region ${regions[region]} --node-type t3.large --nodes 2 --nodes-min 1 --nodes-max 3`,
     ]);
   } catch (err) {
     console.error(err);
@@ -201,15 +220,15 @@ function delete_cluster() {
     const regions = data_configFile.regions;
     ////take cluster name from the file config
     console.log(chalk.green("Please choose the cluster to delete \n"));
-    clusters.forEach(myFunction);
-    function myFunction(item, index, arr) {
+    clusters.forEach(myFunction_choose_cluster);
+    function myFunction_choose_cluster(item, index, arr) {
       console.log(chalk.blue(`To delete a cluster for ${item} enter ${index}`));
     }
     let cluster = prompt();
 
     console.log(chalk.green("Please choose  region \n"));
-    regions.forEach(myFunction);
-    function myFunction(item, index, arr) {
+    regions.forEach(myFunction_choose_region);
+    function myFunction_choose_region(item, index, arr) {
       console.log(chalk.blue(`To delete a cluster in ${item} enter ${index}`));
     }
     let region = prompt();

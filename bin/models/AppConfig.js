@@ -13,7 +13,224 @@ const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
 const aws_file_credentials = `${homeDirectory}/.aws`;
 const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
 
-function up_cli_config(params) {}
+function up_cli_config(option) {
+  if (option.remove) {
+    delete_from_config_file(option.where, option.value);
+  }
+  if (option.add) {
+    add_to_config_file(option.where, option.value);
+  }
+}
+function add_to_config_file(where, value) {
+  if (fs.existsSync(config_file_path)) {
+    fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    data_configFile_old = JSON.parse(fileContents);
+    data_configFileNew = data_configFile_old;
+
+    if (data_configFileNew[where]) {
+      data_configFileNew[where].push(value);
+    } else {
+      data_configFileNew[where] = value;
+    }
+
+    create_file_config(data_configFileNew);
+
+    // delete data_configFileNew[where].value;
+
+    // create_file_config(data_configFileNew);
+
+    //console.log(data_configFileNew[where]);  AKCp8mZHgrAygu6KFrvRQGRycmUMRJyn81Koh6GaBP6GVXrinD9MseEPUr8ZceTnvkbpzGBMV
+
+    // name_configFile = "data_configFile" + "." + where;
+    // console.log(name_configFile);
+
+    // username = `${name_configFile}`;
+    // console.log(username);
+  }
+}
+
+function delete_from_config_file(where, value) {
+  if (fs.existsSync(config_file_path)) {
+    fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    data_configFile_old = JSON.parse(fileContents);
+    data_configFileNew = data_configFile_old;
+    var array;
+
+    if (where === "" || where == null) {
+      array = data_configFileNew;
+      delete data_configFileNew[value];
+      create_file_config(data_configFileNew);
+
+      // console.log(data_configFileNew);
+      // console.log(data_configFileNew.value);
+      // console.log(value);
+
+      return;
+    } else {
+      array = data_configFileNew[where];
+      var index = array.indexOf(value);
+      if (index !== -1) {
+        array.splice(index, 1);
+      }
+      data_configFileNew[where] = array;
+    }
+
+    create_file_config(data_configFileNew);
+
+    // delete data_configFileNew[where].value;
+
+    // create_file_config(data_configFileNew);
+
+    //console.log(data_configFileNew[where]);  AKCp8mZHgrAygu6KFrvRQGRycmUMRJyn81Koh6GaBP6GVXrinD9MseEPUr8ZceTnvkbpzGBMV
+
+    // name_configFile = "data_configFile" + "." + where;
+    // console.log(name_configFile);
+
+    // username = `${name_configFile}`;
+    // console.log(username);
+  }
+}
+function up_and_change_re_af_up_cli_config(where, value) {
+  if (fs.existsSync(config_file_path)) {
+    fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    data_configFile_old = JSON.parse(fileContents);
+    data_configFileNew = data_configFile_old;
+    var array;
+
+    if (where === "" || where == null) {
+      array = data_configFileNew;
+      delete data_configFileNew[value];
+      create_file_config(data_configFileNew);
+
+      // console.log(data_configFileNew);
+      // console.log(data_configFileNew.value);
+      // console.log(value);
+
+      return;
+    } else {
+      data_configFileNew[where] = value;
+    }
+
+    create_file_config(data_configFileNew);
+
+    // delete data_configFileNew[where].value;
+
+    // create_file_config(data_configFileNew);
+
+    //console.log(data_configFileNew[where]);  AKCp8mZHgrAygu6KFrvRQGRycmUMRJyn81Koh6GaBP6GVXrinD9MseEPUr8ZceTnvkbpzGBMV
+
+    // name_configFile = "data_configFile" + "." + where;
+    // console.log(name_configFile);
+
+    // username = `${name_configFile}`;
+    // console.log(username);
+  }
+}
+
+function init_B() {
+  ////this func is Second option to do init at first That it brings you what is there and do you want to change as in aws config
+
+  //check if a dir exists
+  if (!fs.existsSync(nautilus_cli_dir_path)) {
+    create_dir_nautilus_cli();
+  }
+  //const fileContents = fs.readFileSync(config_file_path, "utf8");
+  ////take from the file config
+  //const data_configFile = JSON.parse(fileContents);
+  let username = "";
+  let password = "";
+  let baseAstComponent = "";
+  if (fs.existsSync(config_file_path)) {
+    fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    data_configFile = JSON.parse(fileContents);
+
+    username = data_configFile.username;
+    password = data_configFile.jfrogToken;
+    baseAstComponent = data_configFile.baseAstComponent;
+  }
+
+  console.log(chalk.blue("Please enter the folowo\n"));
+
+  console.log(chalk.blue(`yourname@checkmarx.com [${username}]: `));
+  let yourname = prompt();
+  yourname = remove_spaces(yourname);
+
+  if (yourname.length == 0) {
+    yourname = data_configFile.username;
+  }
+
+  console.log(chalk.blue(`password <you-jfrog-token> [${password}]: `));
+  let jfrog_token = prompt();
+  jfrog_token = remove_spaces(jfrog_token);
+
+  if (jfrog_token.length == 0) {
+    jfrog_token = data_configFile.username;
+  }
+
+  let flag_path_exist = false;
+
+  let astOperator = "";
+  let astComponents = "";
+  let componenIntegration = "";
+  let componentMetrics = "";
+  let componentPolicyManagement = "";
+  let baseComponent = "";
+
+  while (!flag_path_exist) {
+    flag_path_exist = true;
+
+    console.log(chalk.blue(""));
+
+    console.log(
+      chalk.blue(`Base of AST components <you-path> [${baseAstComponent}]: `)
+    );
+    baseComponent = prompt();
+    baseComponent = remove_spaces(baseComponent);
+
+    if (baseComponent.length == 0) {
+      baseComponent = data_configFile.baseAstComponent;
+    }
+
+    astOperator = `${baseComponent}\\ast-operator`;
+    astComponents = `${baseComponent}\\ast-Components`;
+    componenIntegration = `${baseComponent}\\component-integration`;
+    //componentMetrics = `${baseComponent}\\component-ast-metrics`;
+    componentMetrics = `${baseComponent}\\component-metrics`;
+    componentPolicyManagement = `${baseComponent}\\component-policy-management`;
+
+    const paths = new Array(
+      astOperator,
+      astComponents,
+      componenIntegration,
+      componentMetrics,
+      componentPolicyManagement
+    );
+    paths.forEach(myFunction);
+    function myFunction(value, index, array) {
+      if (!fs.existsSync(value)) {
+        flag_path_exist = false;
+        console.log(chalk.blue(`the path "${value}"`));
+        console.log(chalk.red(`not exist try again\n`));
+      }
+    }
+  }
+
+  configeureNau.astOperator = astOperator;
+  configeureNau.astComponents = astComponents;
+  configeureNau.componenIntegration = componenIntegration;
+  configeureNau.componentMetrics = componentMetrics;
+  configeureNau.componentPolicyManagement = componentPolicyManagement;
+  configeureNau.username = yourname;
+  configeureNau.jfrogToken = jfrog_token;
+  configeureNau.baseAstComponent = baseComponent;
+
+  create_file_config(configeureNau);
+  console.log();
+}
 
 let sso_format_login = {
   sso_account_id: "822112283600",
@@ -51,6 +268,7 @@ let configeureNau = {
     "N-Ely",
   ],
   regions: ["eu-west-2", "eu-west-3", "eu-north-1"],
+  baseAstComponent: "",
   services: [
     {
       name: "ast-flow-publisher",
@@ -88,6 +306,8 @@ let aws_credentials_ = {
 
 //##########number 1
 function write_to_file_credentials_for_sso_login() {
+  console.log("START shlab 1");
+
   const aws_file_credentials = `${homeDirectory}/.aws/credentials`;
   var sso_log_credentials =
     "[default]\nsso_start_url=https://d-93670137ee.awsapps.com/start#/\nsso_region=eu-west-1\nsso_account_id=822112283600\nsso_role_name=AdministratorAccess";
@@ -97,12 +317,15 @@ function write_to_file_credentials_for_sso_login() {
     fs.readdir(aws_file_credentials, (err, result) => {
       //console.log(result);
       console.log("Created directory sso!");
+      console.log("end shlab 1");
       crete_token_sso_in_cache();
     });
   });
 }
 ////######number 2
 function crete_token_sso_in_cache() {
+  console.log("START shlab 2");
+
   try {
     var spawn = require("child_process").spawn,
       child;
@@ -111,30 +334,41 @@ function crete_token_sso_in_cache() {
     console.error(err);
   }
   printData.printData(child);
+  console.log("end shlab 2");
+
   get_aws_accessToken_from_cache();
 }
 
 ////######number 3
 function get_aws_accessToken_from_cache() {
+  console.log("START shlab 3A");
+
   const aws_file_credentials = `${homeDirectory}/.aws/sso/cache/5206c3e1f5b52c87e9557fbff4d6953b0b424bcb.json`;
   //dataa = "";
   const fileContents = fs.readFileSync(aws_file_credentials, "utf8");
   ////take from the config sso
   const data_configFile_sso = JSON.parse(fileContents);
+  console.log("end shlab 3A");
 
   printdata(data_configFile_sso);
 }
 //##folowo to number3
 function printdata(sso_file_cache) {
+  console.log("START shlab 3B");
+
   // console.log(dataa);
   // console.log(sso_file_cache.startUrl);
   // console.log(sso_file_cache.region);
   // console.log(sso_file_cache.accessToken);
+  console.log("end shlab 3B");
+
   write_to_file_config_for_sso_login(sso_file_cache);
 }
 
 //#####number 4### set in .aws config file adminstrtor
 function write_to_file_config_for_sso_login(sso_file_cache) {
+  console.log("START shlab 4");
+
   const aws_file_credentials = `${homeDirectory}/.aws/config`;
   var sso_log_config =
     "[profile 822112283600_AdministratorAccess]\nregion = eu-west-1\noutput = json";
@@ -144,6 +378,8 @@ function write_to_file_config_for_sso_login(sso_file_cache) {
       //console.log(result);
       console.log("Created directory sso_config!");
       //??????crete_token_sso_in_cache();
+      console.log("end shlab 4");
+
       get_aws_sso_temporary_credentials(sso_file_cache);
     });
   });
@@ -151,6 +387,8 @@ function write_to_file_config_for_sso_login(sso_file_cache) {
 
 //#####number 5### #aws sso get-role..
 function get_aws_sso_temporary_credentials(sso_file_cache) {
+  console.log("START shlab 5");
+
   //set to sso config token from the cache
   sso_format_login.sso_access_token = sso_file_cache.accessToken;
 
@@ -165,6 +403,8 @@ function get_aws_sso_temporary_credentials(sso_file_cache) {
     console.error(err);
   }
   //printData.printData(child);
+  console.log("end shlab 5");
+
   Data_for_sso_credenials(child);
 }
 
@@ -175,6 +415,8 @@ var credentials = "";
 var arry_context = [];
 var credentials_end = "";
 function Data_for_sso_credenials(child) {
+  console.log("START shlab 6A");
+
   child.stdout.setEncoding("utf8");
   child.stdout.on("data", function (data) {
     credentials += data;
@@ -190,12 +432,16 @@ function Data_for_sso_credenials(child) {
 
   child.on("exit", function () {
     credentials_end = credentials;
+    console.log("end shlab 6A");
+
     get_crede_s_k_t(credentials_end);
   });
   child.stdin.end();
 }
 //###number 6b ## Extract the data certificates
 function get_crede_s_k_t(credentials_end) {
+  console.log("START shlab 6B");
+
   let pattern1 = /"[^"]*(?=",)/g;
   let result1 = credentials_end.match(pattern1);
   console.log(result1);
@@ -209,9 +455,11 @@ function get_crede_s_k_t(credentials_end) {
     var aa = a.replace(/"/g, "");
     credentials_arry[index] = aa;
     itemsProcessed += 1;
-    console.log(itemsProcessed);
+    //console.log(itemsProcessed);
 
     if (itemsProcessed === arr.length) {
+      console.log("end shlab 6B");
+
       write_to_aws_credentials_file_login_format(credentials_arry);
       //credentials_arry.forEach(simplePrint);
       // console.log(arr.length);
@@ -225,6 +473,8 @@ function get_crede_s_k_t(credentials_end) {
 
 /// 6C#### write to aws credentials Mfile login format
 function write_to_aws_credentials_file_login_format(credentials_arry) {
+  console.log("START shlab 6C ANS START THE END");
+
   console.log(credentials_arry);
   const aws_file_credentials = `${homeDirectory}/.aws/credentials`;
   var sso_log_config = `[822112283600_AdministratorAccess]\naws_access_key_id=${credentials_arry[0]}\naws_secret_access_key= ${credentials_arry[1]}\naws_session_token= ${credentials_arry[2]}`;
@@ -233,29 +483,13 @@ function write_to_aws_credentials_file_login_format(credentials_arry) {
     fs.readdir(aws_file_credentials, (err, result) => {
       console.log(result);
       console.log("Created directory sso_config!");
+      console.log("end shlab 6C AND END!!!!!");
+
       //??????crete_token_sso_in_cache();
       //get_aws_sso_temporary_credentials(sso_file_cache);
     });
   });
 }
-
-// function write_to_aws_credentials_file_sso_login_format(sso_format_login) {
-//   fs.writeFile(aws_file_credentials, `${JSON.stringify(sso_format_login)}`, (err) => {
-//     if (err) throw err;
-//     fs.readdir(aws_file_credentials, (err, result) => {
-//       //console.log(result);
-//       console.log("change aws file credentials to sso login");
-//     });
-//   });
-// }
-
-// function read_aws_credentials_file() {
-
-//   fs.readdir(aws_file_credentials, (err, result) => {
-//     //console.log(result);
-//     console.log("change aws file credentials to sso login");
-//   });
-// };
 
 function Login_to_Docker() {
   //problem if not exisit
@@ -346,6 +580,7 @@ function Config_nautilus_cli() {
     );
     let baseComponent = prompt();
     baseComponent = remove_spaces(baseComponent);
+    configeureNau.baseAstComponent = baseComponent;
 
     astOperator = `${baseComponent}\\ast-operator`;
     astComponents = `${baseComponent}\\ast-Components`;
@@ -396,7 +631,13 @@ module.exports.get_aws_accessToken_from_cache = get_aws_accessToken_from_cache;
 module.exports.write_to_file_credentials_for_sso_login =
   write_to_file_credentials_for_sso_login;
 
+module.exports.delete_from_config_file = delete_from_config_file;
 module.exports.up_cli_config = up_cli_config;
+
+module.exports.init_B = init_B;
+module.exports.add_to_config_file = add_to_config_file;
+module.exports.up_and_change_re_af_up_cli_config =
+  up_and_change_re_af_up_cli_config;
 
 // module.exports = { Config_nautilus_cli };
 // module.exports = { Login_to_Docker };
