@@ -13,9 +13,99 @@ const { exit } = require("process");
 const homeDirectory = os.homedir();
 const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
 const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
+let itemsProcessed_name_cluster = 0;
 
 let cluster;
 let region;
+function Create_local_components_clusterA() {
+  Create_local_components_clusterB().then((resultB) => {
+    console.log(resultB);
+    console.log("BBBBB");
+
+    Create_local_components_clusterC().then((resultC) => {
+      console.log(resultC);
+      console.log("CCCC");
+    });
+  });
+}
+
+function Create_local_components_clusterC() {
+  let myPromise = new Promise((resolve, reject) => {
+    //try {
+    if (!fs.existsSync(nautilus_cli_dir_path)) {
+      create_dir_nautilus_cli();
+    }
+    //const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    //const data_configFile = JSON.parse(fileContents);
+    let username = "";
+    let password = "";
+    if (fs.existsSync(config_file_path)) {
+      fileContents = fs.readFileSync(config_file_path, "utf8");
+      ////take from the file config
+      data_configFile = JSON.parse(fileContents);
+
+      username = data_configFile.username;
+      password = data_configFile.jfrogToken;
+
+      var spawn = require("child_process").spawn,
+        child;
+      child = spawn("powershell.exe", [
+        `docker login --username ${username} --password ${password} https://checkmarx.jfrog.io/artifactory/docker ;
+         helm repo add ast https://checkmarx.jfrog.io/artifactory/ast-helm/ --username ${username} --password ${password} ;
+         helm repo update;
+         helm upgrade operator --install --create-namespace --namespace default ast/operator-helm-chart --set config.domain=127.0.0.1 --set-string config.port="8080" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};
+         	kubectl patch sa default -n default -p '"imagePullSecrets": [{"name": "regcred" }]';
+      	helm upgrade --install platform ast/platform-local;$x=1; while ($x -le 14 ) {sleep 2 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be created"}}`,
+      ]);
+      //עשיתיח תנאי למעלה אפשר למחור  להוסיף תנאי שאם אין מספיק פודים שלר ימשיך הלאה ואם כם יחזיר את הריסולב
+
+      resolve("ddd");
+    }
+    // } catch (err) {
+    //   console.error(err);
+    //   reject();
+    // }
+    printData.printData(child);
+  });
+  return myPromise;
+}
+
+function Create_local_components_clusterB() {
+  let myPromise = new Promise((resolve, reject) => {
+    // try {
+    if (!fs.existsSync(nautilus_cli_dir_path)) {
+      create_dir_nautilus_cli();
+    }
+    //const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    //const data_configFile = JSON.parse(fileContents);
+
+    if (fs.existsSync(config_file_path)) {
+      fileContents = fs.readFileSync(config_file_path, "utf8");
+      ////take from the file config
+      data_configFile = JSON.parse(fileContents);
+
+      ////take k3d Path from the data_configFile from the file config
+      const k3dPath = data_configFile.k3dPath;
+      ////Change the directory
+      process.chdir(k3dPath);
+
+      var spawn = require("child_process").spawn,
+        child;
+      child = spawn("powershell.exe", [
+        'k3d cluster create dev --image rancher/k3s:v1.20.15-k3s1 --k3s-server-arg "--disable=traefik" -p="8080:80@server[0]"',
+      ]);
+      resolve("ddd");
+    }
+    // } catch (err) {
+    //   console.error(err);
+    //   reject();
+    // }
+    printData.printData(child);
+  });
+  return myPromise;
+}
 
 function Switched_context_sso() {
   try {
@@ -157,10 +247,10 @@ async function delete_cluster_sso() {
     }
   });
 }
-let itemsProcessed_name_cluster = 0;
 
 function create_cluster() {
   try {
+    itemsProcessed_name_cluster = 0;
     const fileContents = fs.readFileSync(config_file_path, "utf8");
     ////take from the file config
     const data_configFile = JSON.parse(fileContents);
@@ -280,6 +370,60 @@ function get_contexts() {
   }
   printData.printData(child);
 }
+function Connect_cluster() {
+  try {
+    itemsProcessed_name_cluster = 0;
+
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    const data_configFile = JSON.parse(fileContents);
+    ////take cluster name from the file config
+    const clusters = data_configFile.clusters;
+    console.log(chalk.green("Please choose the cluster to Connect \n"));
+    clusters.forEach(myFunction_choose_cluster);
+
+    function myFunction_choose_cluster(item, index, arr) {
+      console.log(
+        chalk.blue(`To Connect a cluster for ${item} enter ${index}`)
+      );
+      itemsProcessed_name_cluster += 1;
+      //console.log(itemsProcessed_name_cluster);
+      //console.log(arr.length);
+
+      if (itemsProcessed_name_cluster === arr.length) {
+        console.log(
+          chalk.green(`To Connect a new "cluster name" enter ${index + 1}`)
+        );
+      }
+    }
+    let index_cluster = prompt();
+    let name_cluster = clusters[index_cluster];
+    if (index_cluster == clusters.length) {
+      console.log(chalk.blue(`Please enter the name of cluster`));
+      name_cluster = prompt();
+    }
+    // console.log("llllllllllllll");
+    // console.log(name_cluster);
+
+    const regions = data_configFile.regions;
+    console.log(chalk.green("Please choose  region \n"));
+    regions.forEach(myFunction_choose_region);
+    function myFunction_choose_region(item, index, arr) {
+      console.log(chalk.blue(`To create a cluster in ${item} enter ${index}`));
+    }
+    let region = prompt();
+
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", [
+      `eksctl utils write-kubeconfig --cluster=${name_cluster} --region ${regions[region]}`,
+    ]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+}
+
 module.exports.Switched_context_sso = Switched_context_sso;
 module.exports.create_cluster_sso = create_cluster_sso;
 module.exports.delete_cluster_sso = delete_cluster_sso;
@@ -287,3 +431,9 @@ module.exports.create_cluster = create_cluster;
 module.exports.delete_cluster = delete_cluster;
 module.exports.Get_current_context = Get_current_context;
 module.exports.get_contexts = get_contexts;
+module.exports.Create_local_components_clusterA =
+  Create_local_components_clusterA;
+module.exports.Create_local_components_clusterB =
+  Create_local_components_clusterB;
+
+module.exports.Connect_cluster = Connect_cluster;

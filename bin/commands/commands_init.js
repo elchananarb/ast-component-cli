@@ -10,6 +10,7 @@ const os = require("os");
 
 // const AppConfig = require("../models/AppConfig");
 const printData = require("../models/printData");
+const edit_yaml_file = require("../edit-files/edit_yaml_file");
 
 ////const path_yaml = "C:\\Projects\\Js\\lern-js\\my-js-1\\files\\values.yaml";
 const homeDirectory = os.homedir();
@@ -33,6 +34,24 @@ function Install_Operator() {
     child = spawn("powershell.exe", [
       "helm upgrade operator ./operator-helm-chart -i",
     ]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+}
+function unInstall_Operator() {
+  try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    const data_configFile = JSON.parse(fileContents);
+
+    ////take path_astOperator from the data_configFile from the file config
+    const path_astOperator = data_configFile.astOperator;
+    ////Change the directory
+    process.chdir(path_astOperator);
+    // //after Change the directory can be input command in new directory
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", ["helm uninstall operator"]);
   } catch (err) {
     console.error(err);
   }
@@ -114,58 +133,63 @@ function Get_Traefik_url() {
   }
   printData.printData(child);
 }
-
+var traefik = "";
+var traefik2 = "";
 function Update_Url_in_all_components_tags() {
   var scriptOutput = "";
-  console.log("jhh");
+  // console.log("jhh");
   try {
-    const fileContents = fs.readFileSync(config_file_path, "utf8");
-    const data_configFile = JSON.parse(fileContents);
-
     var spawn = require("child_process").spawn,
       child;
-
-    child = spawn("powershell.exe", ["kubectl get svc | findstr traefik"]);
-    child.stdout.setEncoding("utf8");
-
-    child.stdout.on("data", function (data) {
-      //Here is where the output goes
-      //console.log(chalk.green(data));
-      data = data.toString();
-      console.log(data);
-      scriptOutput += data;
-    });
-
-    child.stderr.setEncoding("utf8");
-    child.stderr.on("data", function (data) {
-      //Here is where the error output goes
-      console.log("stderr: " + data);
-      data = data.toString();
-      scriptOutput += data;
-    });
-
-    child.on("exit", function () {
-      //console.log(scriptOutput);
-      after();
-      console.log(scriptOutput);
-    });
-    child.stdin.end();
+    child = spawn("powershell.exe", [`kubectl get svc | findstr traefik`]);
   } catch (err) {
     console.error(err);
   }
+  extract_all_trafik_A(child);
+
   //printData.printData(child);
 }
 
-function after() {
-  const fileContents = fs.readFileSync(config_file_path, "utf8");
-  const data_configFile = JSON.parse(fileContents);
+function extract_all_trafik_A(child) {
+  var scriptOutput = "";
+  child.stdout.setEncoding("utf8");
 
-  var spawn = require("child_process").spawn,
-    child;
-  child = spawn("powershell.exe", ["kubectl get svc | findstr traefik"]);
+  child.stdout.on("data", function (data) {
+    //Here is where the output goes
+    traefik = data;
+    traefik2 = data.toString();
+
+    val = traefik.replace(/\s\s+/g, " ");
+    //console.log(val);
+    arry_traefik = val.split(" ");
+    //console.log(arry_traefik);
+  });
+
+  child.stderr.setEncoding("utf8");
+  child.stderr.on("data", function (data) {
+    //Here is where the error output goes
+
+    console.log("stderr: " + data);
+
+    data = data.toString();
+    scriptOutput += data;
+  });
+
+  child.on("exit", function () {
+    extract_trafik(arry_traefik);
+    //console.log("Powershell Script finished");
+  });
+  child.stdin.end();
+}
+
+function extract_trafik(arry_traefik) {
+  url_trafik = arry_traefik[3];
+  console.log(url_trafik);
+  edit_yaml_file.Update_Url_in_all_components_tags(url_trafik);
 }
 
 module.exports.Install_Operator = Install_Operator;
+module.exports.unInstall_Operator = unInstall_Operator;
 module.exports.Install_Ast_Components = Install_Ast_Components;
 module.exports.Install_Metrics_Components = Install_Metrics_Components;
 module.exports.Install_the_Policy_Management_Component =

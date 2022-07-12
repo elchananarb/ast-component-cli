@@ -168,7 +168,7 @@ function init_B() {
   jfrog_token = remove_spaces(jfrog_token);
 
   if (jfrog_token.length == 0) {
-    jfrog_token = data_configFile.username;
+    jfrog_token = data_configFile.jfrogToken;
   }
 
   let flag_path_exist = false;
@@ -248,6 +248,7 @@ let configeureNau = {
   astPath: "C:/Users/elchanana/IdeaProjects/ast/helm",
   username: "elchanan.arbiv@checkmarx.com",
   jfrogToken: "",
+  k3dPath: "",
 
   astOperator: "",
   astComponents: "",
@@ -318,25 +319,32 @@ function write_to_file_credentials_for_sso_login() {
       //console.log(result);
       console.log("Created directory sso!");
       console.log("end shlab 1");
-      crete_token_sso_in_cache();
+
+      crete_token_sso_in_cache().then((result_child_crete_token) => {
+        // printData.printData(result_child_crete_token);
+        get_aws_accessToken_from_cache();
+      });
     });
   });
 }
+
 ////######number 2
 function crete_token_sso_in_cache() {
-  console.log("START shlab 2");
+  let myPromise = new Promise((resolve, reject) => {
+    console.log("START shlab 2");
 
-  try {
+    //try {
     var spawn = require("child_process").spawn,
       child;
     child = spawn("powershell.exe", ["aws sso login --profile default"]);
-  } catch (err) {
-    console.error(err);
-  }
-  printData.printData(child);
-  console.log("end shlab 2");
-
-  get_aws_accessToken_from_cache();
+    // } catch (err) {
+    //   console.error(err);
+    // }
+    //printData.printData(child);
+    console.log("end shlab 2");
+    resolve(child);
+  });
+  return myPromise;
 }
 
 ////######number 3
@@ -380,32 +388,38 @@ function write_to_file_config_for_sso_login(sso_file_cache) {
       //??????crete_token_sso_in_cache();
       console.log("end shlab 4");
 
-      get_aws_sso_temporary_credentials(sso_file_cache);
+      get_aws_sso_temporary_credentials(sso_file_cache).then(
+        (result_child_temporary_credentials) => {
+          // printData.printData(result_child_crete_token);
+          Data_for_sso_credenials(result_child_temporary_credentials);
+        }
+      );
     });
   });
 }
 
 //#####number 5### #aws sso get-role..
 function get_aws_sso_temporary_credentials(sso_file_cache) {
-  console.log("START shlab 5");
+  let myPromise = new Promise((resolve, reject) => {
+    console.log("START shlab 5");
 
-  //set to sso config token from the cache
-  sso_format_login.sso_access_token = sso_file_cache.accessToken;
+    //set to sso config token from the cache
+    sso_format_login.sso_access_token = sso_file_cache.accessToken;
+    console.log("mmmmm");
+    console.log(sso_format_login.sso_access_token);
 
-  try {
     var spawn = require("child_process").spawn,
       child;
     child = spawn("powershell.exe", [
       //`eksctl create cluster --name ${clusters[cluster]} --region ${regions[region]} --node-type t3.large --nodes 2 --nodes-min 1 --nodes-max 3`,
       `aws sso get-role-credentials --account-id ${sso_format_login.sso_account_id} --role-name ${sso_format_login.sso_role_name} --access-token ${sso_format_login.sso_access_token} --region ${sso_format_login.sso_region}`,
     ]);
-  } catch (err) {
-    console.error(err);
-  }
-  //printData.printData(child);
-  console.log("end shlab 5");
 
-  Data_for_sso_credenials(child);
+    // printData.printData(child);
+    console.log("end shlab 5");
+    resolve(child);
+  });
+  return myPromise;
 }
 
 //#####number 6 set in .aws credentials ################
@@ -433,6 +447,7 @@ function Data_for_sso_credenials(child) {
   child.on("exit", function () {
     credentials_end = credentials;
     console.log("end shlab 6A");
+    //console.log(credentials_end);
 
     get_crede_s_k_t(credentials_end);
   });
@@ -466,9 +481,9 @@ function get_crede_s_k_t(credentials_end) {
     }
   }
 
-  function simplePrint(item, index, arr) {
-    console.log(index + "for" + item);
-  }
+  // function simplePrint(item, index, arr) {
+  //   console.log(index + "for" + item);
+  // }
 }
 
 /// 6C#### write to aws credentials Mfile login format

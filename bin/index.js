@@ -37,6 +37,14 @@ nautilus
     clear();
     AppConfig.init_B();
   });
+nautilus
+  .command("Create_local_components_cluster")
+  .alias("clc")
+  .description("Create local components cluster from orly")
+  .action(() => {
+    clear();
+    eksctl_commands.Create_local_components_clusterA();
+  });
 
 nautilus
   .command("test_delete_re_af_up_cli_config")
@@ -316,45 +324,12 @@ nautilus
     }
     printData.printData(child);
   });
-
 nautilus
   .command("connect-Cluster")
   .alias("conc")
   .description("connect to Cluster in Aws")
   .action(() => {
-    //const fileContents = fs.readFileSync("./configFile.json", "utf8");
-    const fileContents = fs.readFileSync(config_file_path, "utf8");
-    try {
-      ////take from the file config
-      const data_configFile = JSON.parse(fileContents);
-      ////take cluster name from the file config
-      const clusters = data_configFile.clusters;
-      console.log(chalk.green("Please choose the cluster to Connect \n"));
-      clusters.forEach(myFunction);
-      function myFunction(item, index, arr) {
-        console.log(chalk.blue(`Connect to a cluster ${item} enter ${index}`));
-      }
-      let cluster = prompt();
-
-      const regions = data_configFile.regions;
-      console.log(chalk.green("Please choose  region \n"));
-      regions.forEach(myFunction);
-      function myFunction(item, index, arr) {
-        console.log(
-          chalk.blue(`To Connect a cluster in ${item} enter ${index}`)
-        );
-      }
-      let region = prompt();
-
-      var spawn = require("child_process").spawn,
-        child;
-      child = spawn("powershell.exe", [
-        `eksctl utils write-kubeconfig --cluster=${clusters[cluster]} --region ${regions[region]}`,
-      ]);
-    } catch (err) {
-      console.error(err);
-    }
-    printData.printData(child);
+    eksctl_commands.Connect_cluster();
   });
 
 nautilus
@@ -817,4 +792,44 @@ if (!nautilus.args.length) {
 //     //fs.mkdir(`${homeDirectory}/.nautilus-cli`);
 
 //     //console.log(process.cwd() + `/node_modules`);
+//   });
+
+// nautilus
+//   .command("connect-Cluster_work_old")
+//   .alias("conc")
+//   .description("connect to Cluster in Aws")
+//   .action(() => {
+//     //const fileContents = fs.readFileSync("./configFile.json", "utf8");
+//     const fileContents = fs.readFileSync(config_file_path, "utf8");
+//     try {
+//       ////take from the file config
+//       const data_configFile = JSON.parse(fileContents);
+//       ////take cluster name from the file config
+//       const clusters = data_configFile.clusters;
+//       console.log(chalk.green("Please choose the cluster to Connect \n"));
+//       clusters.forEach(myFunction);
+//       function myFunction(item, index, arr) {
+//         console.log(chalk.blue(`Connect to a cluster ${item} enter ${index}`));
+//       }
+//       let cluster = prompt();
+
+//       const regions = data_configFile.regions;
+//       console.log(chalk.green("Please choose  region \n"));
+//       regions.forEach(myFunction);
+//       function myFunction(item, index, arr) {
+//         console.log(
+//           chalk.blue(`To Connect a cluster in ${item} enter ${index}`)
+//         );
+//       }
+//       let region = prompt();
+
+//       var spawn = require("child_process").spawn,
+//         child;
+//       child = spawn("powershell.exe", [
+//         `eksctl utils write-kubeconfig --cluster=${clusters[cluster]} --region ${regions[region]}`,
+//       ]);
+//     } catch (err) {
+//       console.error(err);
+//     }
+//     printData.printData(child);
 //   });
