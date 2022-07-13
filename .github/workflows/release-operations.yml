@@ -14,6 +14,6 @@ jobs:
           echo ${{ github.event.head_commit.message }}
        
 
-      - run: echo TAG="${{ github.event.head_commit.message }}"  | grep -E v[0-9]+[.][0-9]+[.][0-9]+.* -o >> $GITHUB_ENV 
+      - run: echo "TAG=`${{ github.event.head_commit.message }}  | grep -E v[0-9]+[.][0-9]+[.][0-9]+.* -o`" >> $GITHUB_ENV 
       - run: |
             echo ${{ GITHUB_ENV }}
