@@ -228,6 +228,14 @@ nautilus
     commands_init.Install_Operator();
   });
 nautilus
+  .command("uninstall-Operator")
+  .alias("uno")
+  .description("uninstall Ast Operator")
+  .action(() => {
+    clear();
+    commands_init.unInstall_Operator();
+  });
+nautilus
   .command("Install-Ast-Components")
   .alias("iac")
   .description("Install Ast Components")

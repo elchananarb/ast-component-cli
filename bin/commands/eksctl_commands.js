@@ -18,15 +18,15 @@ let itemsProcessed_name_cluster = 0;
 let cluster;
 let region;
 function Create_local_components_clusterA() {
-  Create_local_components_clusterB().then((resultB) => {
-    console.log(resultB);
-    console.log("BBBBB");
+  // Create_local_components_clusterB().then((resultB) => {
+  //   console.log(resultB);
+  //   console.log("BBBBB");
 
-    Create_local_components_clusterC().then((resultC) => {
-      console.log(resultC);
-      console.log("CCCC");
-    });
+  Create_local_components_clusterC().then((resultC) => {
+    console.log(resultC);
+    console.log("CCCC");
   });
+  //});
 }
 
 function Create_local_components_clusterC() {
@@ -51,12 +51,15 @@ function Create_local_components_clusterC() {
       var spawn = require("child_process").spawn,
         child;
       child = spawn("powershell.exe", [
-        `docker login --username ${username} --password ${password} https://checkmarx.jfrog.io/artifactory/docker ;
+        `docker login --username ${username} --password ${password} https://checkmarx.jfrog.io/artifactory/ast-helm/ ; 
          helm repo add ast https://checkmarx.jfrog.io/artifactory/ast-helm/ --username ${username} --password ${password} ;
          helm repo update;
          helm upgrade operator --install --create-namespace --namespace default ast/operator-helm-chart --set config.domain=127.0.0.1 --set-string config.port="8080" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};
          	kubectl patch sa default -n default -p '"imagePullSecrets": [{"name": "regcred" }]';
-      	helm upgrade --install platform ast/platform-local;$x=1; while ($x -le 14 ) {sleep 2 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be created"}}`,
+      	helm upgrade --install platform ast/platform-local;$x=1; while ($x -le 16 ) {sleep 2 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be created"}};
+        helm upgrade --install core ast/core;$x=1; while ($x -le 36 ) {sleep 2 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be created"}};
+        helm upgrade --install sast ast/sast;$x=1; while ($x -le 49 ) {sleep 2 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be created"}};
+        ;$x=1; while ($x -ge 45 ) {sleep 2 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "We'm almost done! wait for all the pods to run"}}`,
       ]);
       //עשיתיח תנאי למעלה אפשר למחור  להוסיף תנאי שאם אין מספיק פודים שלר ימשיך הלאה ואם כם יחזיר את הריסולב
 

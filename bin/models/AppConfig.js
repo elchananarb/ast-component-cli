@@ -322,7 +322,15 @@ function write_to_file_credentials_for_sso_login() {
 
       crete_token_sso_in_cache().then((result_child_crete_token) => {
         // printData.printData(result_child_crete_token);
-        get_aws_accessToken_from_cache();
+        var accessToken_from_cache = get_aws_accessToken_from_cache();
+        //לבדוק שחוזר מהשורה לפני מהפונקציה ערך לפני שאני שולח הלאה בשורה הבאה
+        console.log("llllllllllllllllllll");
+        console.log("llllllllllllllllllll");
+        console.log("llllllllllllllllllll");
+        console.log("llllllllllllllllllll");
+        console.log("llllllllllllllllllll");
+        console.log(accessToken_from_cache);
+        printdata(accessToken_from_cache);
       });
     });
   });
@@ -330,6 +338,7 @@ function write_to_file_credentials_for_sso_login() {
 
 ////######number 2
 function crete_token_sso_in_cache() {
+  let flag2 = false;
   let myPromise = new Promise((resolve, reject) => {
     console.log("START shlab 2");
 
@@ -344,6 +353,11 @@ function crete_token_sso_in_cache() {
     console.log("end shlab 2");
     resolve(child);
   });
+  //אולי להוסיף פה קריאה לכאש ולבדוק האם השתנה חותמת הזמן ואם כן להמשיך ואם לא להדפיס הודעה אני ממתין שתאשר
+
+  // while (!flag2) {
+  //   console.log("im wating for allow");
+  // }
   return myPromise;
 }
 
@@ -358,7 +372,8 @@ function get_aws_accessToken_from_cache() {
   const data_configFile_sso = JSON.parse(fileContents);
   console.log("end shlab 3A");
 
-  printdata(data_configFile_sso);
+  // printdata(data_configFile_sso);
+  return data_configFile_sso;
 }
 //##folowo to number3
 function printdata(sso_file_cache) {
@@ -429,10 +444,14 @@ var credentials = "";
 var arry_context = [];
 var credentials_end = "";
 function Data_for_sso_credenials(child) {
+  let flag6A = false;
   console.log("START shlab 6A");
 
   child.stdout.setEncoding("utf8");
   child.stdout.on("data", function (data) {
+    flag6A = true;
+    console.log("from data in 6A after START from data in 6A after START");
+    console.log("from data in 6A after START" + data);
     credentials += data;
     arry_context += data;
   });
@@ -448,8 +467,9 @@ function Data_for_sso_credenials(child) {
     credentials_end = credentials;
     console.log("end shlab 6A");
     //console.log(credentials_end);
-
-    get_crede_s_k_t(credentials_end);
+    if (flag6A) {
+      get_crede_s_k_t(credentials_end);
+    }
   });
   child.stdin.end();
 }
@@ -459,7 +479,7 @@ function get_crede_s_k_t(credentials_end) {
 
   let pattern1 = /"[^"]*(?=",)/g;
   let result1 = credentials_end.match(pattern1);
-  console.log(result1);
+  //console.log(result1);
 
   let itemsProcessed = 0;
 
