@@ -3,10 +3,11 @@ name: Release operations
 on:
   push:
     branches:
-      - test_bash 
+      - test_bash  
 
 
 jobs:
+
 
   echo:
     runs-on: ubuntu-latest
