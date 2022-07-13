@@ -51,7 +51,7 @@ function Create_local_components_clusterC() {
       var spawn = require("child_process").spawn,
         child;
       child = spawn("powershell.exe", [
-        `docker login --username ${username} --password ${password} https://checkmarx.jfrog.io/artifactory/ast-helm/ ; 
+        `docker login --username ${username} --password ${password} https://checkmarx.jfrog.io/artifactory/docker ; 
          helm repo add ast https://checkmarx.jfrog.io/artifactory/ast-helm/ --username ${username} --password ${password} ;
          helm repo update;
          helm upgrade operator --install --create-namespace --namespace default ast/operator-helm-chart --set config.domain=127.0.0.1 --set-string config.port="8080" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};
