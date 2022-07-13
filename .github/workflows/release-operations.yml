@@ -1,0 +1,18 @@
+name: Release operations
+
+on:
+  push:
+    branches:
+      - test_bash 
+
+
+jobs:
+
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+#         echo ${{ github.event.head_commit.message }}
+#      - run: echo 'TAG="${{ github.event.head_commit.message }}" | grep -E v[0-9]+[.][0-9]+[.][0-9]+.* -o' >> $GITHUB_ENV
+#      - run: |
+#          echo ${{ env.TAG }} 
