@@ -320,17 +320,43 @@ function write_to_file_credentials_for_sso_login() {
       console.log("Created directory sso!");
       console.log("end shlab 1");
 
-      crete_token_sso_in_cache().then((result_child_crete_token) => {
+      crete_token_sso_in_cache().then((child_crete_token) => {
+        let flag1bn = false;
+        console.log("START shlab 1bn");
+
+        child_crete_token.stdout.setEncoding("utf8");
+        child_crete_token.stdout.on("data", function (data) {
+          flag1bn = true;
+          console.log("from data in 1bn");
+          console.log("from data in 6A after START" + data);
+          credentials += data;
+          arry_context += data;
+        });
+
+        child_crete_token.stderr.setEncoding("utf8");
+        child_crete_token.stderr.on("data", function (data) {
+          console.log("stderr: " + data);
+          data = data.toString();
+          credentials += data;
+        });
+
+        child_crete_token.on("exit", function () {
+          credentials_end = credentials;
+          console.log("end shlab 1bn");
+          //console.log(credentials_end);
+          if (flag1bn) {
+            console.log("1bn1bn1bn");
+
+            var accessToken_from_cache = get_aws_accessToken_from_cache();
+            //לבדוק שחוזר מהשורה לפני מהפונקציה ערך לפני שאני שולח הלאה בשורה הבאה
+
+            console.log(accessToken_from_cache);
+            printdata(accessToken_from_cache);
+          }
+        });
+        child_crete_token.stdin.end();
+
         // printData.printData(result_child_crete_token);
-        var accessToken_from_cache = get_aws_accessToken_from_cache();
-        //לבדוק שחוזר מהשורה לפני מהפונקציה ערך לפני שאני שולח הלאה בשורה הבאה
-        console.log("llllllllllllllllllll");
-        console.log("llllllllllllllllllll");
-        console.log("llllllllllllllllllll");
-        console.log("llllllllllllllllllll");
-        console.log("llllllllllllllllllll");
-        console.log(accessToken_from_cache);
-        printdata(accessToken_from_cache);
       });
     });
   });
@@ -352,6 +378,8 @@ function crete_token_sso_in_cache() {
     //printData.printData(child);
     console.log("end shlab 2");
     resolve(child);
+    // console.log(child);
+    // console.log(child);
   });
   //אולי להוסיף פה קריאה לכאש ולבדוק האם השתנה חותמת הזמן ואם כן להמשיך ואם לא להדפיס הודעה אני ממתין שתאשר
 
@@ -407,6 +435,7 @@ function write_to_file_config_for_sso_login(sso_file_cache) {
         (result_child_temporary_credentials) => {
           // printData.printData(result_child_crete_token);
           Data_for_sso_credenials(result_child_temporary_credentials);
+          console.log("myby tomoro");
         }
       );
     });
@@ -468,6 +497,8 @@ function Data_for_sso_credenials(child) {
     console.log("end shlab 6A");
     //console.log(credentials_end);
     if (flag6A) {
+      console.log("zbzbzbzbzbzbzb");
+
       get_crede_s_k_t(credentials_end);
     }
   });

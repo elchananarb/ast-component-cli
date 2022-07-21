@@ -24,113 +24,35 @@ const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
 console.log(
   chalk.red((child = spawn("powershell.exe", ["figlet 'NAUTILUS'"])))
 );
+//console.log((child = spawn("powershell.exe", ["figlet 'NAUTILUS'"])));
 
 //nautilus.usage("<command>");
 //nautilus.usage("<command> <option> <name>");
 ////node .\bin\index.js
 
 nautilus
-  .command("init_B")
-  .alias("ib")
-  .description("version B create a directory named .nautilus-cli")
-  .action(() => {
-    clear();
-    AppConfig.init_B();
-  });
-nautilus
-  .command("Create_local_components_cluster")
+  .command("Create_local_components_cluster_orly")
   .alias("clc")
   .description("Create local components cluster from orly")
   .action(() => {
     clear();
     eksctl_commands.Create_local_components_clusterA();
   });
-
 nautilus
-  .command("test_delete_re_af_up_cli_config")
-  .alias("dupcon")
-  .action(() => {
-    AppConfig.delete_from_config_file("", "astPath");
-  });
-nautilus
-  .command("test_add_re_af_up_cli_config")
-  .alias("aupcon")
-  .action(() => {
-    const where = "astOperator2";
-    const value = "efdscdxz22";
-    AppConfig.add_to_config_file(where, value);
-  });
-nautilus
-  .command("test_up_and_change_re_af_up_cli_config")
-  .alias("uupcon")
-  .action(() => {
-    const where = "astPath";
-    const value = "efdscdx111";
-    AppConfig.up_and_change_re_af_up_cli_config(where, value);
-  });
-
-nautilus
-  .command("up_cli_config")
-  .usage("<command> -n <name> -v <value>")
-  .alias("upcli")
-  .option("-w, --where <name>", "name")
-  .option("-v, --value <value>", "value")
-  .option("-r, --remove [remove]", "remove")
-  .option("-a, --add [add]", "add")
-  //צריך לסיים כאם את האופציה של up
-  //.option("-u, --up [up]", "up")
-  .description("set env for switch from local to remote & -1")
-  .action((option) => {
-    //pr(option);
-    if (!option.where) {
-      console.log("option '-w, --where <where>' argument missing");
-      process.exit(1);
-    }
-    if (!option.value) {
-      console.log("option '-v, --value <value>' argument missing");
-      process.exit(1);
-    }
-    if (!option.remove && !option.add) {
-      console.log("option '-r or -a  argument missing");
-      process.exit(1);
-    }
-    AppConfig.up_cli_config(option);
-  });
-
-// nautilus
-//   .command("up_cli_config")
-//   .usage("<command> -n <name> -v <value>")
-//   .alias("upcli")
-//   .option("-n, --name_env <name env>", "name env")
-
-//   // .option("-v, --value <value>", "value")
-//   // .option("-r, --remove")
-//   // .option("-a, --add")
-//   .description("update config file cli e.g add region or name cluster")
-//   .action(() => {
-//     // if (option.where_to_up) {
-//     //   //console.log("name:", option.name_env);
-//     // } else {
-//     //   console.log(
-//     //     "option '-w, --where_to_up <clusters || region>' argument missing"
-//     //   );
-//     //   process.exit(1);
-//     // }
-//     if (option.name_env) {
-//       //console.log("value:", option.value);
-//     } else {
-//       console.log("option '-v, --value <value>' argument missing");
-//       process.exit(1);
-//     }
-//     AppConfig.up_cli_config(option);
-//   });
-nautilus
-  .command("delete_from_config")
-  .alias("dfc")
-  .description("delete_from_config if is arry lebntim.....")
+  .command("Create_local_orly_without_met_inte")
+  .alias("clcw")
+  .description("Create local from orly_without_metrics_integretions")
   .action(() => {
     clear();
-    AppConfig.delete_from_config_file("clusters", "N-Ely");
+    eksctl_commands.Create_local_components_cluster_orly_without_metrics_And_integretions();
+  });
+nautilus
+  .command("uninstall_all")
+  .alias("clcw")
+  .description("uninstall all pods in cluster")
+  .action(() => {
+    clear();
+    eksctl_commands.uninstall_all();
   });
 
 nautilus
@@ -140,25 +62,6 @@ nautilus
   .action(() => {
     clear();
     AppConfig.write_to_file_credentials_for_sso_login();
-  });
-
-nautilus
-  .version("0.1.0")
-  .command("switch")
-  .usage("<command> <option> <name>")
-  .alias("s")
-  .option("-r, --remote <name>", "command to switch to remote")
-  .option("-l, --local <name>", "command to switch to local")
-  .action((option) => {
-    if (option.remote) {
-      console.log("remote:", option.remote);
-      Switch.switch_to_remote(option);
-    }
-    if (option.local) {
-      console.log("local:", option.local);
-      Switch.switch_to_local(option);
-    }
-    //console.log(program);
   });
 
 nautilus
@@ -278,64 +181,27 @@ nautilus
     clear();
     commands_init.Update_Url_in_all_components_tags();
   });
-
 nautilus
-  .command("Ast-Upgrade")
-  .alias("au")
-  .description("Ast Upgrade")
+  .command("from_orly_Update_Url_in_all_components_tags")
+  .alias("fuuc")
+  //צ במקרה שזה כמו של אורלי
+  .description("from orly Update Url in all components tags")
   .action(() => {
-    const fileContents = fs.readFileSync(config_file_path, "utf8");
-    try {
-      ////take from the file config
-      const data_configFile = JSON.parse(fileContents);
-
-      ////take astPath from the data_configFile from the file config
-      const astPath = data_configFile.astPath;
-      ////Change the directory
-      process.chdir(astPath);
-      // //after Change the directory can be input command in new directory
-      var spawn = require("child_process").spawn,
-        child;
-      child = spawn("powershell.exe", [
-        "helm dep up ast; helm upgrade main ast -f ./ast/values-customer.yaml -f ./ast/values-release-tags.yaml",
-      ]);
-    } catch (err) {
-      console.error(err);
-    }
-    printData.printData(child);
+    clear();
+    commands_init.Update_Url_in_all_components_tags_orly();
   });
 
 nautilus
-  .command("Build-Cluster")
-  .alias("bc")
-  .description("Build Cluster in Aws")
-  .action(() => {
-    const fileContents = fs.readFileSync(config_file_path, "utf8");
-    try {
-      ////take from the file config
-      const data_configFile = JSON.parse(fileContents);
-      ////take astPath from the data_configFile from the file config
-      const astPath = data_configFile.astPath;
-      console.log(astPath);
-      ////Change the directory
-      //process.chdir("C:/Users/elchanana/IdeaProjects/ast/helm");
-      process.chdir(astPath);
-      //console.log("Starting directory: " + process.cwd());
-      // //after Change the directory can be input command in new directory
-      var spawn = require("child_process").spawn,
-        child;
-      child = spawn("powershell.exe", [
-        "make ecr; helm dep up ast; helm upgrade main ast -f ./ast/values-customer.yaml -f ./ast/values-release-tags.yaml --install",
-      ]);
-    } catch (err) {
-      console.error(err);
-    }
-    printData.printData(child);
-  });
-nautilus
-  .command("connect-Cluster")
+  .command("connect_Cluster")
   .alias("conc")
   .description("connect to Cluster in Aws")
+  .action(() => {
+    eksctl_commands.Connect_cluster();
+  });
+nautilus
+  .command("to_delete_context")
+  .alias("tdc")
+  .description("to delete context config")
   .action(() => {
     eksctl_commands.Connect_cluster();
   });
@@ -370,90 +236,6 @@ nautilus
   .action(() => {
     eksctl_commands.get_contexts();
   });
-
-nautilus
-  .command("Delete-Service")
-  .description("Delete Service")
-  .alias("dels")
-  .action(() => {
-    //const fileContents = fs.readFileSync("./configFile.json", "utf8");
-    const fileContents = fs.readFileSync(config_file_path, "utf8");
-    try {
-      ////take from the file config
-      const data_configFile = JSON.parse(fileContents);
-      ////take Service name from the file config
-      const services = data_configFile.services;
-      const services_arry = Object(services);
-
-      //console.log(typeof services_arry);
-      console.log(services_arry[0]["name"]);
-
-      //const service = services.firstOrDefault((x) => x.name == item);
-      //console.log(services[0]);
-
-      console.log(chalk.green("Please enter the number \n"));
-      services_arry.forEach(myFunction);
-      function myFunction(item, index, arr) {
-        console.log(
-          chalk.blue(`To delete a service  ${item["name"]} enter ${index}`)
-        );
-      }
-      let service = prompt();
-      var spawn = require("child_process").spawn,
-        child;
-      child = spawn("powershell.exe", [
-        `Deleting Service ${services_arry[service]["name"]}; kubectl delete deployment main-${services_arry[service]["name"]}`,
-      ]);
-    } catch (err) {
-      console.error(err);
-    }
-    printData.printData(child);
-  });
-
-nautilus
-  .command("Deploy-Service")
-  .description("Deploy Service")
-  .alias("deps")
-  .action(() => {
-    console.log("in construction");
-    //
-    // //const fileContents = fs.readFileSync("./configFile.json", "utf8");
-    // const fileContents = fs.readFileSync(
-    //   config_file_path,
-    //   "utf8"
-    // );
-    // try {
-    //   ////take from the file config
-    //   const data_configFile = JSON.parse(fileContents);
-    //   ////take astPath from the data_configFile from the file config
-    //   const services = data_configFile.services;
-    //   const services_arry = Object(services);
-
-    //   console.log(typeof services_arry);
-    //   console.log(services_arry[0]["name"]);
-
-    //   //const service = services.firstOrDefault((x) => x.name == item);
-    //   //console.log(services[0]);
-
-    //   console.log("Please enter the number \n");
-    //   services_arry.forEach(myFunction);
-    //   function myFunction(item, index, arr) {
-    //     console.log(
-    //       chalk.blue(`To delete a service  ${item["name"]} enter ${index}`)
-    //     );
-    //   }
-    //   let service = prompt();
-    //   var spawn = require("child_process").spawn,
-    //     child;
-    //   child = spawn("powershell.exe", [
-    //     `Deleting Service ${services_arry[service]["name"]}; kubectl delete deployment main-${services_arry[service]["name"]}`,
-    //   ]);
-    // } catch (err) {
-    //   console.error(err);
-    // }
-    // printData.printData(child);
-  });
-
 nautilus
   .command("init")
   .alias("i")
@@ -462,39 +244,274 @@ nautilus
     clear();
     AppConfig.Config_nautilus_cli();
   });
+
+// //from here less use
+
 // nautilus
-//   .command("rmdir")
-//   .argument("<username>", "user to login")
-//   .argument("[password]", "password for user, if required", "no password given")
-//   .action((username, password) => {
-//     console.log("username:", username);
-//     console.log("password:", password);
+//   .version("0.1.0")
+//   .command("switch")
+//   .usage("<command> <option> <name>")
+//   .alias("s")
+//   .option("-r, --remote <name>", "command to switch to remote")
+//   .option("-l, --local <name>", "command to switch to local")
+//   .action((option) => {
+//     if (option.remote) {
+//       console.log("remote:", option.remote);
+//       Switch.switch_to_remote(option);
+//     }
+//     if (option.local) {
+//       console.log("local:", option.local);
+//       Switch.switch_to_local(option);
+//     }
+//     //console.log(program);
 //   });
 
 // nautilus
-//   .command("switched-context")
-//   .alias("sc")
-//   .description("Switched to another context kubectl")
+//   .command("test_delete_re_af_up_cli_config")
+//   .alias("dupcon")
+//   .action(() => {
+//     AppConfig.delete_from_config_file("", "astPath");
+//   });
+// nautilus
+//   .command("test_add_re_af_up_cli_config")
+//   .alias("aupcon")
+//   .action(() => {
+//     const where = "astOperator2";
+//     const value = "efdscdxz22";
+//     AppConfig.add_to_config_file(where, value);
+//   });
+// nautilus
+//   .command("test_up_and_change_re_af_up_cli_config")
+//   .alias("uupcon")
+//   .action(() => {
+//     const where = "astPath";
+//     const value = "efdscdx111";
+//     AppConfig.up_and_change_re_af_up_cli_config(where, value);
+//   });
+
+// nautilus
+//   .command("up_cli_config")
+//   .usage("<command> -n <name> -v <value>")
+//   .alias("upcli")
+//   .option("-w, --where <name>", "name")
+//   .option("-v, --value <value>", "value")
+//   .option("-r, --remove [remove]", "remove")
+//   .option("-a, --add [add]", "add")
+//   //צריך לסיים כאם את האופציה של up
+//   //.option("-u, --up [up]", "up")
+//   .description("set env for switch from local to remote & -1")
+//   .action((option) => {
+//     //pr(option);
+//     if (!option.where) {
+//       console.log("option '-w, --where <where>' argument missing");
+//       process.exit(1);
+//     }
+//     if (!option.value) {
+//       console.log("option '-v, --value <value>' argument missing");
+//       process.exit(1);
+//     }
+//     if (!option.remove && !option.add) {
+//       console.log("option '-r or -a  argument missing");
+//       process.exit(1);
+//     }
+//     AppConfig.up_cli_config(option);
+//   });
+
+// nautilus
+//   .command("delete_from_config")
+//   .alias("dfc")
+//   .description("delete_from_config if is arry lebntim.....")
 //   .action(() => {
 //     clear();
-//     eksctl_commands............();
+//     AppConfig.delete_from_config_file("clusters", "N-Ely");
 //   });
 
-nautilus
-  .command("delete-cluster-gui")
-  .description("delete cluster with window")
-  .alias("dcg")
-  .action(() => {
-    const os = require("os");
-    temp = `${process.cwd()}/powerShellScript/deleteCluster.ps1`;
-    console.log(temp);
+// nautilus
+//   .command("init_B")
+//   .alias("ib")
+//   .description("version B create a directory named .nautilus-cli")
+//   .action(() => {
+//     clear();
+//     AppConfig.init_B();
+//   });
 
-    var spawn = require("child_process").spawn,
-      child;
+//   ///from noe less importent
+//   nautilus
+//     .command("aaaa")
+//     .description("display help for command")
+//     .alias("a")
+//     .action(() => {
+//       console.log("pppp");
+//       const os = require("os");
+//       temp = `${process.cwd()}/powerShellScript/deleteCluster.ps1`;
+//       console.log(temp);
 
-    child = spawn("powershell.exe", [`${temp}`]);
-    printData.printData(child);
-  });
+//       var spawn = require("child_process").spawn,
+//         child;
+
+//       child = spawn("powershell.exe", ["ls"]);
+//       printData.printData(child);
+//     });
+
+// nautilus
+//   .command("init")
+//   .alias("i")
+//   .description("create a directory named .nautilus-cli")
+//   .action(() => {
+//     clear();
+//     AppConfig.Config_nautilus_cli();
+//   });
+//   nautilus
+//     .command("Ast-Upgrade")
+//     .alias("au")
+//     .description("Ast Upgrade")
+//     .action(() => {
+//       const fileContents = fs.readFileSync(config_file_path, "utf8");
+//       try {
+//         ////take from the file config
+//         const data_configFile = JSON.parse(fileContents);
+
+//         ////take astPath from the data_configFile from the file config
+//         const astPath = data_configFile.astPath;
+//         ////Change the directory
+//         process.chdir(astPath);
+//         // //after Change the directory can be input command in new directory
+//         var spawn = require("child_process").spawn,
+//           child;
+//         child = spawn("powershell.exe", [
+//           "helm dep up ast; helm upgrade main ast -f ./ast/values-customer.yaml -f ./ast/values-release-tags.yaml",
+//         ]);
+//       } catch (err) {
+//         console.error(err);
+//       }
+//       printData.printData(child);
+//     });
+
+//   nautilus
+//     .command("Build-Cluster")
+//     .alias("bc")
+//     .description("Build Cluster in Aws")
+//     .action(() => {
+//       const fileContents = fs.readFileSync(config_file_path, "utf8");
+//       try {
+//         ////take from the file config
+//         const data_configFile = JSON.parse(fileContents);
+//         ////take astPath from the data_configFile from the file config
+//         const astPath = data_configFile.astPath;
+//         console.log(astPath);
+//         ////Change the directory
+//         //process.chdir("C:/Users/elchanana/IdeaProjects/ast/helm");
+//         process.chdir(astPath);
+//         //console.log("Starting directory: " + process.cwd());
+//         // //after Change the directory can be input command in new directory
+//         var spawn = require("child_process").spawn,
+//           child;
+//         child = spawn("powershell.exe", [
+//           "make ecr; helm dep up ast; helm upgrade main ast -f ./ast/values-customer.yaml -f ./ast/values-release-tags.yaml --install",
+//         ]);
+//       } catch (err) {
+//         console.error(err);
+//       }
+//       printData.printData(child);
+//     });
+// nautilus
+//   .command("Delete-Service")
+//   .description("Delete Service")
+//   .alias("dels")
+//   .action(() => {
+//     //const fileContents = fs.readFileSync("./configFile.json", "utf8");
+//     const fileContents = fs.readFileSync(config_file_path, "utf8");
+//     try {
+//       ////take from the file config
+//       const data_configFile = JSON.parse(fileContents);
+//       ////take Service name from the file config
+//       const services = data_configFile.services;
+//       const services_arry = Object(services);
+
+//       //console.log(typeof services_arry);
+//       console.log(services_arry[0]["name"]);
+
+//       //const service = services.firstOrDefault((x) => x.name == item);
+//       //console.log(services[0]);
+
+//       console.log(chalk.green("Please enter the number \n"));
+//       services_arry.forEach(myFunction);
+//       function myFunction(item, index, arr) {
+//         console.log(
+//           chalk.blue(`To delete a service  ${item["name"]} enter ${index}`)
+//         );
+//       }
+//       let service = prompt();
+//       var spawn = require("child_process").spawn,
+//         child;
+//       child = spawn("powershell.exe", [
+//         `Deleting Service ${services_arry[service]["name"]}; kubectl delete deployment main-${services_arry[service]["name"]}`,
+//       ]);
+//     } catch (err) {
+//       console.error(err);
+//     }
+//     printData.printData(child);
+//   });
+
+// nautilus
+//   .command("Deploy-Service")
+//   .description("Deploy Service")
+//   .alias("deps")
+//   .action(() => {
+//     console.log("in construction");
+//     //
+//     // //const fileContents = fs.readFileSync("./configFile.json", "utf8");
+//     // const fileContents = fs.readFileSync(
+//     //   config_file_path,
+//     //   "utf8"
+//     // );
+//     // try {
+//     //   ////take from the file config
+//     //   const data_configFile = JSON.parse(fileContents);
+//     //   ////take astPath from the data_configFile from the file config
+//     //   const services = data_configFile.services;
+//     //   const services_arry = Object(services);
+
+//     //   console.log(typeof services_arry);
+//     //   console.log(services_arry[0]["name"]);
+
+//     //   //const service = services.firstOrDefault((x) => x.name == item);
+//     //   //console.log(services[0]);
+
+//     //   console.log("Please enter the number \n");
+//     //   services_arry.forEach(myFunction);
+//     //   function myFunction(item, index, arr) {
+//     //     console.log(
+//     //       chalk.blue(`To delete a service  ${item["name"]} enter ${index}`)
+//     //     );
+//     //   }
+//     //   let service = prompt();
+//     //   var spawn = require("child_process").spawn,
+//     //     child;
+//     //   child = spawn("powershell.exe", [
+//     //     `Deleting Service ${services_arry[service]["name"]}; kubectl delete deployment main-${services_arry[service]["name"]}`,
+//     //   ]);
+//     // } catch (err) {
+//     //   console.error(err);
+//     // }
+//     // printData.printData(child);
+//   });
+
+// nautilus
+//   .command("delete-cluster-gui")
+//   .description("delete cluster with window")
+//   .alias("dcg")
+//   .action(() => {
+//     const os = require("os");
+//     temp = `${process.cwd()}/powerShellScript/deleteCluster.ps1`;
+//     console.log(temp);
+
+//     var spawn = require("child_process").spawn,
+//       child;
+
+//     child = spawn("powershell.exe", [`${temp}`]);
+//     printData.printData(child);
+//   });
 
 nautilus
   .command("-help")
@@ -513,27 +530,28 @@ nautilus
     printData.printData(child);
   });
 
-nautilus
-  .command("aaaa")
-  .description("display help for command")
-  .alias("a")
-  .action(() => {
-    console.log("pppp");
-    const os = require("os");
-    temp = `${process.cwd()}/powerShellScript/deleteCluster.ps1`;
-    console.log(temp);
-
-    var spawn = require("child_process").spawn,
-      child;
-
-    child = spawn("powershell.exe", ["ls"]);
-    printData.printData(child);
-  });
-
 nautilus.parse(process.argv);
 if (!nautilus.args.length) {
   nautilus.help();
 }
+
+// nautilus
+//   .command("rmdir")
+//   .argument("<username>", "user to login")
+//   .argument("[password]", "password for user, if required", "no password given")
+//   .action((username, password) => {
+//     console.log("username:", username);
+//     console.log("password:", password);
+//   });
+
+// nautilus
+//   .command("switched-context")
+//   .alias("sc")
+//   .description("Switched to another context kubectl")
+//   .action(() => {
+//     clear();
+//     eksctl_commands............();
+//   });
 
 // const cluster = prompt(
 //   'Please enter the command \n To create a cluster insert "1"  \n To delete a cluster insert     "2" \n To delete delete service Enter "3":\n '
@@ -840,4 +858,32 @@ if (!nautilus.args.length) {
 //       console.error(err);
 //     }
 //     printData.printData(child);
+//   });
+
+// nautilus
+//   .command("up_cli_config")
+//   .usage("<command> -n <name> -v <value>")
+//   .alias("upcli")
+//   .option("-n, --name_env <name env>", "name env")
+
+//   // .option("-v, --value <value>", "value")
+//   // .option("-r, --remove")
+//   // .option("-a, --add")
+//   .description("update config file cli e.g add region or name cluster")
+//   .action(() => {
+//     // if (option.where_to_up) {
+//     //   //console.log("name:", option.name_env);
+//     // } else {
+//     //   console.log(
+//     //     "option '-w, --where_to_up <clusters || region>' argument missing"
+//     //   );
+//     //   process.exit(1);
+//     // }
+//     if (option.name_env) {
+//       //console.log("value:", option.value);
+//     } else {
+//       console.log("option '-v, --value <value>' argument missing");
+//       process.exit(1);
+//     }
+//     AppConfig.up_cli_config(option);
 //   });
