@@ -121,36 +121,44 @@ function Install_the_Policy_Management_Component() {
 }
 
 function Get_Traefik_url() {
-  try {
+  let myPromise = new Promise((resolve, reject) => {
+    //try {
     const fileContents = fs.readFileSync(config_file_path, "utf8");
     const data_configFile = JSON.parse(fileContents);
 
     var spawn = require("child_process").spawn,
       child;
     child = spawn("powershell.exe", ["kubectl get svc | findstr traefik"]);
-  } catch (err) {
-    console.error(err);
-  }
-  printData.printData(child);
+    // } catch (err) {
+    //   console.error(err);
+    // }
+
+    //printData.printData(child);
+    var trafik = extract_all_trafik_A(child);
+    if (typeof trafik !== "undefined") {
+      resolve(trafik);
+    }
+  });
+  return myPromise;
 }
 var traefik = "";
 var traefik2 = "";
 function Update_Url_in_all_components_tags() {
-  var scriptOutput = "";
-  // console.log("jhh");
-  try {
-    var spawn = require("child_process").spawn,
-      child;
-    child = spawn("powershell.exe", [`kubectl get svc | findstr traefik`]);
-  } catch (err) {
-    console.error(err);
-  }
-  extract_all_trafik_A(child);
-
-  //printData.printData(child);
+  Get_Traefik_url().then((trafik_for_up) => {
+    console.log("ocell");
+    console.log(trafik_for_up);
+    edit_yaml_file.Update_Url_in_all_components_tags(trafik_for_up);
+  });
+}
+function Update_Url_in_all_components_tags_orly() {
+  Get_Traefik_url().then((trafik_for_up) => {
+    edit_yaml_file.Update_Url_in_all_components_tags_orly(trafik_for_up);
+  });
 }
 
 function extract_all_trafik_A(child) {
+  console.log("extract_all_trafik_A");
+
   var scriptOutput = "";
   child.stdout.setEncoding("utf8");
 
@@ -176,7 +184,7 @@ function extract_all_trafik_A(child) {
   });
 
   child.on("exit", function () {
-    extract_trafik(arry_traefik);
+    return extract_trafik(arry_traefik);
     //console.log("Powershell Script finished");
   });
   child.stdin.end();
@@ -184,8 +192,9 @@ function extract_all_trafik_A(child) {
 
 function extract_trafik(arry_traefik) {
   url_trafik = arry_traefik[3];
-  console.log(url_trafik);
-  edit_yaml_file.Update_Url_in_all_components_tags(url_trafik);
+  console.log(chalk.green(url_trafik));
+  return url_trafik;
+  //edit_yaml_file.Update_Url_in_all_components_tags(url_trafik);
 }
 
 module.exports.Install_Operator = Install_Operator;
@@ -197,3 +206,5 @@ module.exports.Install_the_Policy_Management_Component =
 module.exports.Get_Traefik_url = Get_Traefik_url;
 module.exports.Update_Url_in_all_components_tags =
   Update_Url_in_all_components_tags;
+module.exports.Update_Url_in_all_components_tags_orly =
+  Update_Url_in_all_components_tags_orly;
