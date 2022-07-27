@@ -157,7 +157,7 @@ function Update_Url_in_all_components_tags_orly() {
 }
 
 function extract_all_trafik_A(child) {
-  console.log("extract_all_trafik_A");
+  // console.log("extract_all_trafik_A");
 
   var scriptOutput = "";
   child.stdout.setEncoding("utf8");
@@ -196,7 +196,9 @@ function extract_trafik(arry_traefik) {
   return url_trafik;
   //edit_yaml_file.Update_Url_in_all_components_tags(url_trafik);
 }
-
+function to_delete_check_test_cli(arry_traefik) {
+  return arry_traefik;
+}
 module.exports.Install_Operator = Install_Operator;
 module.exports.unInstall_Operator = unInstall_Operator;
 module.exports.Install_Ast_Components = Install_Ast_Components;
@@ -208,3 +210,4 @@ module.exports.Update_Url_in_all_components_tags =
   Update_Url_in_all_components_tags;
 module.exports.Update_Url_in_all_components_tags_orly =
   Update_Url_in_all_components_tags_orly;
+module.exports.to_delete_check_test_cli = to_delete_check_test_cli;

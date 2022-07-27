@@ -18,15 +18,14 @@ let itemsProcessed_name_cluster = 0;
 let cluster;
 let region;
 function Create_local_components_clusterA() {
-  // Create_local_components_clusterB().then((resultB) => {
-  //   console.log(resultB);
-  //   console.log("BBBBB");
-
-  Create_local_components_clusterC().then((resultC) => {
-    console.log(resultC);
-    console.log("CCCC");
+  Create_local_components_clusterB().then((resultB) => {
+    console.log(resultB);
+    console.log("BBBBB");
+    Create_local_components_clusterC().then((resultC) => {
+      console.log(resultC);
+      console.log("CCCC");
+    });
   });
-  // });
 }
 
 function Create_local_components_clusterC() {
@@ -57,15 +56,14 @@ function Create_local_components_clusterC() {
          helm repo update;
          helm upgrade operator --install --create-namespace --namespace default ast/operator-helm-chart --set config.domain=127.0.0.1 --set-string config.port="8080" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};
          	kubectl patch sa default -n default -p '"imagePullSecrets": [{"name": "regcred" }]';
-      	helm upgrade --install platform ast/platform-local;$x=1; while ($x -le 5 ) {sleep 2 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be created"}};
-        helm upgrade --install core ast/core;$x=1; while ($x -le 20 ) {sleep 2 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be created"}};
-        helm upgrade --install sast ast/sast;$x=1; while ($x -le 30 ) {sleep 2 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be created"}};
-        ;$x=1; while ($x -ge 25 ) {sleep 2 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "We'm almost done! wait for all the pods to run"}};
+      	helm upgrade --install platform ast/platform-local;$x=1; while ($x -le 11 ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be created"}};
+        helm upgrade --install core ast/core;$x=1; while ($x -le 30 ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be created"}};
+        helm upgrade --install sast ast/sast;$x=1; while ($x -le 41 ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be created"}};
         helm upgrade --install kics ast/kics;
         helm upgrade --install sca ast/sca;
         helm upgrade --install ast-metrics ast/ast-metrics-management;
         helm upgrade --install ast-integrations ast/integrations;
-        $x=1; while ($x -le 65 ) {sleep 2 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be created"}}`,
+        $x=1; while ($x -le 48 ) {sleep 60 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be created"}}`,
       ]);
       //עשיתיח תנאי למעלה אפשר למחור  להוסיף תנאי שאם אין מספיק פודים שלר ימשיך הלאה ואם כם יחזיר את הריסולב
 
@@ -110,9 +108,11 @@ function Create_local_components_cluster_orly_without_metrics_And_integretions()
       	helm upgrade --install platform ast/platform-local;$x=1; while ($x -le 5 ) {sleep 2 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be created"}};
         helm upgrade --install core ast/core;$x=1; while ($x -le 20 ) {sleep 2 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be created"}};
         helm upgrade --install sast ast/sast;$x=1; while ($x -le 30 ) {sleep 2 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be created"}};
-        ;$x=1; while ($x -ge 25 ) {sleep 2 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "We'm almost done! wait for all the pods to run"}};
+        $x=1; while ($x -ge 25 ) {sleep 2 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "We'm almost done! wait for all the pods to run"}};
         helm upgrade --install kics ast/kics;
         helm upgrade --install sca ast/sca;
+        helm upgrade --install ast-integrations ast/integrations;
+
         $x=1; while ($x -le 45 ) {sleep 2 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be created"}}`,
     ]);
     //עשיתיח תנאי למעלה אפשר למחור  להוסיף תנאי שאם אין מספיק פודים שלר ימשיך הלאה ואם כם יחזיר את הריסולב
@@ -133,10 +133,17 @@ function uninstall_all() {
   var spawn = require("child_process").spawn,
     child;
   child = spawn("powershell.exe", [
-    "helm del sast; helm del kiks; helm del core; helm del platform; helm del operator ;helm del ast-integrations ;helm del  ast-metrics",
+    `helm del sast; helm del kiks; helm del core; helm del platform; helm del operator ;helm del ast-integrations ;helm del  ast-metrics;
+    helm  uninstall platform-platform-local;helm  uninstall kics-kics-worker;helm  uninstall sca-sca-webapp;	helm  uninstall sca-sca-worker;
+    helm  uninstall kics-kics-results-processor;helm  uninstall kics-kics-management-writer;helm  uninstall sca-sca-container-results-processor;
+    helm  uninstall sca-sca-results-processor;
+ $x=100; while ($x -ge 10 ) {sleep 40 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be deleted"}}`,
   ]);
   printData.printData(child);
 }
+
+var data_for_create_dev = "";
+var arry_context_for_create_dev = [];
 
 function Create_local_components_clusterB() {
   let myPromise = new Promise((resolve, reject) => {
@@ -161,14 +168,26 @@ function Create_local_components_clusterB() {
       var spawn = require("child_process").spawn,
         child;
       child = spawn("powershell.exe", [
-        'k3d cluster create dev --image rancher/k3s:v1.20.15-k3s1 --k3s-server-arg "--disable=traefik" -p="8080:80@server[0]"',
+        'k3d.exe cluster delete dev; k3d cluster create dev --k3s-arg "--disable=traefik@server:0" --port 8080:80@server:0',
       ]);
-      resolve("ddd");
+      child.stdout.setEncoding("utf8");
+      child.stdout.on("data", function (data) {
+        data_for_create_dev += data;
+        arry_context_for_create_dev += data;
+      });
+
+      child.stderr.setEncoding("utf8");
+      child.stderr.on("data", function (data) {
+        console.log("stderr: " + data);
+        data = data.toString();
+        data_for_create_dev += data;
+      });
+
+      child.on("exit", function () {
+        resolve("ddd");
+      });
+      child.stdin.end();
     }
-    // } catch (err) {
-    //   console.error(err);
-    //   reject();
-    // }
     printData.printData(child);
   });
   return myPromise;

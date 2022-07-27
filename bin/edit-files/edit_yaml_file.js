@@ -37,11 +37,13 @@ function Change_Operator_values_Tag() {
     const doc = yaml.load(fs.readFileSync(path_yaml_astOperator, "utf8"));
     let data = doc;
 
-    var index = "ast-operator";
-    data[index].image.tag = tag;
+    ////check if we need the change the "tag" to "operator-namespaced-stable-v35";
+    // var index = "ast-operator";
+    // data[index].image.tag = tag;
 
-    var index2 = "image";
-    data[index2].tag = tag;
+    // var index2 = "image";
+    // data[index2].tag = tag;
+    ////end check "tag"
 
     var index3 = "config";
     data[index3].port = port;
@@ -94,7 +96,7 @@ function Update_Url_in_all_components_tags(trafik_url) {
     console.log(chalk.blue(`The file "${path_yaml_astComponents}"`));
     console.log(chalk.green("was successfully updated"));
 
-    ////Change the directory
+    ////Change the directory to up astComponents
     process.chdir(path_to_up_astComponents);
     // //after Change the directory can be input command in new directory
     var spawn = require("child_process").spawn,
@@ -116,7 +118,7 @@ function Update_Url_in_all_components_tags(trafik_url) {
     console.log(chalk.blue(`The file "${path_yaml_astOperator}"`));
     console.log(chalk.green("was successfully updated"));
 
-    //Change the directory
+    //Change the directory to uo ast operator
     process.chdir(path_astOperator);
     // //after Change the directory can be input command in new directory
     var spawn = require("child_process").spawn,
@@ -146,7 +148,7 @@ function Update_Url_in_all_components_tags(trafik_url) {
     console.log(chalk.blue(`The file "${path_yaml_componenIntegration}"`));
     console.log(chalk.green("was successfully updated"));
 
-    ////Change the directory
+    ////Change the directory to component-integration
     process.chdir(path_to_up_componenIntegration);
     // //after Change the directory can be input command in new directory
     var spawn = require("child_process").spawn,

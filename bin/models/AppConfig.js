@@ -304,6 +304,7 @@ let aws_credentials_ = {
   username: "elchanan.arbiv@checkmarx.com",
   jfrogToken: "",
 };
+let flag_if_Successully = false;
 
 //##########number 1
 function write_to_file_credentials_for_sso_login() {
@@ -328,9 +329,13 @@ function write_to_file_credentials_for_sso_login() {
         child_crete_token.stdout.on("data", function (data) {
           flag1bn = true;
           console.log("from data in 1bn");
-          console.log("from data in 6A after START" + data);
+          console.log("from data in 6A after START  " + data);
           credentials += data;
           arry_context += data;
+          console.log("typeof data  " + typeof data);
+          if (data.includes("Successully")) {
+            flag_if_Successully = true;
+          }
         });
 
         child_crete_token.stderr.setEncoding("utf8");
@@ -547,9 +552,14 @@ function write_to_aws_credentials_file_login_format(credentials_arry) {
   fs.writeFile(aws_file_credentials, `${sso_log_config}`, (err) => {
     if (err) throw err;
     fs.readdir(aws_file_credentials, (err, result) => {
-      console.log(result);
+      // console.log(result);
       console.log("Created directory sso_config!");
       console.log("end shlab 6C AND END!!!!!");
+      if (!flag_if_Successully) {
+        console.log("try again it dosen't work");
+      } else {
+        console.log("Successully UP");
+      }
 
       //??????crete_token_sso_in_cache();
       //get_aws_sso_temporary_credentials(sso_file_cache);

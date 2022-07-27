@@ -15,6 +15,7 @@ const eksctl_commands = require("./commands/eksctl_commands");
 const edit_yaml_file = require("./edit-files/edit_yaml_file");
 const printData = require("./models/printData.js");
 const commands_init = require("./commands/commands_init");
+const test_cli = require("../test/test_cli");
 const { option } = require("commander");
 
 const homeDirectory = os.homedir();
@@ -24,44 +25,87 @@ const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
 console.log(
   chalk.red((child = spawn("powershell.exe", ["figlet 'NAUTILUS'"])))
 );
-//console.log((child = spawn("powershell.exe", ["figlet 'NAUTILUS'"])));
 
-//nautilus.usage("<command>");
-//nautilus.usage("<command> <option> <name>");
 ////node .\bin\index.js
 
 nautilus
-  .command("Create_local_components_cluster_orly")
+  .command("init")
+  .alias("i")
+  .description("create a directory named .nautilus-cli")
+  .action(() => {
+    clear();
+    AppConfig.Config_nautilus_cli();
+  });
+nautilus
+  .command("morning")
+  .alias("m")
+  .description("set aws credentials every day")
+  .action(() => {
+    // clear();
+    AppConfig.write_to_file_credentials_for_sso_login();
+  });
+nautilus
+  .command("create-cluster")
+  .alias("crec")
+  .description("create a new cluster in Aws")
+  .action(() => {
+    clear();
+    eksctl_commands.create_cluster();
+  });
+
+nautilus
+  .command("delete-cluster")
+  .description("delete a cluster in Aws")
+  .alias("dc")
+  .action(() => {
+    eksctl_commands.delete_cluster();
+  });
+
+nautilus
+  .command("connect-Cluster")
+  .alias("conc")
+  .description("connect to Cluster in Aws")
+  .action(() => {
+    eksctl_commands.Connect_cluster();
+  });
+nautilus
+  .command("to-delete-context")
+  .alias("tdc")
+  .description("to delete context config")
+  .action(() => {
+    eksctl_commands.Connect_cluster();
+  });
+nautilus
+  .command("get-contexts")
+  .description("kubectl config get-contexts")
+  .alias("gcg")
+  .action(() => {
+    eksctl_commands.get_contexts();
+  });
+nautilus
+  .command("Get-current-context")
+  .description("Get current context")
+  .alias("gcc")
+  .action(() => {
+    eksctl_commands.Get_current_context();
+  });
+
+nautilus
+  .command("Create_local_cluster_orly")
   .alias("clc")
-  .description("Create local components cluster from orly")
+  .description("Create local cluster from orly")
   .action(() => {
     clear();
     eksctl_commands.Create_local_components_clusterA();
   });
+
 nautilus
-  .command("Create_local_orly_without_met_inte")
-  .alias("clcw")
-  .description("Create local from orly_without_metrics_integretions")
-  .action(() => {
-    clear();
-    eksctl_commands.Create_local_components_cluster_orly_without_metrics_And_integretions();
-  });
-nautilus
-  .command("uninstall_all")
-  .alias("clcw")
+  .command("uninstall_all_pods in cluster")
+  .alias("una")
   .description("uninstall all pods in cluster")
   .action(() => {
     clear();
     eksctl_commands.uninstall_all();
-  });
-
-nautilus
-  .command("morning")
-  .alias("m")
-  .description("get aws credentials That are renewed every day")
-  .action(() => {
-    clear();
-    AppConfig.write_to_file_credentials_for_sso_login();
   });
 
 nautilus
@@ -70,7 +114,7 @@ nautilus
   .alias("senv")
   .option("-n, --name_env <name env>", "name env")
   .option("-v, --value <value env>", "value env")
-  .description("set env for switch from local to remote & -1")
+  .description("set env for switch from local to remote")
   .action((option) => {
     //pr(option);
     if (option.name_env) {
@@ -105,66 +149,6 @@ nautilus
   });
 
 nautilus
-  .command("Login-to-Docker")
-  .alias("ltd")
-  .description("Login to Docker")
-  .action(() => {
-    clear();
-    AppConfig.Login_to_Docker();
-  });
-
-nautilus
-  .command("Operator-values-Tag")
-  .alias("ovt")
-  .description("Change Operator values Tag")
-  .action(() => {
-    clear();
-    edit_yaml_file.Change_Operator_values_Tag();
-  });
-
-nautilus
-  .command("Install-Operator")
-  .alias("io")
-  .description("Install Ast Operator")
-  .action(() => {
-    clear();
-    commands_init.Install_Operator();
-  });
-nautilus
-  .command("uninstall-Operator")
-  .alias("uno")
-  .description("uninstall Ast Operator")
-  .action(() => {
-    clear();
-    commands_init.unInstall_Operator();
-  });
-nautilus
-  .command("Install-Ast-Components")
-  .alias("iac")
-  .description("Install Ast Components")
-  .action(() => {
-    clear();
-    commands_init.Install_Ast_Components();
-  });
-
-nautilus
-  .command("Install-Metrics-Components")
-  .alias("imc")
-  .description("Install Metrics Components")
-  .action(() => {
-    clear();
-    commands_init.Install_Metrics_Components();
-  });
-nautilus
-  .command("Install_the_Policy_Management_Component")
-  .alias("ipm")
-  .description("nstall the Policy Management Component")
-  .action(() => {
-    clear();
-    commands_init.Install_the_Policy_Management_Component();
-  });
-
-nautilus
   .command("Get_Traefik_url")
   .alias("gtu")
   .description("Get_Traefik_url")
@@ -182,71 +166,85 @@ nautilus
     commands_init.Update_Url_in_all_components_tags();
   });
 nautilus
-  .command("from_orly_Update_Url_in_all_components_tags")
-  .alias("fuuc")
-  //צ במקרה שזה כמו של אורלי
-  .description("from orly Update Url in all components tags")
+  .command("Operator-values-Tag")
+  .alias("ovt")
+  .description("Change Operator values Tag")
   .action(() => {
     clear();
-    commands_init.Update_Url_in_all_components_tags_orly();
-  });
-
-nautilus
-  .command("connect_Cluster")
-  .alias("conc")
-  .description("connect to Cluster in Aws")
-  .action(() => {
-    eksctl_commands.Connect_cluster();
-  });
-nautilus
-  .command("to_delete_context")
-  .alias("tdc")
-  .description("to delete context config")
-  .action(() => {
-    eksctl_commands.Connect_cluster();
-  });
-
-nautilus
-  .command("create-cluster")
-  .alias("crec")
-  .description("create a new cluster in Aws")
-  .action(() => {
-    clear();
-    eksctl_commands.create_cluster();
-  });
-
-nautilus
-  .command("delete-cluster")
-  .description("delete a cluster in Aws")
-  .alias("dc")
-  .action(() => {
-    eksctl_commands.delete_cluster();
-  });
-nautilus
-  .command("Get_current_context")
-  .description("Get current context")
-  .alias("gcc")
-  .action(() => {
-    eksctl_commands.Get_current_context();
-  });
-nautilus
-  .command("get-contexts")
-  .description("kubectl config get-contexts")
-  .alias("gcg")
-  .action(() => {
-    eksctl_commands.get_contexts();
-  });
-nautilus
-  .command("init")
-  .alias("i")
-  .description("create a directory named .nautilus-cli")
-  .action(() => {
-    clear();
-    AppConfig.Config_nautilus_cli();
+    edit_yaml_file.Change_Operator_values_Tag();
   });
 
 // //from here less use
 
+nautilus
+  .command("Login-to-Docker")
+  .alias("ltd")
+  .description("Login to Docker")
+  .action(() => {
+    clear();
+    AppConfig.Login_to_Docker();
+  });
+
+nautilus
+  .command("Install-Metrics-Components")
+  .alias("imc")
+  .description("Install Metrics Components")
+  .action(() => {
+    clear();
+    commands_init.Install_Metrics_Components();
+  });
+
+// nautilus
+//   .command("Install-Operator")
+//   .alias("io")
+//   .description("Install Ast Operator")
+//   .action(() => {
+//     clear();
+//     commands_init.Install_Operator();
+//   });
+// nautilus
+//   .command("uninstall-Operator")
+//   .alias("uno")
+//   .description("uninstall Ast Operator")
+//   .action(() => {
+//     clear();
+//     commands_init.unInstall_Operator();
+//   });
+// nautilus
+//   .command("Install-Ast-Components")
+//   .alias("iac")
+//   .description("Install Ast Components")
+//   .action(() => {
+//     clear();
+//     commands_init.Install_Ast_Components();
+//   });
+
+// nautilus
+//   .command("Install_the_Policy_Management_Component")
+//   .alias("ipm")
+//   .description("nstall the Policy Management Component")
+//   .action(() => {
+//     clear();
+//     commands_init.Install_the_Policy_Management_Component();
+//   });
+
+// nautilus
+//   .command("from_orly_Update_Url_in_all_components_tags")
+//   .alias("fuuc")
+//   //צ במקרה שזה כמו של אורלי
+//   .description("from orly Update Url in all components tags")
+//   .action(() => {
+//     clear();
+//     commands_init.Update_Url_in_all_components_tags_orly();
+//   });
+// nautilus
+//   .command("test_cli_after_change")
+//   .alias("tcac")
+//   .description("To Test a Command-Line Tool after change")
+//   .action(() => {
+//     // clear();
+//     test_cli.test_cli_after_changeA();
+//   });
 // nautilus
 //   .version("0.1.0")
 //   .command("switch")
