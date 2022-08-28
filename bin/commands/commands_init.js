@@ -19,6 +19,41 @@ const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
 
 ////take from the file config
 
+
+function Login_to_Docker_in_init_file() {
+  //problem if not exisit
+  try {
+    //const fileContents = fs.readFileSync("./configFile.json", "utf8");
+    const fileContents = fs.readFileSync(
+      `${homeDirectory}/.nautilus-cli/configFile.json`,
+      "utf8"
+    );
+    ////take from the file config
+    const data = JSON.parse(fileContents);
+
+    ////take cluster name from the file config
+    const username = data.username;
+    const jfrogToken = data.jfrogToken;
+
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", [
+      `docker login --username ${username} --password ${jfrogToken} https://checkmarx.jfrog.io/artifactory/docker ;
+      helm repo remove ast;
+       helm repo add ast https://checkmarx.jfrog.io/artifactory/ast-helm/ --username ${username} --password ${jfrogToken} ;
+      helm repo update`,
+    ]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+  console.log(
+    chalk.magenta(
+      "check!!! the other command" +
+        "helm repo add ast https://checkmarx.jfrog.io/artifactory/ast-helm/ --username <yourname@checkmarx.com> --password <you-jfrog-token> "
+    )
+  );
+}
 function Install_Operator() {
   try {
     const fileContents = fs.readFileSync(config_file_path, "utf8");
@@ -39,24 +74,7 @@ function Install_Operator() {
   }
   printData.printData(child);
 }
-function unInstall_Operator() {
-  try {
-    const fileContents = fs.readFileSync(config_file_path, "utf8");
-    const data_configFile = JSON.parse(fileContents);
 
-    ////take path_astOperator from the data_configFile from the file config
-    const path_astOperator = data_configFile.astOperator;
-    ////Change the directory
-    process.chdir(path_astOperator);
-    // //after Change the directory can be input command in new directory
-    var spawn = require("child_process").spawn,
-      child;
-    child = spawn("powershell.exe", ["helm uninstall operator"]);
-  } catch (err) {
-    console.error(err);
-  }
-  printData.printData(child);
-}
 
 function Install_Ast_Components() {
   try {
@@ -70,9 +88,33 @@ function Install_Ast_Components() {
     // //after Change the directory can be input command in new directory
     var spawn = require("child_process").spawn,
       child;
+      
     child = spawn("powershell.exe", [
-      "git checkout  pu-deployment; cd .\\deployment\\pu\\;helm dep up; helm upgrade ast . -i",
+      "git checkout add-local-deplyment; cd .\\deployment\\dev\\;helm dep up; helm upgrade ast . -i",
     ]);
+
+      // child = spawn("powershell.exe", [
+    //   "git checkout  pu-deployment; cd .\\deployment\\pu\\;helm dep up; helm upgrade ast . -i",
+      
+    // ]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+}
+function unInstall_Operator() {
+  try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    const data_configFile = JSON.parse(fileContents);
+
+    ////take path_astOperator from the data_configFile from the file config
+    const path_astOperator = data_configFile.astOperator;
+    ////Change the directory
+    process.chdir(path_astOperator);
+    // //after Change the directory can be input command in new directory
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", ["helm uninstall operator"]);
   } catch (err) {
     console.error(err);
   }
@@ -143,7 +185,10 @@ function Get_Traefik_url() {
 }
 var traefik = "";
 var traefik2 = "";
-function Update_Url_in_all_components_tags() {
+function Update_Url_in_all_components_tags(trafik_for_up) {
+  edit_yaml_file.Update_Url_in_all_components_tags(trafik_for_up);
+}
+function Update_Url_in_all_components_tags_not_work_check() {
   Get_Traefik_url().then((trafik_for_up) => {
     console.log("ocell");
     console.log(trafik_for_up);
@@ -211,3 +256,4 @@ module.exports.Update_Url_in_all_components_tags =
 module.exports.Update_Url_in_all_components_tags_orly =
   Update_Url_in_all_components_tags_orly;
 module.exports.to_delete_check_test_cli = to_delete_check_test_cli;
+module.exports.Login_to_Docker_in_init_file = Login_to_Docker_in_init_file;

@@ -6,6 +6,10 @@ const prompt = require("prompt-sync")({ sigint: true });
 var spawn = require("child_process").execFileSync,
   child;
 const os = require("os");
+//const figlet = require("figlet");
+var figlet = require('figlet');
+
+
 
 const fs = require("fs");
 const AppConfig = require("./models/AppConfig");
@@ -22,9 +26,19 @@ const homeDirectory = os.homedir();
 const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
 const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
 
-console.log(
-  chalk.red((child = spawn("powershell.exe", ["figlet 'NAUTILUS'"])))
-);
+var figlet = require('figlet');
+
+figlet('Hello Unicorn Ast', function(err, data) {
+    if (err) {
+        console.log('Something went wrong...');
+        console.dir(err);
+        return;
+    }
+    console.log(data)
+});
+
+
+
 
 ////node .\bin\index.js
 
@@ -98,11 +112,35 @@ nautilus
     clear();
     eksctl_commands.Create_local_components_clusterA();
   });
+  nautilus
+  .command("Create_local_cluster_shifra")
+  .alias("clc")
+  .description("Create local cluster from shifra")
+  .action(() => {
+    clear();
+    eksctl_commands.Create_aws_components_clusterA_shifra();
+  });
+  nautilus
+  .command("Create_local_cluster_igor")
+  .alias("clci")
+  .description("Create local cluster from igor")
+  .action(() => {
+    clear();
+    eksctl_commands.Create_local_components_clusterAaigor();
+  });
+  nautilus
+  .command("Create_in_aws_cluster_shifra")
+  .alias("cac")
+  .description("Create in aws cluster shifra")
+  .action(() => {
+    clear();
+    eksctl_commands.Create_in_aws_cluster_shifra();
+  });
 
 nautilus
-  .command("uninstall_all_pods in cluster")
-  .alias("una")
-  .description("uninstall all pods in cluster")
+  .command("del_all_pods in cluster")
+  .alias("dela")
+  .description("del all pods in cluster")
   .action(() => {
     clear();
     eksctl_commands.uninstall_all();
@@ -148,31 +186,9 @@ nautilus
     Switch.remove_Env(option);
   });
 
-nautilus
-  .command("Get_Traefik_url")
-  .alias("gtu")
-  .description("Get_Traefik_url")
-  .action(() => {
-    clear();
-    commands_init.Get_Traefik_url();
-  });
 
-nautilus
-  .command("Update_Url_in_all_components_tags")
-  .alias("uuc")
-  .description("Update Url in all components tags")
-  .action(() => {
-    clear();
-    commands_init.Update_Url_in_all_components_tags();
-  });
-nautilus
-  .command("Operator-values-Tag")
-  .alias("ovt")
-  .description("Change Operator values Tag")
-  .action(() => {
-    clear();
-    edit_yaml_file.Change_Operator_values_Tag();
-  });
+
+
 
 // //from here less use
 
@@ -182,8 +198,58 @@ nautilus
   .description("Login to Docker")
   .action(() => {
     clear();
-    AppConfig.Login_to_Docker();
+    commands_init.Login_to_Docker_in_init_file();
   });
+  nautilus
+  .command("Operator-values-Tag")
+  .alias("ovt")
+  .description("Change Operator values Tag")
+  .action(() => {
+    clear();
+    edit_yaml_file.Change_Operator_values_Tag();
+  });
+
+  
+nautilus
+.command("Install-Operator")
+.alias("io")
+.description("Install Ast Operator")
+.action(() => {
+  clear();
+  commands_init.Install_Operator();
+});
+
+
+nautilus
+.command("Install-Ast-Components")
+.alias("iac")
+.description("Install Ast Components")
+.action(() => {
+  clear();
+  commands_init.Install_Ast_Components();
+});
+
+nautilus
+  .command("Get_Traefik_url")
+  .alias("gtu")
+  .description("Get_Traefik_url")
+  .action(() => {
+    clear();
+    commands_init.Get_Traefik_url();
+  });
+  
+
+nautilus
+.command("Update_Url_in_all_components_tags")
+.alias("uuc")
+.description("Update Url in all components tags")
+.action(() => {
+  clear();
+  var trafik_for_up="a8121b65c99144fe894d492a8ca94ccf-1882965643.eu-north-1.elb.amazonaws.com";
+  commands_init.Update_Url_in_all_components_tags(trafik_for_up);
+});
+
+
 
 nautilus
   .command("Install-Metrics-Components")
@@ -194,29 +260,27 @@ nautilus
     commands_init.Install_Metrics_Components();
   });
 
-// nautilus
-//   .command("Install-Operator")
-//   .alias("io")
-//   .description("Install Ast Operator")
+
+
+  nautilus
+  .command("uninstall-Operator")
+  .alias("uno")
+  .description("uninstall Ast Operator")
+  .action(() => {
+    clear();
+    commands_init.unInstall_Operator();
+  });
+
+
+
+
+  // nautilus
+//   .command("Login-to-Docker")
+//   .alias("ltd")
+//   .description("Login to Docker")
 //   .action(() => {
 //     clear();
-//     commands_init.Install_Operator();
-//   });
-// nautilus
-//   .command("uninstall-Operator")
-//   .alias("uno")
-//   .description("uninstall Ast Operator")
-//   .action(() => {
-//     clear();
-//     commands_init.unInstall_Operator();
-//   });
-// nautilus
-//   .command("Install-Ast-Components")
-//   .alias("iac")
-//   .description("Install Ast Components")
-//   .action(() => {
-//     clear();
-//     commands_init.Install_Ast_Components();
+//     AppConfig.Login_to_Docker();
 //   });
 
 // nautilus

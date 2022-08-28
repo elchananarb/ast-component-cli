@@ -71,8 +71,10 @@ function Update_Url_in_all_components_tags(trafik_url) {
 
   //astComponents
   const path_astComponents = data_configFile.astComponents;
-  const path_yaml_astComponents = `${path_astComponents}/deployment/pu/values.yaml`;
-  const path_to_up_astComponents = `${path_astComponents}/deployment/pu`;
+ // const path_yaml_astComponents = `${path_astComponents}/deployment/pu/values.yaml`;
+  const path_yaml_astComponents = `${path_astComponents}/deployment/dev/values.yaml`;
+  //const path_to_up_astComponents = `${path_astComponents}/deployment/pu`;
+  const path_to_up_astComponents = `${path_astComponents}/deployment/dev`;
   //astOperator
   const path_astOperator = data_configFile.astOperator;
   const path_yaml_astOperator = `${path_astOperator}/operator-helm-chart/values.yaml`;
@@ -86,6 +88,8 @@ function Update_Url_in_all_components_tags(trafik_url) {
     // up for astComponents
     const doc = yaml.load(fs.readFileSync(path_yaml_astComponents, "utf8"));
     let data = doc;
+    console.log(data);
+
 
     var index = "integrations";
     data[index].frontEndUrl = trafik_url;
@@ -103,58 +107,58 @@ function Update_Url_in_all_components_tags(trafik_url) {
       child;
     child = spawn("powershell.exe", ["helm upgrade ast ."]);
     printData.printData(child);
+/////////////end ast///////////////////////////////////////
+//     //up for ast-operator
+//     const doc_astOperator = yaml.load(
+//       fs.readFileSync(path_yaml_astOperator, "utf8")
+//     );
+//     let data_astOperator = doc_astOperator;
 
-    //up for ast-operator
-    const doc_astOperator = yaml.load(
-      fs.readFileSync(path_yaml_astOperator, "utf8")
-    );
-    let data_astOperator = doc_astOperator;
+//     var index = "config";
+//     data_astOperator[index].domain = trafik_url;
 
-    var index = "config";
-    data_astOperator[index].domain = trafik_url;
+//     let yamlStr_astOperator = yaml.dump(data_astOperator);
+//     fs.writeFileSync(path_yaml_astOperator, yamlStr_astOperator, "utf8");
+//     console.log(chalk.blue(`The file "${path_yaml_astOperator}"`));
+//     console.log(chalk.green("was successfully updated"));
 
-    let yamlStr_astOperator = yaml.dump(data_astOperator);
-    fs.writeFileSync(path_yaml_astOperator, yamlStr_astOperator, "utf8");
-    console.log(chalk.blue(`The file "${path_yaml_astOperator}"`));
-    console.log(chalk.green("was successfully updated"));
+//     //Change the directory to uo ast operator
+//     process.chdir(path_astOperator);
+//     // //after Change the directory can be input command in new directory
+//     var spawn = require("child_process").spawn,
+//       child;
+//     child = spawn("powershell.exe", [
+//       "helm upgrade operator ./operator-helm-chart",
+//     ]);
+//     printData.printData(child);
+// ////////////////////////end operator///////////////////
+//     // up for component-integration
+//     const doc_Integration = yaml.load(
+//       fs.readFileSync(path_yaml_componenIntegration, "utf8")
+//     );
+//     let data_Integration = doc_Integration;
 
-    //Change the directory to uo ast operator
-    process.chdir(path_astOperator);
-    // //after Change the directory can be input command in new directory
-    var spawn = require("child_process").spawn,
-      child;
-    child = spawn("powershell.exe", [
-      "helm upgrade operator ./operator-helm-chart",
-    ]);
-    printData.printData(child);
+//     var index = "integrations";
+//     data_Integration.frontEndUrl = trafik_url;
+//     data_Integration.webHookUrl = trafik_url;
+//     data_Integration.astBaseUri = trafik_url;
 
-    // up for component-integration
-    const doc_Integration = yaml.load(
-      fs.readFileSync(path_yaml_componenIntegration, "utf8")
-    );
-    let data_Integration = doc_Integration;
+//     let yamlStr_Integration = yaml.dump(data_Integration);
+//     fs.writeFileSync(
+//       path_yaml_componenIntegration,
+//       yamlStr_Integration,
+//       "utf8"
+//     );
+//     console.log(chalk.blue(`The file "${path_yaml_componenIntegration}"`));
+//     console.log(chalk.green("was successfully updated"));
 
-    var index = "integrations";
-    data_Integration.frontEndUrl = trafik_url;
-    data_Integration.webHookUrl = trafik_url;
-    data_Integration.astBaseUri = trafik_url;
-
-    let yamlStr_Integration = yaml.dump(data_Integration);
-    fs.writeFileSync(
-      path_yaml_componenIntegration,
-      yamlStr_Integration,
-      "utf8"
-    );
-    console.log(chalk.blue(`The file "${path_yaml_componenIntegration}"`));
-    console.log(chalk.green("was successfully updated"));
-
-    ////Change the directory to component-integration
-    process.chdir(path_to_up_componenIntegration);
-    // //after Change the directory can be input command in new directory
-    var spawn = require("child_process").spawn,
-      child;
-    child = spawn("powershell.exe", ["helm upgrade ast-integration . -i"]);
-    printData.printData(child);
+//     ////Change the directory to component-integration
+//     process.chdir(path_to_up_componenIntegration);
+//     // //after Change the directory can be input command in new directory
+//     var spawn = require("child_process").spawn,
+//       child;
+//     child = spawn("powershell.exe", ["helm upgrade ast-integration . -i"]);
+//     printData.printData(child);
   } catch (e) {
     console.log(e);
   }

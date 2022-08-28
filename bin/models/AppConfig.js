@@ -248,7 +248,7 @@ let configeureNau = {
   astPath: "C:/Users/elchanana/IdeaProjects/ast/helm",
   username: "elchanan.arbiv@checkmarx.com",
   jfrogToken: "",
-  k3dPath: "",
+  k3dPath: "C:/k3d",
 
   astOperator: "",
   astComponents: "",
@@ -426,8 +426,10 @@ function write_to_file_config_for_sso_login(sso_file_cache) {
   console.log("START shlab 4");
 
   const aws_file_credentials = `${homeDirectory}/.aws/config`;
+  // var sso_log_config =
+  //   "[profile 822112283600_AdministratorAccess]\nregion = eu-west-1\noutput = json";
   var sso_log_config =
-    "[profile 822112283600_AdministratorAccess]\nregion = eu-west-1\noutput = json";
+  "[default]\nregion = eu-west-1\noutput = json";
   fs.writeFile(aws_file_credentials, `${sso_log_config}`, (err) => {
     if (err) throw err;
     fs.readdir(aws_file_credentials, (err, result) => {
@@ -548,7 +550,9 @@ function write_to_aws_credentials_file_login_format(credentials_arry) {
 
   console.log(credentials_arry);
   const aws_file_credentials = `${homeDirectory}/.aws/credentials`;
-  var sso_log_config = `[822112283600_AdministratorAccess]\naws_access_key_id=${credentials_arry[0]}\naws_secret_access_key= ${credentials_arry[1]}\naws_session_token= ${credentials_arry[2]}`;
+  // var sso_log_config = `[822112283600_AdministratorAccess]\naws_access_key_id=${credentials_arry[0]}\naws_secret_access_key= ${credentials_arry[1]}\naws_session_token= ${credentials_arry[2]}`;
+  var sso_log_config = `[default]\naws_access_key_id=${credentials_arry[0]}\naws_secret_access_key= ${credentials_arry[1]}\naws_session_token= ${credentials_arry[2]}`;
+
   fs.writeFile(aws_file_credentials, `${sso_log_config}`, (err) => {
     if (err) throw err;
     fs.readdir(aws_file_credentials, (err, result) => {
@@ -586,6 +590,7 @@ function Login_to_Docker() {
       child;
     child = spawn("powershell.exe", [
       `docker login --username ${username} --password ${jfrogToken} https://checkmarx.jfrog.io/artifactory/docker ;
+      helm repo remove ast;
        helm repo add ast https://checkmarx.jfrog.io/artifactory/ast-helm/ --username ${username} --password ${jfrogToken} ;
       helm repo update`,
     ]);
