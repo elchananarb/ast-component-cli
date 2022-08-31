@@ -1,6 +1,6 @@
 const yaml = require("js-yaml");
 const fs = require("fs");
-const nautilus = require("commander");
+const ast = require("commander");
 const chalk = require("chalk");
 const clear = require("clear");
 const prompt = require("prompt-sync")({ sigint: true });
@@ -8,11 +8,12 @@ var spawn = require("child_process").execFileSync,
   child;
 const os = require("os");
 const printData = require("../models/printData");
+const commands_init = require("./commands_init");
 const { exit } = require("process");
 
 const homeDirectory = os.homedir();
-const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
-const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
+const ast_cli_dir_path = `${homeDirectory}/.ast-cli`;
+const config_file_path = `${ast_cli_dir_path}/configFile.json`;
 let itemsProcessed_name_cluster = 0;
 
 function Login_to_Docker_ineks_file() {
@@ -20,7 +21,7 @@ function Login_to_Docker_ineks_file() {
   try {
     //const fileContents = fs.readFileSync("./configFile.json", "utf8");
     const fileContents = fs.readFileSync(
-      `${homeDirectory}/.nautilus-cli/configFile.json`,
+      `${homeDirectory}/.ast-cli/configFile.json`,
       "utf8"
     );
     ////take from the file config
@@ -62,6 +63,130 @@ function Create_local_components_clusterA() {
  // });
 }
 
+function test() {
+  var b=commands_init.Get_Traefik_url();
+  console.log("befor");
+  //console.log(b);
+  console.log("after");
+  
+}
+function Ast_Components_Installation_AWS_Nimrod() {
+
+  Ast_Components_Installation_AWS_Nimrod2().then((chiled_trafik_for_up) => {
+    console.log("ocell");
+  //  console.log(trafik_for_up);
+  var b=commands_init.Get_Traefik_url();
+  console.log("befor");
+
+  console.log(b);
+  console.log("after");
+
+  // helm upgrade --install ast-operator ast/operator-helm-chart --set config.domain="127.0.0.1" --set config.enableTLS="false"  --set-string config.port=8080 --set config.protocol="http" --set config.disableResourcesAndRequestLimit="true" --set imagePullSecretJfrog.registry="https://checkmarx.jfrog.io" --set imagePullSecrets="regcred" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};$x=0; while ($x -le 1  ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods ast-operator to be created"}};
+  // echo "after install new ast-operator ";
+  });
+
+
+}
+
+function Ast_Components_Installation_AWS_Nimrod2() {
+
+  let myPromise = new Promise((resolve, reject) => {
+    //try {
+    if (!fs.existsSync(ast_cli_dir_path)) {
+      create_dir_ast_cli();
+    }
+    //const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    //const data_configFile = JSON.parse(fileContents);
+    let username = "";
+    let password = "";
+    if (fs.existsSync(config_file_path)) {
+      fileContents = fs.readFileSync(config_file_path, "utf8");
+      ////take from the file config
+      data_configFile = JSON.parse(fileContents);
+
+      username = data_configFile.username;
+      password = data_configFile.jfrogToken;
+      const path_astComponents = data_configFile.astComponents;
+      process.chdir(path_astComponents);
+
+      var spawn = require("child_process").spawn,
+        child;
+
+      child = spawn("powershell.exe", [
+        `docker login --username ${username} --password ${password} https://checkmarx.jfrog.io/artifactory/docker ; 
+        helm repo remove ast;
+        sleep 30;
+         helm repo add ast https://checkmarx.jfrog.io/artifactory/ast-helm/ --username ${username} --password ${password} ;
+         helm repo update;
+
+         helm upgrade --install ast-operator ast/operator-helm-chart --set config.domain="127.0.0.1" --set config.enableTLS="false"  --set-string config.port=8080 --set config.protocol="http" --set config.disableResourcesAndRequestLimit="true" --set imagePullSecretJfrog.registry="https://checkmarx.jfrog.io" --set imagePullSecrets="regcred" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};$x=0; while ($x -le 1  ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods ast-operator to be created"}};
+         echo "after install one ast-operator ";
+
+         helm upgrade --install platform ast/platform-local;$x=1; while ($x -le 11 ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods ast/platform-local to be created"}};
+         helm uninstall ast-operator;$x=1; while ($x -le 2 ) {sleep 50 ;$x=3};
+         echo "after uninstal  befor install";
+        
+        `,
+      ]);
+     //  זה בדיקה של אנינסטל לראות שזה באמת הוסר הורדתי את זה  helm uninstall ast-operator;$x=250; while ($x -ge 9 ) {sleep 50 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting until the Pod ast-operator deleted"}};
+//      זה בדיקה של ינסטל אופרטור בהתחלה אני מוריד את הבדיקה כי הוא מתקין לי את אופרטוק ישירות  ת helm upgrade --install ast-operator ast/operator-helm-chart --set config.domain="127.0.0.1" --set config.enableTLS="false"  --set-string config.port=8080 --set config.protocol="http" --set config.disableResourcesAndRequestLimit="true" --set imagePullSecretJfrog.registry="https://checkmarx.jfrog.io" --set imagePullSecrets="regcred" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};$x=0; while ($x -le 1  ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods ast-operator to be created"}};
+
+      //עשיתיח תנאי למעלה אפשר למחור  להוסיף תנאי שאם אין מספיק פודים שלר ימשיך הלאה ואם כם יחזיר את הריסולב
+
+
+      child.stdout.setEncoding("utf8");
+      child.stdout.on("data", function (data) {
+        data_for_create_dev += data;
+        arry_context_for_create_dev += data;
+      });
+
+      child.stderr.setEncoding("utf8");
+      child.stderr.on("data", function (data) {
+        console.log("stderr: " + data);
+        data = data.toString();
+        data_for_create_dev += data;
+      });
+
+      child.on("exit", function () {
+        resolve("ddd");
+      });
+      child.stdin.end();
+    }
+    printData.printData(child);
+  });
+  return myPromise;
+}
+
+
+
+
+////888888888888
+function get_aws_sso_temporary_credentials(sso_file_cache) {
+  let myPromise = new Promise((resolve, reject) => {
+    console.log("START shlab 5");
+
+    //set to sso config token from the cache
+    sso_format_login.sso_access_token = sso_file_cache.accessToken;
+    console.log("mmmmm");
+    console.log(sso_format_login.sso_access_token);
+
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", [
+      //`eksctl create cluster --name ${clusters[cluster]} --region ${regions[region]} --node-type t3.large --nodes 2 --nodes-min 1 --nodes-max 3`,
+      `aws sso get-role-credentials --account-id ${sso_format_login.sso_account_id} --role-name ${sso_format_login.sso_role_name} --access-token ${sso_format_login.sso_access_token} --region ${sso_format_login.sso_region}`,
+    ]);
+
+    // printData.printData(child);
+    console.log("end shlab 5");
+    resolve(child);
+  });
+  return myPromise;
+}
+////88888888888888888
+
+
 function Create_aws_components_clusterA_shifra() {
   //  Create_local_components_clusterB().then((resultB) => {
       console.log("BBBBB");
@@ -84,8 +209,8 @@ function Create_in_aws_cluster_shifra() {
  
   let myPromise = new Promise((resolve, reject) => {
     //try {
-    if (!fs.existsSync(nautilus_cli_dir_path)) {
-      create_dir_nautilus_cli();
+    if (!fs.existsSync(ast_cli_dir_path)) {
+      create_dir_ast_cli();
     }
     //const fileContents = fs.readFileSync(config_file_path, "utf8");
     ////take from the file config
@@ -147,8 +272,8 @@ function Create_in_aws_cluster_shifra() {
 function Create_local_components_clusterC() {
   let myPromise = new Promise((resolve, reject) => {
     //try {
-    if (!fs.existsSync(nautilus_cli_dir_path)) {
-      create_dir_nautilus_cli();
+    if (!fs.existsSync(ast_cli_dir_path)) {
+      create_dir_ast_cli();
     }
     //const fileContents = fs.readFileSync(config_file_path, "utf8");
     ////take from the file config
@@ -197,8 +322,8 @@ function Create_local_components_clusterC() {
 function  Create_local_components_clusterCigor() {
   let myPromise = new Promise((resolve, reject) => {
     //try {
-    if (!fs.existsSync(nautilus_cli_dir_path)) {
-      create_dir_nautilus_cli();
+    if (!fs.existsSync(ast_cli_dir_path)) {
+      create_dir_ast_cli();
     }
     //const fileContents = fs.readFileSync(config_file_path, "utf8");
     ////take from the file config
@@ -240,8 +365,8 @@ function  Create_local_components_clusterCigor() {
 function Create_local_components_cluster_orly_without_metrics_And_integretions() {
   // let myPromise = new Promise((resolve, reject) => {
   //try {
-  if (!fs.existsSync(nautilus_cli_dir_path)) {
-    create_dir_nautilus_cli();
+  if (!fs.existsSync(ast_cli_dir_path)) {
+    create_dir_ast_cli();
   }
   //const fileContents = fs.readFileSync(config_file_path, "utf8");
   ////take from the file config
@@ -306,8 +431,8 @@ var arry_context_for_create_dev = [];
 function Create_local_components_clusterB() {
   let myPromise = new Promise((resolve, reject) => {
     // try {
-    if (!fs.existsSync(nautilus_cli_dir_path)) {
-      create_dir_nautilus_cli();
+    if (!fs.existsSync(ast_cli_dir_path)) {
+      create_dir_ast_cli();
     }
     //const fileContents = fs.readFileSync(config_file_path, "utf8");
     ////take from the file config
@@ -399,7 +524,7 @@ function create_cluster() {
 
     function myFunction_choose_cluster(item, index, arr) {
       console.log(
-        chalk.blue(`To createggg a cluster for ${item} enter ${index}`)
+        chalk.blue(`To create a cluster for ${item} enter ${index}`)
       );
       itemsProcessed_name_cluster += 1;
       //console.log(itemsProcessed_name_cluster);
@@ -412,15 +537,20 @@ function create_cluster() {
       }
     }
     let index_cluster = prompt();
-    let name_cluster = clusters[index_cluster];
+    let name_cluster="";
     if (index_cluster == clusters.length) {
       console.log(chalk.blue(`Please enter the name of cluster`));
       name_cluster = prompt();
     }
+    else{
+      name_cluster = clusters[index_cluster];
+
+    }
     // console.log("llllllllllllll");
     // console.log(name_cluster);
 
-    const regions = data_configFile.regions;
+    const regions = data_configFile.
+    regions;
     console.log(chalk.green("Please choose  region \n"));
     regions.forEach(myFunction_choose_region);
     function myFunction_choose_region(item, index, arr) {
@@ -429,10 +559,27 @@ function create_cluster() {
     let region = prompt();
 
     var spawn = require("child_process").spawn,
-      child;
-    child = spawn("powershell.exe", [
-      `eksctl create cluster --name ${name_cluster} --region ${regions[region]} --node-type t3.large --nodes 2 --nodes-min 1 --nodes-max 3`,
-    ]);
+    child;
+
+    if (regions[region]=="eu-central-1")
+    {
+      console.log("eu-central-1");
+     
+      child = spawn("powershell.exe", [
+        `eksctl create cluster --name ${name_cluster} --region ${regions[region]} --node-type m3.2xlarge --nodes 2 --nodes-min 1 --nodes-max 2 --tags CxSaverTeamName=Chameleon,CxSaverClusterName=${name_cluster} --version 1.21`,
+
+      ]);
+    }
+    else
+    {
+      
+
+      child = spawn("powershell.exe", [
+        `eksctl create cluster --name ${name_cluster} --region ${regions[region]} --node-type t3.2xlarge --nodes 2 --nodes-min 1 --nodes-max 3 --tags CxSaverTeamName=Chameleon,CxSaverClusterName=${name_cluster} --version 1.21`,
+      ]);
+    }
+
+  
   } catch (err) {
     console.error(err);
   }
@@ -669,9 +816,11 @@ async function delete_cluster_sso() {
 }
 module.exports.Switched_context_sso = Switched_context_sso;
 module.exports.Login_to_Docker_ineks_file = Login_to_Docker_ineks_file;
-module.exports.Create_in_aws_cluster_shifra = Create_in_aws_cluster_shifra;
 module.exports.create_cluster_sso = create_cluster_sso;
 module.exports.delete_cluster_sso = delete_cluster_sso;
+module.exports.Ast_Components_Installation_AWS_Nimrod = Ast_Components_Installation_AWS_Nimrod;
+module.exports.test = test;
+module.exports.Ast_Components_Installation_AWS_Nimrod2 = Ast_Components_Installation_AWS_Nimrod2;
 module.exports.create_cluster = create_cluster;
 module.exports.uninstall_all = uninstall_all;
 module.exports.delete_cluster = delete_cluster;
@@ -689,5 +838,6 @@ module.exports.Create_local_components_clusterB =
 
 module.exports.Connect_cluster = Connect_cluster;
 module.exports.Create_in_aws_cluster_shifra = Create_in_aws_cluster_shifra;
+
 module.exports.Create_local_components_cluster_orly_without_metrics_And_integretions =
   Create_local_components_cluster_orly_without_metrics_And_integretions;

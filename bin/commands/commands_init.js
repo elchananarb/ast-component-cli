@@ -1,6 +1,6 @@
 const yaml = require("js-yaml");
 const fs = require("fs");
-const nautilus = require("commander");
+const ast = require("commander");
 const chalk = require("chalk");
 const clear = require("clear");
 const prompt = require("prompt-sync")({ sigint: true });
@@ -14,8 +14,8 @@ const edit_yaml_file = require("../edit-files/edit_yaml_file");
 
 ////const path_yaml = "C:\\Projects\\Js\\lern-js\\my-js-1\\files\\values.yaml";
 const homeDirectory = os.homedir();
-const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
-const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
+const ast_cli_dir_path = `${homeDirectory}/.ast-cli`;
+const config_file_path = `${ast_cli_dir_path}/configFile.json`;
 
 ////take from the file config
 
@@ -25,7 +25,7 @@ function Login_to_Docker_in_init_file() {
   try {
     //const fileContents = fs.readFileSync("./configFile.json", "utf8");
     const fileContents = fs.readFileSync(
-      `${homeDirectory}/.nautilus-cli/configFile.json`,
+      `${homeDirectory}/.ast-cli/configFile.json`,
       "utf8"
     );
     ////take from the file config

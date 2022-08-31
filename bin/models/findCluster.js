@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const nautilus1 = require("commander");
+const ast1 = require("commander");
 const path = require("path");
 const chalk = require("chalk");
 const clear = require("clear");

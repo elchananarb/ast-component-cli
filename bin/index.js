@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const nautilus = require("commander");
+const ast = require("commander");
 const chalk = require("chalk");
 const clear = require("clear");
 const prompt = require("prompt-sync")({ sigint: true });
@@ -7,7 +7,6 @@ var spawn = require("child_process").execFileSync,
   child;
 const os = require("os");
 //const figlet = require("figlet");
-var figlet = require('figlet');
 
 
 
@@ -23,34 +22,24 @@ const test_cli = require("../test/test_cli");
 const { option } = require("commander");
 
 const homeDirectory = os.homedir();
-const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
-const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
-
-var figlet = require('figlet');
-
-figlet('Hello Unicorn Ast', function(err, data) {
-    if (err) {
-        console.log('Something went wrong...');
-        console.dir(err);
-        return;
-    }
-    console.log(data)
-});
+const ast_cli_dir_path = `${homeDirectory}/.ast-cli`;
+const config_file_path = `${ast_cli_dir_path}/configFile.json`;
 
 
-
-
+////npm run ast
 ////node .\bin\index.js
+////pkg .\bin\index.js  
 
-nautilus
+
+ast
   .command("init")
   .alias("i")
-  .description("create a directory named .nautilus-cli")
+  .description("create a directory named .ast-cli")
   .action(() => {
     clear();
-    AppConfig.Config_nautilus_cli();
+    AppConfig.Config_ast_cli();
   });
-nautilus
+ast
   .command("morning")
   .alias("m")
   .description("set aws credentials every day")
@@ -58,7 +47,7 @@ nautilus
     // clear();
     AppConfig.write_to_file_credentials_for_sso_login();
   });
-nautilus
+ast
   .command("create-cluster")
   .alias("crec")
   .description("create a new cluster in Aws")
@@ -67,7 +56,7 @@ nautilus
     eksctl_commands.create_cluster();
   });
 
-nautilus
+ast
   .command("delete-cluster")
   .description("delete a cluster in Aws")
   .alias("dc")
@@ -75,28 +64,28 @@ nautilus
     eksctl_commands.delete_cluster();
   });
 
-nautilus
+ast
   .command("connect-Cluster")
   .alias("conc")
   .description("connect to Cluster in Aws")
   .action(() => {
     eksctl_commands.Connect_cluster();
   });
-nautilus
+ast
   .command("to-delete-context")
   .alias("tdc")
   .description("to delete context config")
   .action(() => {
     eksctl_commands.Connect_cluster();
   });
-nautilus
+ast
   .command("get-contexts")
   .description("kubectl config get-contexts")
   .alias("gcg")
   .action(() => {
     eksctl_commands.get_contexts();
   });
-nautilus
+ast
   .command("Get-current-context")
   .description("Get current context")
   .alias("gcc")
@@ -104,7 +93,25 @@ nautilus
     eksctl_commands.Get_current_context();
   });
 
-nautilus
+
+  ast
+  .command("Ast_Components_Installation_AWS_Nimrod")
+  .alias("aci")
+  .description("Ast Components Installation in AWS from Nimrod")
+  .action(() => {
+    clear();
+    eksctl_commands.Ast_Components_Installation_AWS_Nimrod();
+  });
+
+  ast
+  .command("fortest")
+  .alias("te")
+  .description("fortest")
+  .action(() => {
+    clear();
+    eksctl_commands.test();
+  });
+ast
   .command("Create_local_cluster_orly")
   .alias("clc")
   .description("Create local cluster from orly")
@@ -112,7 +119,7 @@ nautilus
     clear();
     eksctl_commands.Create_local_components_clusterA();
   });
-  nautilus
+  ast
   .command("Create_local_cluster_shifra")
   .alias("clc")
   .description("Create local cluster from shifra")
@@ -120,7 +127,7 @@ nautilus
     clear();
     eksctl_commands.Create_aws_components_clusterA_shifra();
   });
-  nautilus
+  ast
   .command("Create_local_cluster_igor")
   .alias("clci")
   .description("Create local cluster from igor")
@@ -128,7 +135,7 @@ nautilus
     clear();
     eksctl_commands.Create_local_components_clusterAaigor();
   });
-  nautilus
+  ast
   .command("Create_in_aws_cluster_shifra")
   .alias("cac")
   .description("Create in aws cluster shifra")
@@ -137,7 +144,7 @@ nautilus
     eksctl_commands.Create_in_aws_cluster_shifra();
   });
 
-nautilus
+ast
   .command("del_all_pods in cluster")
   .alias("dela")
   .description("del all pods in cluster")
@@ -146,7 +153,7 @@ nautilus
     eksctl_commands.uninstall_all();
   });
 
-nautilus
+ast
   .command("set_Env")
   .usage("<command> -n <name> -v <value>")
   .alias("senv")
@@ -170,7 +177,7 @@ nautilus
     Switch.set_Env(option);
   });
 
-nautilus
+ast
   .command("remove_Env")
   .alias("renv")
   .option("-n, --name_env <name env to remove>", "name env")
@@ -192,7 +199,7 @@ nautilus
 
 // //from here less use
 
-nautilus
+ast
   .command("Login-to-Docker")
   .alias("ltd")
   .description("Login to Docker")
@@ -200,7 +207,7 @@ nautilus
     clear();
     commands_init.Login_to_Docker_in_init_file();
   });
-  nautilus
+  ast
   .command("Operator-values-Tag")
   .alias("ovt")
   .description("Change Operator values Tag")
@@ -210,7 +217,7 @@ nautilus
   });
 
   
-nautilus
+ast
 .command("Install-Operator")
 .alias("io")
 .description("Install Ast Operator")
@@ -220,7 +227,7 @@ nautilus
 });
 
 
-nautilus
+ast
 .command("Install-Ast-Components")
 .alias("iac")
 .description("Install Ast Components")
@@ -229,7 +236,7 @@ nautilus
   commands_init.Install_Ast_Components();
 });
 
-nautilus
+ast
   .command("Get_Traefik_url")
   .alias("gtu")
   .description("Get_Traefik_url")
@@ -239,7 +246,7 @@ nautilus
   });
   
 
-nautilus
+ast
 .command("Update_Url_in_all_components_tags")
 .alias("uuc")
 .description("Update Url in all components tags")
@@ -251,7 +258,7 @@ nautilus
 
 
 
-nautilus
+ast
   .command("Install-Metrics-Components")
   .alias("imc")
   .description("Install Metrics Components")
@@ -262,7 +269,7 @@ nautilus
 
 
 
-  nautilus
+  ast
   .command("uninstall-Operator")
   .alias("uno")
   .description("uninstall Ast Operator")
@@ -274,7 +281,7 @@ nautilus
 
 
 
-  // nautilus
+  // ast
 //   .command("Login-to-Docker")
 //   .alias("ltd")
 //   .description("Login to Docker")
@@ -283,7 +290,7 @@ nautilus
 //     AppConfig.Login_to_Docker();
 //   });
 
-// nautilus
+// ast
 //   .command("Install_the_Policy_Management_Component")
 //   .alias("ipm")
 //   .description("nstall the Policy Management Component")
@@ -292,7 +299,7 @@ nautilus
 //     commands_init.Install_the_Policy_Management_Component();
 //   });
 
-// nautilus
+// ast
 //   .command("from_orly_Update_Url_in_all_components_tags")
 //   .alias("fuuc")
 //   //צ במקרה שזה כמו של אורלי
@@ -301,7 +308,7 @@ nautilus
 //     clear();
 //     commands_init.Update_Url_in_all_components_tags_orly();
 //   });
-// nautilus
+// ast
 //   .command("test_cli_after_change")
 //   .alias("tcac")
 //   .description("To Test a Command-Line Tool after change")
@@ -309,7 +316,7 @@ nautilus
 //     // clear();
 //     test_cli.test_cli_after_changeA();
 //   });
-// nautilus
+// ast
 //   .version("0.1.0")
 //   .command("switch")
 //   .usage("<command> <option> <name>")
@@ -328,13 +335,13 @@ nautilus
 //     //console.log(program);
 //   });
 
-// nautilus
+// ast
 //   .command("test_delete_re_af_up_cli_config")
 //   .alias("dupcon")
 //   .action(() => {
 //     AppConfig.delete_from_config_file("", "astPath");
 //   });
-// nautilus
+// ast
 //   .command("test_add_re_af_up_cli_config")
 //   .alias("aupcon")
 //   .action(() => {
@@ -342,7 +349,7 @@ nautilus
 //     const value = "efdscdxz22";
 //     AppConfig.add_to_config_file(where, value);
 //   });
-// nautilus
+// ast
 //   .command("test_up_and_change_re_af_up_cli_config")
 //   .alias("uupcon")
 //   .action(() => {
@@ -351,7 +358,7 @@ nautilus
 //     AppConfig.up_and_change_re_af_up_cli_config(where, value);
 //   });
 
-// nautilus
+// ast
 //   .command("up_cli_config")
 //   .usage("<command> -n <name> -v <value>")
 //   .alias("upcli")
@@ -379,7 +386,7 @@ nautilus
 //     AppConfig.up_cli_config(option);
 //   });
 
-// nautilus
+// ast
 //   .command("delete_from_config")
 //   .alias("dfc")
 //   .description("delete_from_config if is arry lebntim.....")
@@ -388,17 +395,17 @@ nautilus
 //     AppConfig.delete_from_config_file("clusters", "N-Ely");
 //   });
 
-// nautilus
+// ast
 //   .command("init_B")
 //   .alias("ib")
-//   .description("version B create a directory named .nautilus-cli")
+//   .description("version B create a directory named .ast-cli")
 //   .action(() => {
 //     clear();
 //     AppConfig.init_B();
 //   });
 
 //   ///from noe less importent
-//   nautilus
+//   ast
 //     .command("aaaa")
 //     .description("display help for command")
 //     .alias("a")
@@ -415,15 +422,15 @@ nautilus
 //       printData.printData(child);
 //     });
 
-// nautilus
+// ast
 //   .command("init")
 //   .alias("i")
-//   .description("create a directory named .nautilus-cli")
+//   .description("create a directory named .ast-cli")
 //   .action(() => {
 //     clear();
-//     AppConfig.Config_nautilus_cli();
+//     AppConfig.Config_ast_cli();
 //   });
-//   nautilus
+//   ast
 //     .command("Ast-Upgrade")
 //     .alias("au")
 //     .description("Ast Upgrade")
@@ -449,7 +456,7 @@ nautilus
 //       printData.printData(child);
 //     });
 
-//   nautilus
+//   ast
 //     .command("Build-Cluster")
 //     .alias("bc")
 //     .description("Build Cluster in Aws")
@@ -476,7 +483,7 @@ nautilus
 //       }
 //       printData.printData(child);
 //     });
-// nautilus
+// ast
 //   .command("Delete-Service")
 //   .description("Delete Service")
 //   .alias("dels")
@@ -515,7 +522,7 @@ nautilus
 //     printData.printData(child);
 //   });
 
-// nautilus
+// ast
 //   .command("Deploy-Service")
 //   .description("Deploy Service")
 //   .alias("deps")
@@ -559,7 +566,7 @@ nautilus
 //     // printData.printData(child);
 //   });
 
-// nautilus
+// ast
 //   .command("delete-cluster-gui")
 //   .description("delete cluster with window")
 //   .alias("dcg")
@@ -575,7 +582,7 @@ nautilus
 //     printData.printData(child);
 //   });
 
-nautilus
+ast
   .command("-help")
   .description("display help for command")
   .alias("-h")
@@ -592,12 +599,12 @@ nautilus
     printData.printData(child);
   });
 
-nautilus.parse(process.argv);
-if (!nautilus.args.length) {
-  nautilus.help();
+ast.parse(process.argv);
+if (!ast.args.length) {
+  ast.help();
 }
 
-// nautilus
+// ast
 //   .command("rmdir")
 //   .argument("<username>", "user to login")
 //   .argument("[password]", "password for user, if required", "no password given")
@@ -606,7 +613,7 @@ if (!nautilus.args.length) {
 //     console.log("password:", password);
 //   });
 
-// nautilus
+// ast
 //   .command("switched-context")
 //   .alias("sc")
 //   .description("Switched to another context kubectl")
@@ -628,7 +635,7 @@ if (!nautilus.args.length) {
 //not woring in exe
 //    console.log(chalk.greenBright(figlet.textSync("hello world")));
 
-// nautilus
+// ast
 //   .command("create-cluster1")
 //   .description("create a new cluster in Aws")
 //   .action(() => {
@@ -675,7 +682,7 @@ if (!nautilus.args.length) {
 //     }
 //   });
 
-// nautilus
+// ast
 //   .command("create-cluster3")
 //   .description("create a new cluster in Aws")
 //   .action(() => {
@@ -733,7 +740,7 @@ if (!nautilus.args.length) {
 //     child.stdin.end(); //end input
 //   });
 
-// nautilus
+// ast
 //   .command("test-ls")
 
 //   .description("ls command")
@@ -803,7 +810,7 @@ if (!nautilus.args.length) {
 //     child.stdin.end(); //end input
 //   });
 
-// nautilus
+// ast
 //   .command("create-cluster0")
 //   .description("beny mastuer")
 //   .action(() => {
@@ -832,12 +839,12 @@ if (!nautilus.args.length) {
 //     //   "C:\\Projects\\Js\\lern-js\\my-js-1\\powerShellScript\\listBoxControl.ps1",
 //     // ]);
 
-//     //fs.mkdir(`${homeDirectory}/.nautilus-cli`);
+//     //fs.mkdir(`${homeDirectory}/.ast-cli`);
 
 //     //console.log(process.cwd() + `/node_modules`);
 //   });
 
-//nautilus;
+//ast;
 //   .command("test-ps1")
 //   .description("ps1 script ")
 //   .action(() => {
@@ -847,7 +854,7 @@ if (!nautilus.args.length) {
 //     ps.addCommand("& {" + startStr + "} \n");
 //   });
 
-// nautilus
+// ast
 //   .command("delete-cluster0")
 //   .description("beny mastuer")
 //   .action(() => {
@@ -877,12 +884,12 @@ if (!nautilus.args.length) {
 //     //   "C:\\Projects\\Js\\lern-js\\my-js-1\\powerShellScript\\listBoxControl.ps1",
 //     // ]);
 
-//     //fs.mkdir(`${homeDirectory}/.nautilus-cli`);
+//     //fs.mkdir(`${homeDirectory}/.ast-cli`);
 
 //     //console.log(process.cwd() + `/node_modules`);
 //   });
 
-// nautilus
+// ast
 //   .command("connect-Cluster_work_old")
 //   .alias("conc")
 //   .description("connect to Cluster in Aws")
@@ -922,7 +929,7 @@ if (!nautilus.args.length) {
 //     printData.printData(child);
 //   });
 
-// nautilus
+// ast
 //   .command("up_cli_config")
 //   .usage("<command> -n <name> -v <value>")
 //   .alias("upcli")

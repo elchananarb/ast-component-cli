@@ -1,6 +1,6 @@
 const chalk = require("chalk");
 const clear = require("clear");
-const figlet = require("figlet");
+//const figlet = require("figlet");
 const prompt = require("prompt-sync")({ sigint: true });
 var spawn = require("child_process").execFileSync,
   child;
@@ -9,9 +9,9 @@ const os = require("os");
 const fs = require("fs");
 
 const homeDirectory = os.homedir();
-const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
+const ast_cli_dir_path = `${homeDirectory}/.ast-cli`;
 const aws_file_credentials = `${homeDirectory}/.aws`;
-const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
+const config_file_path = `${ast_cli_dir_path}/configFile.json`;
 
 function up_cli_config(option) {
   if (option.remove) {
@@ -134,8 +134,8 @@ function init_B() {
   ////this func is Second option to do init at first That it brings you what is there and do you want to change as in aws config
 
   //check if a dir exists
-  if (!fs.existsSync(nautilus_cli_dir_path)) {
-    create_dir_nautilus_cli();
+  if (!fs.existsSync(ast_cli_dir_path)) {
+    create_dir_ast_cli();
   }
   //const fileContents = fs.readFileSync(config_file_path, "utf8");
   ////take from the file config
@@ -203,11 +203,11 @@ function init_B() {
     componentPolicyManagement = `${baseComponent}\\component-policy-management`;
 
     const paths = new Array(
-      astOperator,
+     // astOperator,
       astComponents,
-      componenIntegration,
-      componentMetrics,
-      componentPolicyManagement
+     componenIntegration
+     // componentMetrics,
+      //componentPolicyManagement
     );
     paths.forEach(myFunction);
     function myFunction(value, index, array) {
@@ -245,7 +245,6 @@ let credentials_file_format_login = {
 };
 
 let configeureNau = {
-  astPath: "C:/Users/elchanana/IdeaProjects/ast/helm",
   username: "elchanan.arbiv@checkmarx.com",
   jfrogToken: "",
   k3dPath: "C:/k3d",
@@ -260,15 +259,14 @@ let configeureNau = {
   devName: "",
   teamName: "",
   clusters: [
-    "Nautilus-Igor",
-    "Nautilus-Orly",
-    "Nautilus-Jorge",
-    "Nautilus-Shifra",
-    "Nautilus-Chaya",
-    "Nautilus-Ely",
-    "N-Ely",
+    "Unicorn-Asaf",
+    "Unicorn-Sara",
+    "Unicorn-Shoshana",
+    "Unicorn-Tamar",
+    "Unicorn-Elchanan",
+    "Unicorn-Ely-Test",
   ],
-  regions: ["eu-west-2", "eu-west-3", "eu-north-1"],
+  regions: ["eu-west-2", "eu-west-3","eu-central-1", "eu-north-1"],
   baseAstComponent: "",
   services: [
     {
@@ -300,7 +298,6 @@ let configeureNau = {
 };
 
 let aws_credentials_ = {
-  astPath: "C:/Users/elchanana/IdeaProjects/ast/helm",
   username: "elchanan.arbiv@checkmarx.com",
   jfrogToken: "",
 };
@@ -576,7 +573,7 @@ function Login_to_Docker() {
   try {
     //const fileContents = fs.readFileSync("./configFile.json", "utf8");
     const fileContents = fs.readFileSync(
-      `${homeDirectory}/.nautilus-cli/configFile.json`,
+      `${homeDirectory}/.ast-cli/configFile.json`,
       "utf8"
     );
     ////take from the file config
@@ -617,20 +614,20 @@ function create_file_config(configeureNau) {
   });
 }
 
-function create_dir_nautilus_cli() {
-  fs.mkdir(nautilus_cli_dir_path, (err) => {
+function create_dir_ast_cli() {
+  fs.mkdir(ast_cli_dir_path, (err) => {
     if (err) {
       console.error(err);
     } else {
-      console.log(chalk.green("We create a directory named .nautilus-cli"));
+      console.log(chalk.green("We create a directory named .ast-cli"));
     }
   });
 }
 
-function Config_nautilus_cli() {
+function Config_ast_cli() {
   //check if a dir exists
-  if (!fs.existsSync(nautilus_cli_dir_path)) {
-    create_dir_nautilus_cli();
+  if (!fs.existsSync(ast_cli_dir_path)) {
+    create_dir_ast_cli();
   }
 
   console.log(chalk.blue("Please enter the 'yourname@checkmarx.com' \n"));
@@ -670,20 +667,25 @@ function Config_nautilus_cli() {
     componentMetrics = `${baseComponent}\\component-metrics`;
     componentPolicyManagement = `${baseComponent}\\component-policy-management`;
 
+    // const paths = new Array(
+    //   astOperator,
+    //   astComponents,
+    //   componenIntegration,
+    //   componentMetrics,
+    //   componentPolicyManagement
+    // );
     const paths = new Array(
-      astOperator,
-      astComponents,
-      componenIntegration,
-      componentMetrics,
-      componentPolicyManagement
+      astComponents
     );
     paths.forEach(myFunction);
     function myFunction(value, index, array) {
       if (!fs.existsSync(value)) {
-        flag_path_exist = false;
-        console.log(chalk.blue(`the path "${value}"`));
-        console.log(chalk.red(`not exist try again\n`));
+       flag_path_exist = false;
+       console.log(chalk.blue(`the path "${value}"`));
+       console.log(chalk.red(`not exist try again\n`));
+
       }
+
     }
   }
 
@@ -704,7 +706,7 @@ function remove_spaces(el) {
   return val;
 }
 
-module.exports.Config_nautilus_cli = Config_nautilus_cli;
+module.exports.Config_ast_cli = Config_ast_cli;
 module.exports.Login_to_Docker = Login_to_Docker;
 module.exports.get_aws_sso_temporary_credentials =
   get_aws_sso_temporary_credentials;
@@ -720,7 +722,7 @@ module.exports.add_to_config_file = add_to_config_file;
 module.exports.up_and_change_re_af_up_cli_config =
   up_and_change_re_af_up_cli_config;
 
-// module.exports = { Config_nautilus_cli };
+// module.exports = { Config_ast_cli };
 // module.exports = { Login_to_Docker };
 
 //path to ast-operator /ast-components /component-integration /component-metrics /component-policy-managementast-operator
@@ -827,7 +829,7 @@ module.exports.up_and_change_re_af_up_cli_config =
 
 //   	  getConfig() {
 //   		const home = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
-//   		const path=`${home}/.nautilus/configFile.json`;
+//   		const path=`${home}/.ast/configFile.json`;
 //   		if( fs.existsSync(path)) {
 //   			return parseJson<AppConfig>(fs.readFileSync(path).toString());
 //   		}
@@ -862,7 +864,7 @@ module.exports.up_and_change_re_af_up_cli_config =
 
 // // 	private static getConfig(): AppConfig{
 // // 		const home = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
-// // 		const path=`${home}/.nautilus/configFile.json`;
+// // 		const path=`${home}/.ast/configFile.json`;
 // // 		if( fs.existsSync(path)) {
 // // 			return parseJson<AppConfig>(fs.readFileSync(path).toString());
 // // 		}

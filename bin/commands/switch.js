@@ -1,6 +1,6 @@
 const yaml = require("js-yaml");
 const fs = require("fs");
-const nautilus = require("commander");
+const ast = require("commander");
 const chalk = require("chalk");
 const clear = require("clear");
 const prompt = require("prompt-sync")({ sigint: true });
@@ -10,8 +10,8 @@ const os = require("os");
 const printData = require("../models/printData");
 
 const homeDirectory = os.homedir();
-const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
-const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
+const ast_cli_dir_path = `${homeDirectory}/.ast-cli`;
+const config_file_path = `${ast_cli_dir_path}/configFile.json`;
 
 let cluster;
 let region;

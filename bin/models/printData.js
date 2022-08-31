@@ -1,4 +1,4 @@
-const nautilus1 = require("commander");
+const ast1 = require("commander");
 const path = require("path");
 const chalk = require("chalk");
 const clear = require("clear");
@@ -83,7 +83,7 @@ module.exports.printData_try_promise = printData_try_promise;
 
 //   	  getConfig() {
 //   		const home = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
-//   		const path=`${home}/.nautilus/configFile.json`;
+//   		const path=`${home}/.ast/configFile.json`;
 //   		if( fs.existsSync(path)) {
 //   			return parseJson<AppConfig>(fs.readFileSync(path).toString());
 //   		}
@@ -118,7 +118,7 @@ module.exports.printData_try_promise = printData_try_promise;
 
 // // 	private static getConfig(): AppConfig{
 // // 		const home = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
-// // 		const path=`${home}/.nautilus/configFile.json`;
+// // 		const path=`${home}/.ast/configFile.json`;
 // // 		if( fs.existsSync(path)) {
 // // 			return parseJson<AppConfig>(fs.readFileSync(path).toString());
 // // 		}
