@@ -162,6 +162,36 @@ function Install_the_Policy_Management_Component() {
   printData.printData(child);
 }
 
+function Get_Traefik_url2() {
+  
+}
+
+function Get_Traefik_url2B() {
+
+  let myPromise = new Promise((resolve, reject) => {
+    //try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    const data_configFile = JSON.parse(fileContents);
+
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", ["kubectl get svc | findstr traefik"]);
+    // } catch (err) {
+    //   console.error(err);
+    // }
+
+    //printData.printData(child);
+    var trafik = extract_all_trafik_A(child);
+   // if (typeof trafik == "undefined") {
+     
+      resolve(trafik);
+   // }
+  });
+  return myPromise;
+  
+}
+
+
 function Get_Traefik_url() {
   let myPromise = new Promise((resolve, reject) => {
     //try {
@@ -177,9 +207,10 @@ function Get_Traefik_url() {
 
     //printData.printData(child);
     var trafik = extract_all_trafik_A(child);
-    if (typeof trafik !== "undefined") {
+   // if (typeof trafik == "undefined") {
+     
       resolve(trafik);
-    }
+   // }
   });
   return myPromise;
 }
@@ -203,10 +234,8 @@ function Update_Url_in_all_components_tags_orly() {
 
 function extract_all_trafik_A(child) {
   // console.log("extract_all_trafik_A");
-
   var scriptOutput = "";
   child.stdout.setEncoding("utf8");
-
   child.stdout.on("data", function (data) {
     //Here is where the output goes
     traefik = data;
@@ -221,16 +250,13 @@ function extract_all_trafik_A(child) {
   child.stderr.setEncoding("utf8");
   child.stderr.on("data", function (data) {
     //Here is where the error output goes
-
     console.log("stderr: " + data);
-
     data = data.toString();
     scriptOutput += data;
   });
-
   child.on("exit", function () {
-    return extract_trafik(arry_traefik);
-    //console.log("Powershell Script finished");
+    let url= extract_trafik(arry_traefik);
+    return url
   });
   child.stdin.end();
 }
@@ -257,3 +283,4 @@ module.exports.Update_Url_in_all_components_tags_orly =
   Update_Url_in_all_components_tags_orly;
 module.exports.to_delete_check_test_cli = to_delete_check_test_cli;
 module.exports.Login_to_Docker_in_init_file = Login_to_Docker_in_init_file;
+module.exports.extract_all_trafik_A = extract_all_trafik_A;

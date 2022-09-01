@@ -326,7 +326,7 @@ function write_to_file_credentials_for_sso_login() {
         child_crete_token.stdout.on("data", function (data) {
           flag1bn = true;
           console.log("from data in 1bn");
-          console.log("from data in 6A after START  " + data);
+          console.log(data);
           credentials += data;
           arry_context += data;
           console.log("typeof data  " + typeof data);
