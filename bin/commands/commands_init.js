@@ -233,6 +233,9 @@ function Update_Url_in_all_components_tags_orly() {
 }
 
 function extract_all_trafik_A(child) {
+
+  let myPromise = new Promise((resolve, reject) => {
+
   // console.log("extract_all_trafik_A");
   var scriptOutput = "";
   child.stdout.setEncoding("utf8");
@@ -256,9 +259,11 @@ function extract_all_trafik_A(child) {
   });
   child.on("exit", function () {
     let url= extract_trafik(arry_traefik);
-    return url
+    resolve(url);
   });
   child.stdin.end();
+ });
+ return myPromise;
 }
 
 function extract_trafik(arry_traefik) {

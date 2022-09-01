@@ -102,6 +102,14 @@ ast
     clear();
     eksctl_commands.Ast_Components_Installation_AWS_Nimrod();
   });
+  ast
+  .command("Uninstallation_Ast_Components_AWS_Nimrod")
+  .alias("uaci")
+  .description("Uninstallation Ast Components in AWS from Nimrod")
+  .action(() => {
+    clear();
+    eksctl_commands.Ast_Components_Installation_AWS_Nimrod();
+  });
 
   ast
   .command("fortest")
@@ -254,6 +262,15 @@ ast
   clear();
   var trafik_for_up="a8121b65c99144fe894d492a8ca94ccf-1882965643.eu-north-1.elb.amazonaws.com";
   commands_init.Update_Url_in_all_components_tags(trafik_for_up);
+});
+
+ast
+.command("Update_Url_in_ast_components")
+.alias("uuast")
+.description("Update Url in ast components tags")
+.action(() => {
+  clear();
+  eksctl_commands.Update_Url_in_ast_components();
 });
 
 

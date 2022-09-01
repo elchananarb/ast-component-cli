@@ -9,12 +9,288 @@ var spawn = require("child_process").execFileSync,
 const os = require("os");
 const printData = require("../models/printData");
 const commands_init = require("./commands_init");
+const edit_yaml_file = require("../edit-files/edit_yaml_file");
 const { exit } = require("process");
 
 const homeDirectory = os.homedir();
 const ast_cli_dir_path = `${homeDirectory}/.ast-cli`;
 const config_file_path = `${ast_cli_dir_path}/configFile.json`;
 let itemsProcessed_name_cluster = 0;
+
+function Ast_Components_Installation_AWS_Nimrod() {
+
+   Ast_Components_Installation_AWS_Nimrod2().then((nating) => {
+   console.log("befor");
+ 
+     Get_Traefik_url_local().then((child ) => {
+      console.log("after");
+
+      
+      var scriptOutput = "";
+  child.stdout.setEncoding("utf8");
+  child.stdout.on("data", function (data) {
+    //Here is where the output goes
+    traefik = data;
+    traefik2 = data.toString();
+
+    val = traefik.replace(/\s\s+/g, " ");
+    //console.log(val);
+    arry_traefik = val.split(" ");
+    //console.log(arry_traefik);
+  });
+
+  child.stderr.setEncoding("utf8");
+  child.stderr.on("data", function (data) {
+    //Here is where the error output goes
+    console.log("stderr: " + data);
+    data = data.toString();
+    scriptOutput += data;
+  });
+  child.on("exit", function () {
+    let url= arry_traefik[3];
+   //console.log(arry_traefik[3]);
+   re_nstallation_Nimrod3_ast_oprator(url);
+
+  });
+  child.stdin.end();
+ });
+});
+
+ }
+ 
+ function  re_nstallation_Nimrod3_ast_oprator(cluster_url){
+  console.log(cluster_url);
+ 
+
+
+  if (!fs.existsSync(ast_cli_dir_path)) {
+    create_dir_ast_cli();
+  }
+  //const fileContents = fs.readFileSync(config_file_path, "utf8");
+  ////take from the file config
+  //const data_configFile = JSON.parse(fileContents);
+  let username = "";
+  let password = "";
+  if (fs.existsSync(config_file_path)) {
+    fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    data_configFile = JSON.parse(fileContents);
+
+    username = data_configFile.username;
+    password = data_configFile.jfrogToken;
+    const path_astComponents = data_configFile.astComponents;
+    process.chdir(path_astComponents);
+
+    var spawn = require("child_process").spawn,
+      child;
+
+      //child = spawn("powershell.exe",["ls"]);
+
+   child = spawn("powershell.exe", [ `helm upgrade --install ast-operator ast/operator-helm-chart --set config.domain="${cluster_url}" --set config.enableTLS="false"  --set-string config.port=8080 --set config.protocol="http" --set config.disableResourcesAndRequestLimit="true" --set imagePullSecretJfrog.registry="https://checkmarx.jfrog.io" --set imagePullSecrets="regcred" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};$x=0; while ($x -le 1  ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods ast-operator to be created"}};`,]);
+   //  זה בדיקה של אנינסטל לראות שזה באמת הוסר הורדתי את זה  helm uninstall ast-operator;$x=250; while ($x -ge 9 ) {sleep 50 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting until the Pod ast-operator deleted"}};
+//      זה בדיקה של ינסטל אופרטור בהתחלה אני מוריד את הבדיקה כי הוא מתקין לי את אופרטוק ישירות  ת helm upgrade --install ast-operator ast/operator-helm-chart --set config.domain="127.0.0.1" --set config.enableTLS="false"  --set-string config.port=8080 --set config.protocol="http" --set config.disableResourcesAndRequestLimit="true" --set imagePullSecretJfrog.registry="https://checkmarx.jfrog.io" --set imagePullSecrets="regcred" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};$x=0; while ($x -le 1  ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods ast-operator to be created"}};
+
+    //עשיתיח תנאי למעלה אפשר למחור  להוסיף תנאי שאם אין מספיק פודים שלר ימשיך הלאה ואם כם יחזיר את הריסולב
+
+
+    child.stdout.setEncoding("utf8");
+    child.stdout.on("data", function (data) {
+      data_for_create_dev += data;
+      arry_context_for_create_dev += data;
+    });
+
+    child.stderr.setEncoding("utf8");
+    child.stderr.on("data", function (data) {
+      console.log("stderr: " + data);
+      data = data.toString();
+      data_for_create_dev += data;
+    });
+
+    child.on("exit", function () {
+    });
+    child.stdin.end();
+  }
+  printData.printData(child);
+
+ }
+
+ 
+ function Ast_Components_Installation_AWS_Nimrod2() {
+ 
+   let myPromise = new Promise((resolve, reject) => {
+     //try {
+     if (!fs.existsSync(ast_cli_dir_path)) {
+       create_dir_ast_cli();
+     }
+     //const fileContents = fs.readFileSync(config_file_path, "utf8");
+     ////take from the file config
+     //const data_configFile = JSON.parse(fileContents);
+     let username = "";
+     let password = "";
+     if (fs.existsSync(config_file_path)) {
+       fileContents = fs.readFileSync(config_file_path, "utf8");
+       ////take from the file config
+       data_configFile = JSON.parse(fileContents);
+ 
+       username = data_configFile.username;
+       password = data_configFile.jfrogToken;
+       const path_astComponents = data_configFile.astComponents;
+       process.chdir(path_astComponents);
+ 
+       var spawn = require("child_process").spawn,
+         child;
+ 
+       child = spawn("powershell.exe", [
+         `docker login --username ${username} --password ${password} https://checkmarx.jfrog.io/artifactory/docker ; 
+         helm repo remove ast;
+         sleep 30;
+          helm repo add ast https://checkmarx.jfrog.io/artifactory/ast-helm/ --username ${username} --password ${password} ;
+          helm repo update;
+ 
+          helm upgrade --install ast-operator ast/operator-helm-chart --set config.domain="127.0.0.1" --set config.enableTLS="false"  --set-string config.port=8080 --set config.protocol="http" --set config.disableResourcesAndRequestLimit="true" --set imagePullSecretJfrog.registry="https://checkmarx.jfrog.io" --set imagePullSecrets="regcred" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};$x=0; while ($x -le 1  ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods ast-operator to be created"}};
+          echo "after install one ast-operator ";
+ 
+          helm upgrade --install platform ast/platform-local;$x=1; while ($x -le 11 ) {sleep 60 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods ast/platform-local to be created"}};
+          helm uninstall ast-operator;$x=1; while ($x -le 2 ) {sleep 50 ;$x=3};
+          echo "after uninstal  befor install";
+         
+         `,
+       ]);
+      //  זה בדיקה של אנינסטל לראות שזה באמת הוסר הורדתי את זה  helm uninstall ast-operator;$x=250; while ($x -ge 9 ) {sleep 50 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting until the Pod ast-operator deleted"}};
+ //      זה בדיקה של ינסטל אופרטור בהתחלה אני מוריד את הבדיקה כי הוא מתקין לי את אופרטוק ישירות  ת helm upgrade --install ast-operator ast/operator-helm-chart --set config.domain="127.0.0.1" --set config.enableTLS="false"  --set-string config.port=8080 --set config.protocol="http" --set config.disableResourcesAndRequestLimit="true" --set imagePullSecretJfrog.registry="https://checkmarx.jfrog.io" --set imagePullSecrets="regcred" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};$x=0; while ($x -le 1  ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods ast-operator to be created"}};
+ 
+       //עשיתיח תנאי למעלה אפשר למחור  להוסיף תנאי שאם אין מספיק פודים שלר ימשיך הלאה ואם כם יחזיר את הריסולב
+ 
+ 
+       child.stdout.setEncoding("utf8");
+       child.stdout.on("data", function (data) {
+         data_for_create_dev += data;
+         arry_context_for_create_dev += data;
+       });
+ 
+       child.stderr.setEncoding("utf8");
+       child.stderr.on("data", function (data) {
+         console.log("stderr: " + data);
+         data = data.toString();
+         data_for_create_dev += data;
+       });
+ 
+       child.on("exit", function () {
+         resolve("ddd");
+       });
+       child.stdin.end();
+     }
+     printData.printData(child);
+   });
+   return myPromise;
+ }
+ 
+
+ function Get_Traefik_url_local() {
+  console.log("Get_Traefik_url_local");
+  let myPromise = new Promise((resolve, reject) => {
+    //try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    const data_configFile = JSON.parse(fileContents);
+
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", ["kubectl get svc | findstr traefik"]);
+   
+    
+
+    // child.on("exit", function () {
+    //   console.log("inside exit 1");
+    //  // console.log(arry_context_for_create_dev)
+
+     resolve(child);
+
+     // resolve(arry_context_for_create_dev);
+    });
+
+//  printData.printData(child);
+  
+  // });
+  return myPromise;
+}
+
+
+
+function extract_all_trafik_A(child) {
+
+  let myPromise = new Promise((resolve, reject) => {
+
+  // console.log("extract_all_trafik_A");
+  var scriptOutput = "";
+  child.stdout.setEncoding("utf8");
+  child.stdout.on("data", function (data) {
+    //Here is where the output goes
+    traefik = data;
+    traefik2 = data.toString();
+
+    val = traefik.replace(/\s\s+/g, " ");
+    //console.log(val);
+    arry_traefik = val.split(" ");
+    //console.log(arry_traefik);
+  });
+
+  child.stderr.setEncoding("utf8");
+  child.stderr.on("data", function (data) {
+    //Here is where the error output goes
+    console.log("stderr: " + data);
+    data = data.toString();
+    scriptOutput += data;
+  });
+  child.on("exit", function () {
+    //let url= extract_trafik(arry_traefik);
+    resolve(arry_traefik);
+  });
+  child.stdin.end();
+ });
+ return myPromise;
+}
+
+function extract_trafik(arry_traefik) {
+  url_trafik = arry_traefik[3];
+  //console.log(chalk.green(url_trafik));
+  return url_trafik;
+  //edit_yaml_file.Update_Url_in_all_components_tags(url_trafik);
+}
+ 
+
+
+
+
+
+
+
+
+
+function Uninstallation_Ast_Components_AWS_Nimrod() {
+
+  if (fs.existsSync(config_file_path)) {
+    fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    data_configFile = JSON.parse(fileContents);
+
+    const path_astComponents = data_configFile.astComponents;
+    const path_yaml_astComponents = `${path_astComponents}/platforms/helm/values.yaml`;
+    const path_to_up_astComponents = `${path_astComponents}/platforms/helm`;
+
+   
+    process.chdir(path_to_up_astComponents);
+
+   var spawn = require("child_process").spawn,
+   child;
+ child = spawn("powershell.exe", ["helm uninstall ast"]);
+
+  }
+
+  
+ 
+}
+
+
 
 function Login_to_Docker_ineks_file() {
   //problem if not exisit
@@ -62,6 +338,26 @@ function Create_local_components_clusterA() {
     });
  // });
 }
+
+
+function Update_Url_in_ast_components()
+{
+  Get_Traefik_url_local().then((url_trafik) => {
+
+    traefik = url_trafik;
+    traefik2 = url_trafik.toString();
+    val_trafefikA = traefik.replace(/\s\s+/g, " ");
+    //console.log(val);
+    arry_traefik = val_trafefikA.split(" ");
+
+   console.log(arry_traefik[3]);
+   url=(arry_traefik[3]);
+  
+  edit_yaml_file.Update_Url_in_ast_components_tags_nimrod(url)
+
+});
+}
+
 
 function test() {
   console.log("beforerfef");
@@ -113,178 +409,6 @@ function test() {
   }
   });
 
-}
-function Get_Traefik_url_local() {
-  let myPromise = new Promise((resolve, reject) => {
-    //try {
-    const fileContents = fs.readFileSync(config_file_path, "utf8");
-    const data_configFile = JSON.parse(fileContents);
-
-    var spawn = require("child_process").spawn,
-      child;
-    child = spawn("powershell.exe", ["kubectl get svc | findstr traefik"]);
-   
-     child.stdout.setEncoding("utf8");
-    child.stdout.on("data", function (data) {
-      data_for_create_dev += data;
-      arry_context_for_create_dev += data;
-    });
-
-    child.stderr.setEncoding("utf8");
-    child.stderr.on("data", function (data) {
-      console.log("stderr: " +data);
-      data = data.toString();
-      data_for_create_dev += data;
-    });
-
-    child.on("exit", function () {
-      console.log("inside exit 1");
-      console.log(arry_context_for_create_dev)
-
-      resolve(arry_context_for_create_dev);
-    });
-    child.stdin.end();
-
-//  printData.printData(child);
-  
-  });
-  return myPromise;
-}
-
-
- function Get_Traefik_url_local0ld() {
-  let myPromise = new Promise((resolve, reject) => {
-    //try {
-    const fileContents = fs.readFileSync(config_file_path, "utf8");
-    const data_configFile = JSON.parse(fileContents);
-
-    var spawn = require("child_process").spawn,
-      child;
-    child = spawn("powershell.exe", ["kubectl get svc | findstr traefik"]);
-   
-     child.stdout.setEncoding("utf8");
-    child.stdout.on("data", function (data) {
-      data_for_create_dev += data;
-      arry_context_for_create_dev += data;
-    });
-
-    child.stderr.setEncoding("utf8");
-    child.stderr.on("data", function (data) {
-      console.log("stderr: " +data);
-      data = data.toString();
-      data_for_create_dev += data;
-    });
-
-    child.on("exit", function () {
-    // console.log("inside exit");
-      console.log(arry_context_for_create_dev)
-
-      //commands_init.extract_all_trafik_A(child)
-
-      //setTimeout(commands_init.extract_all_trafik_A(child), 300000);
-
-     //var url_local=  commands_init.extract_all_trafik_A(child);
-     
-   
-
-    // console.log(chalk.blue(url_local));
-      resolve("ddd");
-    });
-    child.stdin.end();
-
-//  printData.printData(child);
-  
-  });
-  return myPromise;
-}
-
-
-function Ast_Components_Installation_AWS_Nimrod() {
-
-  Ast_Components_Installation_AWS_Nimrod2().then((chiled_trafik_for_up) => {
-    console.log("ocell");
-  //  console.log(trafik_for_up);
-  var b=commands_init.Get_Traefik_url();
-  console.log("befor");
-
-  console.log(b);
-  console.log("after");
-
-  // helm upgrade --install ast-operator ast/operator-helm-chart --set config.domain="127.0.0.1" --set config.enableTLS="false"  --set-string config.port=8080 --set config.protocol="http" --set config.disableResourcesAndRequestLimit="true" --set imagePullSecretJfrog.registry="https://checkmarx.jfrog.io" --set imagePullSecrets="regcred" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};$x=0; while ($x -le 1  ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods ast-operator to be created"}};
-  // echo "after install new ast-operator ";
-  });
-
-
-}
-
-function Ast_Components_Installation_AWS_Nimrod2() {
-
-  let myPromise = new Promise((resolve, reject) => {
-    //try {
-    if (!fs.existsSync(ast_cli_dir_path)) {
-      create_dir_ast_cli();
-    }
-    //const fileContents = fs.readFileSync(config_file_path, "utf8");
-    ////take from the file config
-    //const data_configFile = JSON.parse(fileContents);
-    let username = "";
-    let password = "";
-    if (fs.existsSync(config_file_path)) {
-      fileContents = fs.readFileSync(config_file_path, "utf8");
-      ////take from the file config
-      data_configFile = JSON.parse(fileContents);
-
-      username = data_configFile.username;
-      password = data_configFile.jfrogToken;
-      const path_astComponents = data_configFile.astComponents;
-      process.chdir(path_astComponents);
-
-      var spawn = require("child_process").spawn,
-        child;
-
-      child = spawn("powershell.exe", [
-        `docker login --username ${username} --password ${password} https://checkmarx.jfrog.io/artifactory/docker ; 
-        helm repo remove ast;
-        sleep 30;
-         helm repo add ast https://checkmarx.jfrog.io/artifactory/ast-helm/ --username ${username} --password ${password} ;
-         helm repo update;
-
-         helm upgrade --install ast-operator ast/operator-helm-chart --set config.domain="127.0.0.1" --set config.enableTLS="false"  --set-string config.port=8080 --set config.protocol="http" --set config.disableResourcesAndRequestLimit="true" --set imagePullSecretJfrog.registry="https://checkmarx.jfrog.io" --set imagePullSecrets="regcred" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};$x=0; while ($x -le 1  ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods ast-operator to be created"}};
-         echo "after install one ast-operator ";
-
-         helm upgrade --install platform ast/platform-local;$x=1; while ($x -le 11 ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods ast/platform-local to be created"}};
-         helm uninstall ast-operator;$x=1; while ($x -le 2 ) {sleep 50 ;$x=3};//checek with grep that is delete!!!
-         echo "after uninstal  befor install";
-        
-        `,
-      ]);
-     //  זה בדיקה של אנינסטל לראות שזה באמת הוסר הורדתי את זה  helm uninstall ast-operator;$x=250; while ($x -ge 9 ) {sleep 50 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting until the Pod ast-operator deleted"}};
-//      זה בדיקה של ינסטל אופרטור בהתחלה אני מוריד את הבדיקה כי הוא מתקין לי את אופרטוק ישירות  ת helm upgrade --install ast-operator ast/operator-helm-chart --set config.domain="127.0.0.1" --set config.enableTLS="false"  --set-string config.port=8080 --set config.protocol="http" --set config.disableResourcesAndRequestLimit="true" --set imagePullSecretJfrog.registry="https://checkmarx.jfrog.io" --set imagePullSecrets="regcred" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};$x=0; while ($x -le 1  ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods ast-operator to be created"}};
-
-      //עשיתיח תנאי למעלה אפשר למחור  להוסיף תנאי שאם אין מספיק פודים שלר ימשיך הלאה ואם כם יחזיר את הריסולב
-
-
-      child.stdout.setEncoding("utf8");
-      child.stdout.on("data", function (data) {
-        data_for_create_dev += data;
-        arry_context_for_create_dev += data;
-      });
-
-      child.stderr.setEncoding("utf8");
-      child.stderr.on("data", function (data) {
-        console.log("stderr: " + data);
-        data = data.toString();
-        data_for_create_dev += data;
-      });
-
-      child.on("exit", function () {
-        resolve("ddd");
-      });
-      child.stdin.end();
-    }
-    printData.printData(child);
-  });
-  return myPromise;
 }
 
 
@@ -702,7 +826,6 @@ function create_cluster() {
     else
     {
       
-
       child = spawn("powershell.exe", [
         `eksctl create cluster --name ${name_cluster} --region ${regions[region]} --node-type t3.2xlarge --nodes 2 --nodes-min 1 --nodes-max 3 --tags CxSaverTeamName=Chameleon,CxSaverClusterName=${name_cluster} --version 1.21`,
       ]);
@@ -785,6 +908,7 @@ function get_contexts() {
   }
   printData.printData(child);
 }
+
 function Connect_cluster() {
   try {
     itemsProcessed_name_cluster = 0;
@@ -948,6 +1072,7 @@ module.exports.Login_to_Docker_ineks_file = Login_to_Docker_ineks_file;
 module.exports.create_cluster_sso = create_cluster_sso;
 module.exports.delete_cluster_sso = delete_cluster_sso;
 module.exports.Ast_Components_Installation_AWS_Nimrod = Ast_Components_Installation_AWS_Nimrod;
+module.exports.Uninstallation_Ast_Components_AWS_Nimrod = Uninstallation_Ast_Components_AWS_Nimrod;
 module.exports.test = test;
 module.exports.Ast_Components_Installation_AWS_Nimrod2 = Ast_Components_Installation_AWS_Nimrod2;
 module.exports.create_cluster = create_cluster;
@@ -970,3 +1095,54 @@ module.exports.Create_in_aws_cluster_shifra = Create_in_aws_cluster_shifra;
 
 module.exports.Create_local_components_cluster_orly_without_metrics_And_integretions =
   Create_local_components_cluster_orly_without_metrics_And_integretions;
+
+
+module.exports.Update_Url_in_ast_components = Update_Url_in_ast_components;
+
+
+
+  // function Get_Traefik_url_local0ld() {
+  //   let myPromise = new Promise((resolve, reject) => {
+  //     //try {
+  //     const fileContents = fs.readFileSync(config_file_path, "utf8");
+  //     const data_configFile = JSON.parse(fileContents);
+  
+  //     var spawn = require("child_process").spawn,
+  //       child;
+  //     child = spawn("powershell.exe", ["kubectl get svc | findstr traefik"]);
+     
+  //      child.stdout.setEncoding("utf8");
+  //     child.stdout.on("data", function (data) {
+  //       data_for_create_dev += data;
+  //       arry_context_for_create_dev += data;
+  //     });
+  
+  //     child.stderr.setEncoding("utf8");
+  //     child.stderr.on("data", function (data) {
+  //       console.log("stderr: " +data);
+  //       data = data.toString();
+  //       data_for_create_dev += data;
+  //     });
+  
+  //     child.on("exit", function () {
+  //     // console.log("inside exit");
+  //       console.log(arry_context_for_create_dev)
+  
+  //       //commands_init.extract_all_trafik_A(child)
+  
+  //       //setTimeout(commands_init.extract_all_trafik_A(child), 300000);
+  
+  //      //var url_local=  commands_init.extract_all_trafik_A(child);
+       
+     
+  
+  //     // console.log(chalk.blue(url_local));
+  //       resolve("ddd");
+  //     });
+  //     child.stdin.end();
+  
+  // //  printData.printData(child);
+    
+  //   });
+  //   return myPromise;
+  // }

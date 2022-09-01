@@ -196,7 +196,7 @@ function init_B() {
     }
 
     astOperator = `${baseComponent}\\ast-operator`;
-    astComponents = `${baseComponent}\\ast-Components`;
+    astComponents = `${baseComponent}\\ast-components`;
     componenIntegration = `${baseComponent}\\component-integration`;
     //componentMetrics = `${baseComponent}\\component-ast-metrics`;
     componentMetrics = `${baseComponent}\\component-metrics`;
@@ -661,7 +661,7 @@ function Config_ast_cli() {
     configeureNau.baseAstComponent = baseComponent;
 
     astOperator = `${baseComponent}\\ast-operator`;
-    astComponents = `${baseComponent}\\ast-Components`;
+    astComponents = `${baseComponent}\\ast-components`;
     componenIntegration = `${baseComponent}\\component-integration`;
     //componentMetrics = `${baseComponent}\\component-ast-metrics`;
     componentMetrics = `${baseComponent}\\component-metrics`;
