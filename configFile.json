@@ -4,12 +4,12 @@
   "devName": "",
   "teamName": "",
   "clusters": [
-    "Nautilus-Igor",
-    "Nautilus-Orly",
-    "Nautilus-Jorge",
-    "Nautilus-Ely",
+    "ast-Igor",
+    "ast-Orly",
+    "ast-Jorge",
+    "ast-Ely",
     "ely-test",
-    "Nautilus-Team",
+    "ast-Team",
     "N-Ely"
   ],
   "regions": ["eu-west-1", "eu-west-2", "eu-west-3", "eu-north-1"],

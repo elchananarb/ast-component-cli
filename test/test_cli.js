@@ -13,7 +13,7 @@ function test_cli_after_changeA() {
 
 function test_cli_after_changeB() {
   let myPromise = new Promise((resolve, reject) => {
-    process.chdir("C:/Projects/Js/nautilus1");
+    process.chdir("C:/Projects/Js/ast1");
 
     // //after Change the directory can be input command in new directory
     var spawn = require("child_process").spawn,

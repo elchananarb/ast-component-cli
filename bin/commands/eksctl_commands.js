@@ -1,6 +1,6 @@
 const yaml = require("js-yaml");
 const fs = require("fs");
-const nautilus = require("commander");
+const ast = require("commander");
 const chalk = require("chalk");
 const clear = require("clear");
 const prompt = require("prompt-sync")({ sigint: true });
@@ -11,8 +11,8 @@ const printData = require("../models/printData");
 const { exit } = require("process");
 
 const homeDirectory = os.homedir();
-const nautilus_cli_dir_path = `${homeDirectory}/.nautilus-cli`;
-const config_file_path = `${nautilus_cli_dir_path}/configFile.json`;
+const ast_cli_dir_path = `${homeDirectory}/.ast-cli`;
+const config_file_path = `${ast_cli_dir_path}/configFile.json`;
 let itemsProcessed_name_cluster = 0;
 
 function Login_to_Docker_ineks_file() {
@@ -20,7 +20,7 @@ function Login_to_Docker_ineks_file() {
   try {
     //const fileContents = fs.readFileSync("./configFile.json", "utf8");
     const fileContents = fs.readFileSync(
-      `${homeDirectory}/.nautilus-cli/configFile.json`,
+      `${homeDirectory}/.ast-cli/configFile.json`,
       "utf8"
     );
     ////take from the file config
@@ -84,8 +84,8 @@ function Create_in_aws_cluster_shifra() {
  
   let myPromise = new Promise((resolve, reject) => {
     //try {
-    if (!fs.existsSync(nautilus_cli_dir_path)) {
-      create_dir_nautilus_cli();
+    if (!fs.existsSync(ast_cli_dir_path)) {
+      create_dir_ast_cli();
     }
     //const fileContents = fs.readFileSync(config_file_path, "utf8");
     ////take from the file config
@@ -147,8 +147,8 @@ function Create_in_aws_cluster_shifra() {
 function Create_local_components_clusterC() {
   let myPromise = new Promise((resolve, reject) => {
     //try {
-    if (!fs.existsSync(nautilus_cli_dir_path)) {
-      create_dir_nautilus_cli();
+    if (!fs.existsSync(ast_cli_dir_path)) {
+      create_dir_ast_cli();
     }
     //const fileContents = fs.readFileSync(config_file_path, "utf8");
     ////take from the file config
@@ -197,8 +197,8 @@ function Create_local_components_clusterC() {
 function  Create_local_components_clusterCigor() {
   let myPromise = new Promise((resolve, reject) => {
     //try {
-    if (!fs.existsSync(nautilus_cli_dir_path)) {
-      create_dir_nautilus_cli();
+    if (!fs.existsSync(ast_cli_dir_path)) {
+      create_dir_ast_cli();
     }
     //const fileContents = fs.readFileSync(config_file_path, "utf8");
     ////take from the file config
@@ -240,8 +240,8 @@ function  Create_local_components_clusterCigor() {
 function Create_local_components_cluster_orly_without_metrics_And_integretions() {
   // let myPromise = new Promise((resolve, reject) => {
   //try {
-  if (!fs.existsSync(nautilus_cli_dir_path)) {
-    create_dir_nautilus_cli();
+  if (!fs.existsSync(ast_cli_dir_path)) {
+    create_dir_ast_cli();
   }
   //const fileContents = fs.readFileSync(config_file_path, "utf8");
   ////take from the file config
@@ -306,8 +306,8 @@ var arry_context_for_create_dev = [];
 function Create_local_components_clusterB() {
   let myPromise = new Promise((resolve, reject) => {
     // try {
-    if (!fs.existsSync(nautilus_cli_dir_path)) {
-      create_dir_nautilus_cli();
+    if (!fs.existsSync(ast_cli_dir_path)) {
+      create_dir_ast_cli();
     }
     //const fileContents = fs.readFileSync(config_file_path, "utf8");
     ////take from the file config

@@ -1,10 +1,10 @@
 {
-  "name": "nautilus1",
+  "name": "ast1",
   "version": "1.0.0",
   "description": "A cool dev tool to help automate the intialize phase of your git workflow.",
   "main": "./bin/index.js",
   "bin": {
-    "nautilus1": "./bin/index.js"
+    "ast1": "./bin/index.js"
   },
   "scripts": {
     "test": "jest",
@@ -20,9 +20,9 @@
     "assets": [
       "node_modules/figlet/fonts/Standard.flf",
       "C:/Users/elchanana/AppData/Local/Microsoft/TypeScript/4.6/node_modules/@types/figlet/index.d.ts",
-      "C:/**/nautilus1/node_modules/figlet/fonts/Standard.flf",
+      "C:/**/ast1/node_modules/figlet/fonts/Standard.flf",
       "data/xiaomiPackageRemovalList.json",
-      "C:/Projects/Js/nautilus1/powerShellScript/createCluster.ps1"
+      "C:/Projects/Js/ast1/powerShellScript/createCluster.ps1"
     ],
     "targets": [
       "node12-linux-x64",
