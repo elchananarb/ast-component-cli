@@ -301,18 +301,242 @@ function extract_trafik(arry_traefik) {
 
 
 
+function Switched_context_sso() {
+  try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    const data_configFile = JSON.parse(fileContents);
+    const clusters = data_configFile.clusters;
+    const regions = data_configFile.regions;
+    ////take from the file config
+    ////take cluster name from the file config
+    console.log(chalk.green("Please choose the cluster to context \n"));
+    clusters.forEach(myFunction_choose_cluster);
+    function myFunction_choose_cluster(item, index, arr) {
+      console.log(
+        chalk.blue(`To context a cluster for ${item} enter ${index}`)
+      );
+    }
+    let cluster = prompt();
 
+    console.log(chalk.green("Please choose  region \n"));
+    regions.forEach(myFunction_choose_region);
+    function myFunction_choose_region(item, index, arr) {
+      console.log(chalk.blue(`To context a cluster in ${item} enter ${index}`));
+    }
+    let region = prompt();
 
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", [
+      `eksctl delete cluster -n ${clusters[cluster]} -r ${regions[region]} --profile default`,
+    ]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+}
 
+function create_cluster() {
+  try {
+    itemsProcessed_name_cluster = 0;
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    const data_configFile = JSON.parse(fileContents);
+    const clusters = data_configFile.clusters;
+    console.log(chalk.green("Please choose the cluster to create \n"));
+    clusters.forEach(myFunction_choose_cluster);
 
+    function myFunction_choose_cluster(item, index, arr) {
+      console.log(
+        chalk.blue(`To create a cluster for ${item} enter ${index}`)
+      );
+      itemsProcessed_name_cluster += 1;
+      //console.log(itemsProcessed_name_cluster);
+      //console.log(arr.length);
 
+      if (itemsProcessed_name_cluster === arr.length) {
+        console.log(
+          chalk.green(`To add a new "cluster name" enter ${index + 1}`)
+        );
+      }
+    }
+    let index_cluster = prompt();
+    let name_cluster="";
+    if (index_cluster == clusters.length) {
+      console.log(chalk.blue(`Please enter the name of cluster`));
+      name_cluster = prompt();
+    }
+    else{
+      name_cluster = clusters[index_cluster];
 
+    }
+    // console.log("llllllllllllll");
+    // console.log(name_cluster);
 
+    const regions = data_configFile.
+    regions;
+    console.log(chalk.green("Please choose  region \n"));
+    regions.forEach(myFunction_choose_region);
+    function myFunction_choose_region(item, index, arr) {
+      console.log(chalk.blue(`To create a cluster in ${item} enter ${index}`));
+    }
+    let region = prompt();
 
+    var spawn = require("child_process").spawn,
+    child;
+    
+    child = spawn("powershell.exe", [
+      `eksctl create cluster --name ${name_cluster} --region ${regions[region]} --node-type t3.xlarge --nodes 2 --nodes-min 1 --nodes-max 3 --tags CxSaverTeamName=Chameleon,CxSaverClusterName=${name_cluster} --version 1.21`,
+    ]);
+   
+  
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+}
 
+function delete_cluster() {
+  //const fileContents = fs.readFileSync("./configFile.json", "utf8");
+  try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    const data_configFile = JSON.parse(fileContents);
+    const clusters = data_configFile.clusters;
+    const regions = data_configFile.regions;
+    ////take cluster name from the file config
+    console.log(chalk.green("Please choose the cluster to delete \n"));
+    clusters.forEach(myFunction_choose_cluster);
+    function myFunction_choose_cluster(item, index, arr) {
+      console.log(chalk.blue(`To delete a cluster for ${item} enter ${index}`));
+    }
+    let cluster = prompt();
 
+    console.log(chalk.green("Please choose  region \n"));
+    regions.forEach(myFunction_choose_region);
+    function myFunction_choose_region(item, index, arr) {
+      console.log(chalk.blue(`To delete a cluster in ${item} enter ${index}`));
+    }
+    let region = prompt();
 
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", [
+      `eksctl delete cluster -n ${clusters[cluster]} -r ${regions[region]}`,
+    ]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+}
 
+function Get_current_context() {
+  try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    const data_configFile = JSON.parse(fileContents);
+    const clusters = data_configFile.clusters;
+    const regions = data_configFile.regions;
+    ////take from the file config
+
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", [`kubectl config current-context`]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+}
+
+function get_contexts() {
+  //const fileContents = fs.readFileSync("./configFile.json", "utf8");
+  try {
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    const data_configFile = JSON.parse(fileContents);
+    const clusters = data_configFile.clusters;
+    const regions = data_configFile.regions;
+    ////take from the file config
+
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", [`kubectl config get-contexts`]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+}
+
+function Connect_cluster() {
+  try {
+    itemsProcessed_name_cluster = 0;
+
+    const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    const data_configFile = JSON.parse(fileContents);
+    ////take cluster name from the file config
+    const clusters = data_configFile.clusters;
+    console.log(chalk.green("Please choose the cluster to Connect \n"));
+    clusters.forEach(myFunction_choose_cluster);
+
+    function myFunction_choose_cluster(item, index, arr) {
+      console.log(
+        chalk.blue(`To Connect a cluster for ${item} enter ${index}`)
+      );
+      itemsProcessed_name_cluster += 1;
+      //console.log(itemsProcessed_name_cluster);
+      //console.log(arr.length);
+
+      if (itemsProcessed_name_cluster === arr.length) {
+        console.log(
+          chalk.green(`To Connect a new "cluster name" enter ${index + 1}`)
+        );
+      }
+    }
+    let index_cluster = prompt();
+    let name_cluster = clusters[index_cluster];
+    if (index_cluster == clusters.length) {
+      console.log(chalk.blue(`Please enter the name of cluster`));
+      name_cluster = prompt();
+    }
+    // console.log("llllllllllllll");
+    // console.log(name_cluster);
+
+    const regions = data_configFile.regions;
+    console.log(chalk.green("Please choose  region \n"));
+    regions.forEach(myFunction_choose_region);
+    function myFunction_choose_region(item, index, arr) {
+      console.log(chalk.blue(`To create a cluster in ${item} enter ${index}`));
+    }
+    let region = prompt();
+
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", [
+      `eksctl utils write-kubeconfig --cluster=${name_cluster} --region ${regions[region]}`,
+    ]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+}
+
+function delete_Connect_cluster() {
+  try {
+    itemsProcessed_name_cluster = 0;
+    console.log(chalk.green("Please choose the cluster to delete Connect \n"));
+    let name_cluster_to_delete_connect = prompt();
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", [
+      `kubectl config delete-context ${name_cluster_to_delete_connect}`,
+    ]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+}
 
 
 function Login_to_Docker_ineks_file() {
@@ -673,226 +897,6 @@ function Create_local_components_clusterB() {
   return myPromise;
 }
 
-function Switched_context_sso() {
-  try {
-    const fileContents = fs.readFileSync(config_file_path, "utf8");
-    ////take from the file config
-    const data_configFile = JSON.parse(fileContents);
-    const clusters = data_configFile.clusters;
-    const regions = data_configFile.regions;
-    ////take from the file config
-    ////take cluster name from the file config
-    console.log(chalk.green("Please choose the cluster to context \n"));
-    clusters.forEach(myFunction_choose_cluster);
-    function myFunction_choose_cluster(item, index, arr) {
-      console.log(
-        chalk.blue(`To context a cluster for ${item} enter ${index}`)
-      );
-    }
-    let cluster = prompt();
-
-    console.log(chalk.green("Please choose  region \n"));
-    regions.forEach(myFunction_choose_region);
-    function myFunction_choose_region(item, index, arr) {
-      console.log(chalk.blue(`To context a cluster in ${item} enter ${index}`));
-    }
-    let region = prompt();
-
-    var spawn = require("child_process").spawn,
-      child;
-    child = spawn("powershell.exe", [
-      `eksctl delete cluster -n ${clusters[cluster]} -r ${regions[region]} --profile default`,
-    ]);
-  } catch (err) {
-    console.error(err);
-  }
-  printData.printData(child);
-}
-
-function create_cluster() {
-  try {
-    itemsProcessed_name_cluster = 0;
-    const fileContents = fs.readFileSync(config_file_path, "utf8");
-    ////take from the file config
-    const data_configFile = JSON.parse(fileContents);
-    const clusters = data_configFile.clusters;
-    console.log(chalk.green("Please choose the cluster to create \n"));
-    clusters.forEach(myFunction_choose_cluster);
-
-    function myFunction_choose_cluster(item, index, arr) {
-      console.log(
-        chalk.blue(`To create a cluster for ${item} enter ${index}`)
-      );
-      itemsProcessed_name_cluster += 1;
-      //console.log(itemsProcessed_name_cluster);
-      //console.log(arr.length);
-
-      if (itemsProcessed_name_cluster === arr.length) {
-        console.log(
-          chalk.green(`To add a new "cluster name" enter ${index + 1}`)
-        );
-      }
-    }
-    let index_cluster = prompt();
-    let name_cluster="";
-    if (index_cluster == clusters.length) {
-      console.log(chalk.blue(`Please enter the name of cluster`));
-      name_cluster = prompt();
-    }
-    else{
-      name_cluster = clusters[index_cluster];
-
-    }
-    // console.log("llllllllllllll");
-    // console.log(name_cluster);
-
-    const regions = data_configFile.
-    regions;
-    console.log(chalk.green("Please choose  region \n"));
-    regions.forEach(myFunction_choose_region);
-    function myFunction_choose_region(item, index, arr) {
-      console.log(chalk.blue(`To create a cluster in ${item} enter ${index}`));
-    }
-    let region = prompt();
-
-    var spawn = require("child_process").spawn,
-    child;
-    
-    child = spawn("powershell.exe", [
-      `eksctl create cluster --name ${name_cluster} --region ${regions[region]} --node-type t3.xlarge --nodes 2 --nodes-min 1 --nodes-max 3 --tags CxSaverTeamName=Chameleon,CxSaverClusterName=${name_cluster} --version 1.21`,
-    ]);
-   
-  
-  } catch (err) {
-    console.error(err);
-  }
-  printData.printData(child);
-}
-
-function delete_cluster() {
-  //const fileContents = fs.readFileSync("./configFile.json", "utf8");
-  try {
-    const fileContents = fs.readFileSync(config_file_path, "utf8");
-    ////take from the file config
-    const data_configFile = JSON.parse(fileContents);
-    const clusters = data_configFile.clusters;
-    const regions = data_configFile.regions;
-    ////take cluster name from the file config
-    console.log(chalk.green("Please choose the cluster to delete \n"));
-    clusters.forEach(myFunction_choose_cluster);
-    function myFunction_choose_cluster(item, index, arr) {
-      console.log(chalk.blue(`To delete a cluster for ${item} enter ${index}`));
-    }
-    let cluster = prompt();
-
-    console.log(chalk.green("Please choose  region \n"));
-    regions.forEach(myFunction_choose_region);
-    function myFunction_choose_region(item, index, arr) {
-      console.log(chalk.blue(`To delete a cluster in ${item} enter ${index}`));
-    }
-    let region = prompt();
-
-    var spawn = require("child_process").spawn,
-      child;
-    child = spawn("powershell.exe", [
-      `eksctl delete cluster -n ${clusters[cluster]} -r ${regions[region]}`,
-    ]);
-  } catch (err) {
-    console.error(err);
-  }
-  printData.printData(child);
-}
-
-function Get_current_context() {
-  try {
-    const fileContents = fs.readFileSync(config_file_path, "utf8");
-    ////take from the file config
-    const data_configFile = JSON.parse(fileContents);
-    const clusters = data_configFile.clusters;
-    const regions = data_configFile.regions;
-    ////take from the file config
-
-    var spawn = require("child_process").spawn,
-      child;
-    child = spawn("powershell.exe", [`kubectl config current-context`]);
-  } catch (err) {
-    console.error(err);
-  }
-  printData.printData(child);
-}
-
-function get_contexts() {
-  //const fileContents = fs.readFileSync("./configFile.json", "utf8");
-  try {
-    const fileContents = fs.readFileSync(config_file_path, "utf8");
-    ////take from the file config
-    const data_configFile = JSON.parse(fileContents);
-    const clusters = data_configFile.clusters;
-    const regions = data_configFile.regions;
-    ////take from the file config
-
-    var spawn = require("child_process").spawn,
-      child;
-    child = spawn("powershell.exe", [`kubectl config get-contexts`]);
-  } catch (err) {
-    console.error(err);
-  }
-  printData.printData(child);
-}
-
-function Connect_cluster() {
-  try {
-    itemsProcessed_name_cluster = 0;
-
-    const fileContents = fs.readFileSync(config_file_path, "utf8");
-    ////take from the file config
-    const data_configFile = JSON.parse(fileContents);
-    ////take cluster name from the file config
-    const clusters = data_configFile.clusters;
-    console.log(chalk.green("Please choose the cluster to Connect \n"));
-    clusters.forEach(myFunction_choose_cluster);
-
-    function myFunction_choose_cluster(item, index, arr) {
-      console.log(
-        chalk.blue(`To Connect a cluster for ${item} enter ${index}`)
-      );
-      itemsProcessed_name_cluster += 1;
-      //console.log(itemsProcessed_name_cluster);
-      //console.log(arr.length);
-
-      if (itemsProcessed_name_cluster === arr.length) {
-        console.log(
-          chalk.green(`To Connect a new "cluster name" enter ${index + 1}`)
-        );
-      }
-    }
-    let index_cluster = prompt();
-    let name_cluster = clusters[index_cluster];
-    if (index_cluster == clusters.length) {
-      console.log(chalk.blue(`Please enter the name of cluster`));
-      name_cluster = prompt();
-    }
-    // console.log("llllllllllllll");
-    // console.log(name_cluster);
-
-    const regions = data_configFile.regions;
-    console.log(chalk.green("Please choose  region \n"));
-    regions.forEach(myFunction_choose_region);
-    function myFunction_choose_region(item, index, arr) {
-      console.log(chalk.blue(`To create a cluster in ${item} enter ${index}`));
-    }
-    let region = prompt();
-
-    var spawn = require("child_process").spawn,
-      child;
-    child = spawn("powershell.exe", [
-      `eksctl utils write-kubeconfig --cluster=${name_cluster} --region ${regions[region]}`,
-    ]);
-  } catch (err) {
-    console.error(err);
-  }
-  printData.printData(child);
-}
 
 async function create_cluster_sso() {
   try {
@@ -1005,6 +1009,7 @@ module.exports.delete_cluster_sso = delete_cluster_sso;
 module.exports.Ast_Components_Installation_AWS_Nimrod = Ast_Components_Installation_AWS_Nimrod;
 module.exports.Uninstallation_Ast_Components_AWS_Nimrod = Uninstallation_Ast_Components_AWS_Nimrod;
 module.exports.test = test;
+module.exports.delete_Connect_cluster = delete_Connect_cluster;
 module.exports.Ast_Components_Installation_AWS_Nimrod2 = Ast_Components_Installation_AWS_Nimrod2;
 module.exports.create_cluster = create_cluster;
 module.exports.uninstall_all = uninstall_all;

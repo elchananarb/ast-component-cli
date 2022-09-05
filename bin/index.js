@@ -87,16 +87,6 @@ ast
     eksctl_commands.Get_current_context();
   });
 
-
-  ast
-  .command("Only_Installation_Ast_ComponentAWS_Nimrod")
-  .alias("oast")
-  .description("omly Installation in Ast Components AWS from Nimrod")
-  .action(() => {
-    clear();
-    eksctl_commands.Ast_Components_Installation_AWS_Nimrod();
-  });
-  
   ast
   .command("Uninstallation_operator_platform")
   .alias("unop")
@@ -114,56 +104,6 @@ ast
     eksctl_commands.Uninstallation_Ast_Components_AWS_Nimrod();
   });
 
-  ast
-  .command("fortest")
-  .alias("te")
-  .description("fortest")
-  .action(() => {
-    clear();
-    eksctl_commands.test("ac6576fd92efd4b55aba9e805cfe2f43-1599807202.eu-north-1.elb.amazonaws.com");
-  });
-ast
-  .command("Create_local_cluster_orly")
-  .alias("clc")
-  .description("Create local cluster from orly")
-  .action(() => {
-    clear();
-    eksctl_commands.Create_local_components_clusterA();
-  });
-  ast
-  .command("Create_local_cluster_shifra")
-  .alias("clc")
-  .description("Create local cluster from shifra")
-  .action(() => {
-    clear();
-    eksctl_commands.Create_aws_components_clusterA_shifra();
-  });
-  ast
-  .command("Create_local_cluster_igor")
-  .alias("clci")
-  .description("Create local cluster from igor")
-  .action(() => {
-    clear();
-    eksctl_commands.Create_local_components_clusterAaigor();
-  });
-  ast
-  .command("Create_in_aws_cluster_shifra")
-  .alias("cac")
-  .description("Create in aws cluster shifra")
-  .action(() => {
-    clear();
-    eksctl_commands.Create_in_aws_cluster_shifra();
-  });
-
-ast
-  .command("del_all_pods in cluster")
-  .alias("dela")
-  .description("del all pods in cluster")
-  .action(() => {
-    clear();
-    eksctl_commands.uninstall_all();
-  });
-
 
   ast
   .command("connect-Cluster")
@@ -172,13 +112,15 @@ ast
   .action(() => {
     eksctl_commands.Connect_cluster();
   });
+
 ast
   .command("to-delete-context")
   .alias("tdc")
   .description("to delete context config")
   .action(() => {
-    eksctl_commands.Connect_cluster();
+    eksctl_commands.delete_Connect_cluster();
   });
+
 ast
   .command("set_Env")
   .usage("<command> -n <name> -v <value>")
@@ -220,39 +162,21 @@ ast
   });
 
 
+  // ast
+  // .command("Only_Installation_Ast_ComponentAWS_Nimrod")
+  // .alias("oast")
+  // .description("omly Installation in Ast Components AWS from Nimrod")
+  // .action(() => {
+  //   clear();
+  //   eksctl_commands.Ast_Components_Installation_AWS_Nimrod();
+  // });
+  
+
+
 
 
 
 // //from here less use
-
-ast
-  .command("Login-to-Docker")
-  .alias("ltd")
-  .description("Login to Docker")
-  .action(() => {
-    clear();
-    commands_init.Login_to_Docker_in_init_file();
-  });
-  ast
-  .command("Operator-values-Tag")
-  .alias("ovt")
-  .description("Change Operator values Tag")
-  .action(() => {
-    clear();
-    edit_yaml_file.Change_Operator_values_Tag();
-  });
-
-  
-ast
-.command("Install-Operator")
-.alias("io")
-.description("Install Ast Operator")
-.action(() => {
-  clear();
-  commands_init.Install_Operator();
-});
-
-
 ast
 .command("Install-Ast-Components")
 .alias("iac")
@@ -270,49 +194,129 @@ ast
     clear();
     commands_init.Get_Traefik_url();
   });
+
+ast
+  .command("del_all_pods in cluster")
+  .alias("dela")
+  .description("del all pods in cluster")
+  .action(() => {
+    clear();
+    eksctl_commands.uninstall_all();
+  });
+
+
+  // ast
+  // .command("Login-to-Docker")
+  // .alias("ltd")
+  // .description("Login to Docker")
+  // .action(() => {
+  //   clear();
+  //   commands_init.Login_to_Docker_in_init_file();
+  // });
+  // ast
+// .command("Update_Url_in_all_components_tags")
+// .alias("uuc")
+// .description("Update Url in all components tags")
+// .action(() => {
+//   clear();
+//   var trafik_for_up="a8121b65c99144fe894d492a8ca94ccf-1882965643.eu-north-1.elb.amazonaws.com";
+//   commands_init.Update_Url_in_all_components_tags(trafik_for_up);
+// });
+
+// ast
+// .command("Update_Url_in_ast_components")
+// .alias("uuast")
+// .description("Update Url in ast components tags")
+// .action(() => {
+//   clear();
+//   eksctl_commands.Update_Url_in_ast_components();
+// });
+
+// ast
+//   .command("Install-Metrics-Components")
+//   .alias("imc")
+//   .description("Install Metrics Components")
+//   .action(() => {
+//     clear();
+//     commands_init.Install_Metrics_Components();
+//   });
+
+
+
+  // ast
+  // .command("uninstall-Operator")
+  // .alias("uno")
+  // .description("uninstall Ast Operator")
+  // .action(() => {
+  //   clear();
+  //   commands_init.unInstall_Operator();
+  // });
+
+
+
+
+
+  // ast
+  // .command("Operator-values-Tag")
+  // .alias("ovt")
+  // .description("Change Operator values Tag")
+  // .action(() => {
+  //   clear();
+  //   edit_yaml_file.Change_Operator_values_Tag();
+  // });
+
   
-
-ast
-.command("Update_Url_in_all_components_tags")
-.alias("uuc")
-.description("Update Url in all components tags")
-.action(() => {
-  clear();
-  var trafik_for_up="a8121b65c99144fe894d492a8ca94ccf-1882965643.eu-north-1.elb.amazonaws.com";
-  commands_init.Update_Url_in_all_components_tags(trafik_for_up);
-});
-
-ast
-.command("Update_Url_in_ast_components")
-.alias("uuast")
-.description("Update Url in ast components tags")
-.action(() => {
-  clear();
-  eksctl_commands.Update_Url_in_ast_components();
-});
+// ast
+// .command("Install-Operator")
+// .alias("io")
+// .description("Install Ast Operator")
+// .action(() => {
+//   clear();
+//   commands_init.Install_Operator();
+// });
 
 
 
-ast
-  .command("Install-Metrics-Components")
-  .alias("imc")
-  .description("Install Metrics Components")
-  .action(() => {
-    clear();
-    commands_init.Install_Metrics_Components();
-  });
-
-
-
-  ast
-  .command("uninstall-Operator")
-  .alias("uno")
-  .description("uninstall Ast Operator")
-  .action(() => {
-    clear();
-    commands_init.unInstall_Operator();
-  });
-
+//   ast
+//   .command("fortest")
+//   .alias("te")
+//   .description("fortest")
+//   .action(() => {
+//     clear();
+//     eksctl_commands.test("ac6576fd92efd4b55aba9e805cfe2f43-1599807202.eu-north-1.elb.amazonaws.com");
+//   });
+// ast
+//   .command("Create_local_cluster_orly")
+//   .alias("clc")
+//   .description("Create local cluster from orly")
+//   .action(() => {
+//     clear();
+//     eksctl_commands.Create_local_components_clusterA();
+//   });
+//   ast
+//   .command("Create_local_cluster_shifra")
+//   .alias("clc")
+//   .description("Create local cluster from shifra")
+//   .action(() => {
+//     clear();
+//     eksctl_commands.Create_aws_components_clusterA_shifra();
+//   });
+//   ast
+//   .command("Create_local_cluster_igor")
+//   .alias("clci")
+//   .description("Create local cluster from igor")
+//   .action(() => {
+//     clear();
+//     eksctl_commands.Create_local_components_clusterAaigor();
+//   });
+//   ast
+//   .command("Create_in_aws_cluster_shifra")
+//   .alias("cac")
+//   .description("Create in aws cluster shifra")
+//   .action(() => {
+//     clear();
+//     eksctl_commands.Create_in_aws_cluster_shifra();
+//   });
 
 
 
