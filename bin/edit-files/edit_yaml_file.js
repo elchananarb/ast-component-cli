@@ -192,6 +192,27 @@ function Update_Url_in_ast_components_tags_nimrod(trafik_url) {
     console.log(chalk.blue(`The file "${path_yaml_astComponents}"`));
     console.log(chalk.green("was successfully updated"));
 
+
+
+    fs.writeFile(path_yaml_astComponents, yamlStr,"utf8", (err) => {
+      if (err) throw err;
+      fs.readdir(path_yaml_astComponents, (err, result) => {
+        //console.log(result);
+       
+
+         //Change the directory
+    process.chdir(path_to_up_astComponents);
+    // //after Change the directory can be input command in new directory
+    var spawn = require("child_process").spawn,
+      child;
+  //  child = spawn("powershell.exe", ["git pull; helm dep up;helm install ast ."]);
+   child = spawn("powershell.exe", [`git pull; helm dep up;helm install ast .;Start-Process -FilePath "C://Program Files (x86)//Google//Chrome//Application//chrome.exe" -ArgumentList '--start-fullscreen "${trafik_url}"'`]);
+    printData.printData(child);
+  
+      });
+    });
+
+
     ////Change the directory
     // process.chdir(path_to_up_astComponents);
     // // //after Change the directory can be input command in new directory

@@ -266,7 +266,7 @@ let configeureNau = {
     "Unicorn-Elchanan",
     "Unicorn-Ely-Test",
   ],
-  regions: ["eu-west-2", "eu-west-3","eu-central-1", "eu-north-1"],
+  regions: ["eu-west-1","eu-west-2", "eu-west-3","eu-central-1", "eu-north-1"],
   baseAstComponent: "",
   services: [
     {

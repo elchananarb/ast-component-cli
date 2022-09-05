@@ -18,7 +18,6 @@ const eksctl_commands = require("./commands/eksctl_commands");
 const edit_yaml_file = require("./edit-files/edit_yaml_file");
 const printData = require("./models/printData.js");
 const commands_init = require("./commands/commands_init");
-const test_cli = require("../test/test_cli");
 const { option } = require("commander");
 
 const homeDirectory = os.homedir();
@@ -64,20 +63,15 @@ ast
     eksctl_commands.delete_cluster();
   });
 
-ast
-  .command("connect-Cluster")
-  .alias("conc")
-  .description("connect to Cluster in Aws")
+  ast
+  .command("Ast_Components_Installation_AWS_Nimrod")
+  .alias("aci")
+  .description("Ast Components Installation in AWS from Nimrod")
   .action(() => {
-    eksctl_commands.Connect_cluster();
+    clear();
+    eksctl_commands.Ast_Components_Installation_AWS_Nimrod();
   });
-ast
-  .command("to-delete-context")
-  .alias("tdc")
-  .description("to delete context config")
-  .action(() => {
-    eksctl_commands.Connect_cluster();
-  });
+
 ast
   .command("get-contexts")
   .description("kubectl config get-contexts")
@@ -95,12 +89,21 @@ ast
 
 
   ast
-  .command("Ast_Components_Installation_AWS_Nimrod")
-  .alias("aci")
-  .description("Ast Components Installation in AWS from Nimrod")
+  .command("Only_Installation_Ast_ComponentAWS_Nimrod")
+  .alias("oast")
+  .description("omly Installation in Ast Components AWS from Nimrod")
   .action(() => {
     clear();
     eksctl_commands.Ast_Components_Installation_AWS_Nimrod();
+  });
+  
+  ast
+  .command("Uninstallation_operator_platform")
+  .alias("unop")
+  .description("Uninstallation operator platform in aws Nimrod")
+  .action(() => {
+    clear();
+    eksctl_commands.Uninstallation_operator_platform();
   });
   ast
   .command("Uninstallation_Ast_Components_AWS_Nimrod")
@@ -108,7 +111,7 @@ ast
   .description("Uninstallation Ast Components in AWS from Nimrod")
   .action(() => {
     clear();
-    eksctl_commands.Ast_Components_Installation_AWS_Nimrod();
+    eksctl_commands.Uninstallation_Ast_Components_AWS_Nimrod();
   });
 
   ast
@@ -117,7 +120,7 @@ ast
   .description("fortest")
   .action(() => {
     clear();
-    eksctl_commands.test();
+    eksctl_commands.test("ac6576fd92efd4b55aba9e805cfe2f43-1599807202.eu-north-1.elb.amazonaws.com");
   });
 ast
   .command("Create_local_cluster_orly")
@@ -161,6 +164,21 @@ ast
     eksctl_commands.uninstall_all();
   });
 
+
+  ast
+  .command("connect-Cluster")
+  .alias("conc")
+  .description("connect to Cluster in Aws")
+  .action(() => {
+    eksctl_commands.Connect_cluster();
+  });
+ast
+  .command("to-delete-context")
+  .alias("tdc")
+  .description("to delete context config")
+  .action(() => {
+    eksctl_commands.Connect_cluster();
+  });
 ast
   .command("set_Env")
   .usage("<command> -n <name> -v <value>")
