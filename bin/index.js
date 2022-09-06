@@ -10,9 +10,7 @@ const os = require("os");
 
 
 
-const fs = require("fs");
 const AppConfig = require("./models/AppConfig");
-const Switch = require("./commands/switch");
 
 const eksctl_commands = require("./commands/eksctl_commands");
 const edit_yaml_file = require("./edit-files/edit_yaml_file");
@@ -95,6 +93,7 @@ ast
     clear();
     eksctl_commands.Uninstallation_operator_platform();
   });
+
   ast
   .command("Uninstallation_Ast_Components_AWS_Nimrod")
   .alias("uaci")
@@ -104,7 +103,6 @@ ast
     eksctl_commands.Uninstallation_Ast_Components_AWS_Nimrod();
   });
 
-
   ast
   .command("connect_Cluster")
   .alias("conc")
@@ -113,13 +111,6 @@ ast
     eksctl_commands.Connect_cluster();
   });
 
-  ast
-  .command("connect_New_Cluster")
-  .alias("concnew")
-  .description("connect New Cluster in Aws")
-  .action(() => {
-    eksctl_commands.connect_New_Cluster();
-  });
 ast
   .command("to-delete-context")
   .alias("tdc")
@@ -146,46 +137,53 @@ ast
     eksctl_commands.uninstall_all();
   });
 
+  // ast
+  // .command("connect_New_Cluster")
+  // .alias("concnew")
+  // .description("connect New Cluster in Aws")
+  // .action(() => {
+  //   eksctl_commands.connect_New_Cluster();
+  // });
 
-ast
-  .command("set_Env")
-  .usage("<command> -n <name> -v <value>")
-  .alias("senv")
-  .option("-n, --name_env <name env>", "name env")
-  .option("-v, --value <value env>", "value env")
-  .description("set env for switch from local to remote")
-  .action((option) => {
-    //pr(option);
-    if (option.name_env) {
-      //console.log("name:", option.name_env);
-    } else {
-      console.log("option '-n, --name_env <name env>' argument missing");
-      process.exit(1);
-    }
-    if (option.value) {
-      //console.log("value:", option.value);
-    } else {
-      console.log("option '-v, --value <value env>' argument missing");
-      process.exit(1);
-    }
-    Switch.set_Env(option);
-  });
+// ast
+//   .command("set_Env")
+//   .usage("<command> -n <name> -v <value>")
+//   .alias("senv")
+//   .option("-n, --name_env <name env>", "name env")
+//   .option("-v, --value <value env>", "value env")
+//   .description("set env for switch from local to remote")
+//   .action((option) => {
+//     //pr(option);
+//     if (option.name_env) {
+//       //console.log("name:", option.name_env);
+//     } else {
+//       console.log("option '-n, --name_env <name env>' argument missing");
+//       process.exit(1);
+//     }
+//     if (option.value) {
+//       //console.log("value:", option.value);
+//     } else {
+//       console.log("option '-v, --value <value env>' argument missing");
+//       process.exit(1);
+//     }
+//     Switch.set_Env(option);
+//   });
 
-ast
-  .command("remove_Env")
-  .alias("renv")
-  .option("-n, --name_env <name env to remove>", "name env")
-  .description("remov env")
-  .action((option) => {
-    //pr(option);
-    if (option.name_env) {
-    } else {
-      console.log("option '-n, --name_env <name env>' argument missing");
-      process.exit(1);
-    }
+// ast
+//   .command("remove_Env")
+//   .alias("renv")
+//   .option("-n, --name_env <name env to remove>", "name env")
+//   .description("remov env")
+//   .action((option) => {
+//     //pr(option);
+//     if (option.name_env) {
+//     } else {
+//       console.log("option '-n, --name_env <name env>' argument missing");
+//       process.exit(1);
+//     }
 
-    Switch.remove_Env(option);
-  });
+//     Switch.remove_Env(option);
+//   });
 
 
 
