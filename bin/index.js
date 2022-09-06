@@ -121,6 +121,25 @@ ast
     eksctl_commands.delete_Connect_cluster();
   });
 
+  ast
+  .command("Get_Traefik_url")
+  .alias("gtu")
+  .description("Get_Traefik_url")
+  .action(() => {
+    clear();
+    commands_init.Get_Traefik_url();
+  });
+
+ast
+  .command("del_all_pods in cluster")
+  .alias("dela")
+  .description("del all pods in cluster")
+  .action(() => {
+    clear();
+    eksctl_commands.uninstall_all();
+  });
+
+
 ast
   .command("set_Env")
   .usage("<command> -n <name> -v <value>")
@@ -162,6 +181,9 @@ ast
   });
 
 
+
+
+  
   // ast
   // .command("Only_Installation_Ast_ComponentAWS_Nimrod")
   // .alias("oast")
@@ -171,38 +193,17 @@ ast
   //   eksctl_commands.Ast_Components_Installation_AWS_Nimrod();
   // });
   
-
-
-
-
-
 // //from here less use
-ast
-.command("Install-Ast-Components")
-.alias("iac")
-.description("Install Ast Components")
-.action(() => {
-  clear();
-  commands_init.Install_Ast_Components();
-});
+// ast
+// .command("Install-Ast-Components")
+// .alias("iac")
+// .description("Install Ast Components")
+// .action(() => {
+//   clear();
+//   commands_init.Install_Ast_Components();
+// });
 
-ast
-  .command("Get_Traefik_url")
-  .alias("gtu")
-  .description("Get_Traefik_url")
-  .action(() => {
-    clear();
-    commands_init.Get_Traefik_url();
-  });
 
-ast
-  .command("del_all_pods in cluster")
-  .alias("dela")
-  .description("del all pods in cluster")
-  .action(() => {
-    clear();
-    eksctl_commands.uninstall_all();
-  });
 
 
   // ast
