@@ -470,6 +470,22 @@ function get_contexts() {
 
 function Connect_cluster() {
   try {
+   
+    console.log(chalk.green("Please enter the name of cluster \n"));
+    let name = prompt();
+    var spawn = require("child_process").spawn,
+      child;
+    child = spawn("powershell.exe", [
+      `kubectl config use-context ${name}`,
+    ]);
+  } catch (err) {
+    console.error(err);
+  }
+  printData.printData(child);
+}
+
+function connect_New_Cluster() {
+  try {
     itemsProcessed_name_cluster = 0;
 
     const fileContents = fs.readFileSync(config_file_path, "utf8");
@@ -1027,6 +1043,7 @@ module.exports.Create_local_components_clusterB =
 
 
 module.exports.Connect_cluster = Connect_cluster;
+module.exports.connect_New_Cluster = connect_New_Cluster;
 module.exports.Uninstallation_operator_platform = Uninstallation_operator_platform;
 module.exports.Create_in_aws_cluster_shifra = Create_in_aws_cluster_shifra;
 

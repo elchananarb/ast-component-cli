@@ -106,13 +106,20 @@ ast
 
 
   ast
-  .command("connect-Cluster")
+  .command("connect_Cluster")
   .alias("conc")
   .description("connect to Cluster in Aws")
   .action(() => {
     eksctl_commands.Connect_cluster();
   });
 
+  ast
+  .command("connect_New_Cluster")
+  .alias("concnew")
+  .description("connect New Cluster in Aws")
+  .action(() => {
+    eksctl_commands.connect_New_Cluster();
+  });
 ast
   .command("to-delete-context")
   .alias("tdc")
