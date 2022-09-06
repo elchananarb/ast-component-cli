@@ -227,7 +227,7 @@ function Uninstallation_Ast_Components_AWS_Nimrod() {
 
    var spawn = require("child_process").spawn,
    child;
- child = spawn("powershell.exe", ["helm uninstall ast"]);
+ child = spawn("powershell.exe", ["helm uninstall ast ."]);
 
   }
 
