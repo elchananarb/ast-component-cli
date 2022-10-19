@@ -206,7 +206,7 @@ function Update_Url_in_ast_components_tags_nimrod(trafik_url) {
     var spawn = require("child_process").spawn,
       child;
   //  child = spawn("powershell.exe", ["git pull; helm dep up;helm install ast ."]);
-   child = spawn("powershell.exe", [`git pull; helm dep up;helm install ast .;$x=-1; while ($x -le 11) {sleep 5 ;$x=kubectl get pods | findstr ast-core | findstr 1/1 | Measure-Object | %{$_.Count}; if ($x -le 11) {echo "Waiting Pods ast to be created"}}   ;Start-Process -FilePath "C://Program Files (x86)//Google//Chrome//Application//chrome.exe" -ArgumentList '--start-fullscreen "${trafik_url}"'`]);
+   child = spawn("powershell.exe", [`helm dep up;helm install ast .;$x=-1; while ($x -le 11) {sleep 5 ;$x=kubectl get pods | findstr ast-core | findstr 1/1 | Measure-Object | %{$_.Count}; if ($x -le 11) {echo "Waiting Pods ast to be created"}}   ;Start-Process -FilePath "C://Program Files (x86)//Google//Chrome//Application//chrome.exe" -ArgumentList '--start-fullscreen "${trafik_url}"'`]);
     printData.printData(child);
   
       });

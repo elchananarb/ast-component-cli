@@ -10,6 +10,7 @@ const os = require("os");
 
 // const AppConfig = require("../models/AppConfig");
 const printData = require("../models/printData");
+//const eksctl_commands = require("./eksctl_commands");
 const edit_yaml_file = require("../edit-files/edit_yaml_file");
 
 ////const path_yaml = "C:\\Projects\\Js\\lern-js\\my-js-1\\files\\values.yaml";
@@ -191,6 +192,42 @@ function Get_Traefik_url2B() {
   
 }
 
+function open_ast_web() {
+  Get_Traefik_url().then((child ) => {
+       var scriptOutput = "";
+   child.stdout.setEncoding("utf8");
+   child.stdout.on("data", function (data) {
+     //Here is where the output goes
+     traefik = data;
+     traefik2 = data.toString();
+ 
+     val = traefik.replace(/\s\s+/g, " ");
+     //console.log(val);
+     arry_traefik = val.split(" ");
+     //console.log(arry_traefik);
+   });
+   child.stderr.setEncoding("utf8");
+   child.stderr.on("data", function (data) {
+     //Here is where the error output goes
+     console.log("stderr: " + data);
+     data = data.toString();
+     scriptOutput += data;
+   });
+   child.on("exit", function () {
+     let url= arry_traefik[3];
+    //console.log(arry_traefik[3]);
+    open_ast(url);
+   });
+   child.stdin.end();
+  });
+}
+function open_ast(url_ast)
+{
+  var spawn = require("child_process").spawn,
+  child;
+  child = spawn("powershell.exe", [`Start-Process -FilePath "C://Program Files (x86)//Google//Chrome//Application//chrome.exe" -ArgumentList '--start-fullscreen "${url_ast}"'`]);
+
+}
 
 function Get_Traefik_url() {
   let myPromise = new Promise((resolve, reject) => {
@@ -289,3 +326,4 @@ module.exports.Update_Url_in_all_components_tags_orly =
 module.exports.to_delete_check_test_cli = to_delete_check_test_cli;
 module.exports.Login_to_Docker_in_init_file = Login_to_Docker_in_init_file;
 module.exports.extract_all_trafik_A = extract_all_trafik_A;
+module.exports.open_ast_web = open_ast_web;

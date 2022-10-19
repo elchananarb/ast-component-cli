@@ -127,6 +127,14 @@ ast
     clear();
     commands_init.Get_Traefik_url();
   });
+  ast
+  .command("open_ast_web")
+  .alias("astup")
+  .description("open own ast web ")
+  .action(() => {
+    clear();
+    commands_init.open_ast_web();
+  });
 
 ast
   .command("del_all_pods in cluster")
