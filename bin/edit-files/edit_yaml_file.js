@@ -1,5 +1,7 @@
 const yaml = require("js-yaml");
 const fs = require("fs");
+//const yaml_file = require("js-yaml");
+const writeYamlFile = require('write-yaml-file')
 const ast = require("commander");
 const chalk = require("chalk");
 const clear = require("clear");
@@ -227,6 +229,61 @@ function Update_Url_in_ast_components_tags_nimrod(trafik_url) {
   }
 }
 
+function test_test_Update_Url_in_ast_components_tags_nimrod(trafik_url) {
+  const fileContents = fs.readFileSync(config_file_path, "utf8");
+  ////take path ast-components  from the file config and go to "ast-components\deployment\pu\values.yaml"
+  const data_configFile = JSON.parse(fileContents);
+
+  //console.log(path_astComponents);
+
+  //astComponents
+  const path_astComponents = data_configFile.astComponents;
+  const path_yaml_astComponents = `${path_astComponents}/platforms/helm/values.yaml`;
+  const path_to_up_astComponents = `${path_astComponents}/platforms/helm`;
+
+  // Get document, or throw exception on error
+  try {
+    // up for astComponents
+    const doc = yaml.load(fs.readFileSync(path_yaml_astComponents, "utf8"));
+    let data = doc;
+
+    var index = "integrations";
+    data[index].frontEndUrl = `"http://${trafik_url}`;
+    data[index].webHookUrl = `"http://${trafik_url}/ast-flow-listener/"`;
+    data[index].astBaseUri = `"http://${trafik_url}"`;
+
+    //let yamlStr = yaml.dump(data);
+    let yamlStr = data;
+    writeYamlFile(path_yaml_astComponents, yamlStr, "utf8");
+    console.log(chalk.blue(`The file "${path_yaml_astComponents}"`));
+    console.log(chalk.green("was successfully updated"));
+
+
+
+    fs.writeFile(path_yaml_astComponents, yamlStr,"utf8", (err) => {
+      if (err) throw err;
+      fs.readdir(path_yaml_astComponents, (err, result) => {
+        console.log("finich");
+       
+
+      });
+    });
+
+
+    ////Change the directory
+    // process.chdir(path_to_up_astComponents);
+    // // //after Change the directory can be input command in new directory
+    // var spawn = require("child_process").spawn,
+    //   child;
+    // child = spawn("powershell.exe", ["helm dep up"]);
+    // printData.printData(child);
+
+   
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 
 function Update_Url_in_all_components_tags_orly(trafik_url) {
   const fileContents = fs.readFileSync(config_file_path, "utf8");
@@ -326,6 +383,9 @@ function Update_Url_in_all_components_tags_orly(trafik_url) {
     console.log(e);
   }
 }
+
+
+
 module.exports.Change_Operator_values_Tag = Change_Operator_values_Tag;
 module.exports.Update_Url_in_all_components_tags =
   Update_Url_in_all_components_tags;
@@ -334,3 +394,7 @@ module.exports.Update_Url_in_all_components_tags_orly =
 
   module.exports.Update_Url_in_ast_components_tags_nimrod =
   Update_Url_in_ast_components_tags_nimrod;
+
+  module.exports.test_test_Update_Url_in_ast_components_tags_nimrod =
+  test_test_Update_Url_in_ast_components_tags_nimrod;
+

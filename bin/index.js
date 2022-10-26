@@ -145,6 +145,19 @@ ast
     eksctl_commands.uninstall_all();
   });
 
+
+    ast
+.command("test_test_Update_Url_in_ast_components_tags_nimrod")
+.alias("test_1")
+.description("test_test_Update_Url_in_ast_components_tags_nimrod")
+.action(() => {
+  clear();
+  //var trafik_for_up="a8121b65c99144fe894d492a8ca94ccf-1882965643";
+  var trafik_for_up="a8121b65c99144fe894d492a8ca94ccf-1882965643.eu-north-1.elb.amazonaws.com";
+
+  edit_yaml_file.test_test_Update_Url_in_ast_components_tags_nimrod("a8121b65c99144fe894d492a8ca94ccf-1882965643.eu-north-1.elb.amazonaws.com");
+});
+
   // ast
   // .command("connect_New_Cluster")
   // .alias("concnew")

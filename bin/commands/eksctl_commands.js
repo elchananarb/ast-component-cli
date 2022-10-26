@@ -857,6 +857,7 @@ function uninstall_all() {
     helm  uninstall platform-platform-local;helm uninstall kics-kics-worker;helm  uninstall sca-sca-webapp;	helm  uninstall sca-sca-worker;
     helm  uninstall kics-kics-results-processor;helm  uninstall kics-kics-management-writer;helm  uninstall sca-sca-container-results-processor;
     helm  uninstall sca-sca-results-processor;
+    helm uninstall ast-operator;
  $x=100; while ($x -ge 10 ) {sleep 40 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be deleted"}}`,
   ]);
   printData.printData(child);
