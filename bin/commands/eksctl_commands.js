@@ -78,7 +78,7 @@ function Ast_Components_Installation_AWS_Nimrod() {
 
       //child = spawn("powershell.exe",["ls"]);
 
-   child = spawn("powershell.exe", [ `helm upgrade --install ast-operator ast/operator-helm-chart --set config.domain="${cluster_url}" --set config.enableTLS="false"  --set-string config.port=8080 --set config.protocol="http" --set config.disableResourcesAndRequestLimit="true" --set imagePullSecretJfrog.registry="https://checkmarx.jfrog.io" --set imagePullSecrets="regcred" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};$x=-1; while ($x -le 0) {sleep 5 ;$x=kubectl get pods | findstr ast-operator | findstr 2/2 | Measure-Object | %{$_.Count}; if ($x -le 0) {echo "Waiting Pods ast-operator to be created"}};`,]);
+   child = spawn("powershell.exe", [ `helm upgrade --install ast-operator ast/operator-helm-chart --set config.domain="${cluster_url}" --set config.enableTLS="false" --set config.protocol="http" --set config.disableResourcesAndRequestLimit="true" --set imagePullSecretJfrog.registry="https://checkmarx.jfrog.io" --set imagePullSecrets="regcred" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};$x=-1; while ($x -le 0) {sleep 5 ;$x=kubectl get pods | findstr ast-operator | findstr 2/2 | Measure-Object | %{$_.Count}; if ($x -le 0) {echo "Waiting Pods ast-operator to be created"}};`,]);
    //  זה בדיקה של אנינסטל לראות שזה באמת הוסר הורדתי את זה  helm uninstall ast-operator;$x=250; while ($x -ge 9 ) {sleep 50 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting until the Pod ast-operator deleted"}};
 //      זה בדיקה של ינסטל אופרטור בהתחלה אני מוריד את הבדיקה כי הוא מתקין לי את אופרטוק ישירות  ת helm upgrade --install ast-operator ast/operator-helm-chart --set config.domain="127.0.0.1" --set config.enableTLS="false"  --set-string config.port=8080 --set config.protocol="http" --set config.disableResourcesAndRequestLimit="true" --set imagePullSecretJfrog.registry="https://checkmarx.jfrog.io" --set imagePullSecrets="regcred" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};$x=0; while ($x -le 1  ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods ast-operator to be created"}};
 
@@ -99,7 +99,9 @@ function Ast_Components_Installation_AWS_Nimrod() {
     });
 
     child.on("exit", function () {
-      Update_Url_in_ast_components(cluster_url)
+      console.log("last for today!!!!");
+
+    Update_Url_in_ast_components(cluster_url)
 
     });
     child.stdin.end();
@@ -140,7 +142,7 @@ function Ast_Components_Installation_AWS_Nimrod() {
           helm repo add ast https://checkmarx.jfrog.io/artifactory/ast-helm/ --username ${username} --password ${password} ;
           helm repo update;
  
-          helm upgrade --install ast-operator ast/operator-helm-chart --set config.domain="127.0.0.1" --set config.enableTLS="false"  --set-string config.port=8080 --set config.protocol="http" --set config.disableResourcesAndRequestLimit="true" --set imagePullSecretJfrog.registry="https://checkmarx.jfrog.io" --set imagePullSecrets="regcred" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};$x=-1; while ($x -le 0) {sleep 5 ;$x=kubectl get pods | findstr ast-operator | findstr 2/2 | Measure-Object | %{$_.Count}; if ($x -le 0) {echo "Waiting Pods ast-operator to be created"}};
+          helm upgrade --install ast-operator ast/operator-helm-chart --set config.domain="127.0.0.1" --set config.enableTLS="false" --set-string config.port=8080  --set config.protocol="http" --set config.disableResourcesAndRequestLimit="true" --set imagePullSecretJfrog.registry="https://checkmarx.jfrog.io" --set imagePullSecrets="regcred" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};$x=-1; while ($x -le 0) {sleep 5 ;$x=kubectl get pods | findstr ast-operator | findstr 2/2 | Measure-Object | %{$_.Count}; if ($x -le 0) {echo "Waiting Pods ast-operator to be created"}};
           echo "after install one ast-operator ";
  
           helm upgrade --install platform ast/platform-local;$x=1; while ($x -le 6) {sleep 5 ;$x=kubectl get pods | findstr platform | findstr 1/1 | Measure-Object | %{$_.Count}; if ($x -le 6) {echo "Waiting Pods ast/platform-local to be created creted $x from 7 "}};
@@ -149,7 +151,7 @@ function Ast_Components_Installation_AWS_Nimrod() {
          `,
        ]);
       //  זה בדיקה של אנינסטל לראות שזה באמת הוסר הורדתי את זה  helm uninstall ast-operator;$x=250; while ($x -ge 9 ) {sleep 50 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting until the Pod ast-operator deleted"}};
- //      זה בדיקה של ינסטל אופרטור בהתחלה אני מוריד את הבדיקה כי הוא מתקין לי את אופרטוק ישירות  ת helm upgrade --install ast-operator ast/operator-helm-chart --set config.domain="127.0.0.1" --set config.enableTLS="false"  --set-string config.port=8080 --set config.protocol="http" --set config.disableResourcesAndRequestLimit="true" --set imagePullSecretJfrog.registry="https://checkmarx.jfrog.io" --set imagePullSecrets="regcred" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};$x=0; while ($x -le 1  ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods ast-operator to be created"}};
+ //      זה בדיקה של ינסטל אופרטור בהתחלה אני מוריד את הבדיקה כי הוא מתקין לי את אופרטוק ישירות  ת helm upgrade --install ast-operator ast/operator-helm-chart --set config.domain="127.0.0.1" --set config.enableTLS="false"   --set config.protocol="http" --set config.disableResourcesAndRequestLimit="true" --set imagePullSecretJfrog.registry="https://checkmarx.jfrog.io" --set imagePullSecrets="regcred" --set imagePullSecretJfrog.username=${username} --set imagePullSecretJfrog.password=${password} --set imagePullSecretJfrog.email=${username};$x=0; while ($x -le 1  ) {sleep 30 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods ast-operator to be created"}};
  
        //עשיתיח תנאי למעלה אפשר למחור  להוסיף תנאי שאם אין מספיק פודים שלר ימשיך הלאה ואם כם יחזיר את הריסולב
  
@@ -601,6 +603,74 @@ function Create_local_components_clusterA() {
  // });
 }
 
+
+
+function uninstall_all() {
+  var spawn = require("child_process").spawn,
+    child;
+  child = spawn("powershell.exe", [
+    `helm del sast; helm del kiks; helm del core; helm del platform; helm del operator ;helm del ast-integrations ;helm del  ast-metrics;
+    helm  uninstall platform-platform-local;helm uninstall kics-kics-worker;helm  uninstall sca-sca-webapp;	helm  uninstall sca-sca-worker;
+    helm  uninstall kics-kics-results-processor;helm  uninstall kics-kics-management-writer;helm  uninstall sca-sca-container-results-processor;
+    helm  uninstall sca-sca-results-processor;
+    helm uninstall ast-operator;
+ $x=100; while ($x -ge 10 ) {sleep 40 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be deleted"}}`,
+  ]);
+  printData.printData(child);
+}
+
+var data_for_create_dev = "";
+var arry_context_for_create_dev = [];
+
+function Create_local_components_clusterB() {
+  let myPromise = new Promise((resolve, reject) => {
+    // try {
+    if (!fs.existsSync(ast_cli_dir_path)) {
+      create_dir_ast_cli();
+    }
+    //const fileContents = fs.readFileSync(config_file_path, "utf8");
+    ////take from the file config
+    //const data_configFile = JSON.parse(fileContents);
+
+    if (fs.existsSync(config_file_path)) {
+      fileContents = fs.readFileSync(config_file_path, "utf8");
+      ////take from the file config
+      data_configFile = JSON.parse(fileContents);
+
+      ////take k3d Path from the data_configFile from the file config
+      const k3dPath = data_configFile.k3dPath;
+      ////Change the directory
+      process.chdir(k3dPath);
+
+      var spawn = require("child_process").spawn,
+        child;
+      child = spawn("powershell.exe", [
+        'k3d.exe cluster delete dev; k3d cluster create dev --k3s-arg "--disable=traefik@server:0" --port 8080:80@server:0',
+      ]);
+      child.stdout.setEncoding("utf8");
+      child.stdout.on("data", function (data) {
+        data_for_create_dev += data;
+        arry_context_for_create_dev += data;
+      });
+
+      child.stderr.setEncoding("utf8");
+      child.stderr.on("data", function (data) {
+        console.log("stderr: " + data);
+        data = data.toString();
+        data_for_create_dev += data;
+      });
+
+      child.on("exit", function () {
+        resolve("ddd");
+      });
+      child.stdin.end();
+    }
+    printData.printData(child);
+  });
+  return myPromise;
+}
+
+
 function get_aws_sso_temporary_credentials(sso_file_cache) {
   let myPromise = new Promise((resolve, reject) => {
     console.log("START shlab 5");
@@ -848,72 +918,6 @@ function Create_local_components_cluster_orly_without_metrics_And_integretions()
   //});
   //return myPromise;
 }
-
-function uninstall_all() {
-  var spawn = require("child_process").spawn,
-    child;
-  child = spawn("powershell.exe", [
-    `helm del sast; helm del kiks; helm del core; helm del platform; helm del operator ;helm del ast-integrations ;helm del  ast-metrics;
-    helm  uninstall platform-platform-local;helm uninstall kics-kics-worker;helm  uninstall sca-sca-webapp;	helm  uninstall sca-sca-worker;
-    helm  uninstall kics-kics-results-processor;helm  uninstall kics-kics-management-writer;helm  uninstall sca-sca-container-results-processor;
-    helm  uninstall sca-sca-results-processor;
-    helm uninstall ast-operator;
- $x=100; while ($x -ge 10 ) {sleep 40 ;$x=kubectl get pods | Measure-Object | %{$_.Count}; if ($x -ge 1) {echo "Waiting Pods to be deleted"}}`,
-  ]);
-  printData.printData(child);
-}
-
-var data_for_create_dev = "";
-var arry_context_for_create_dev = [];
-
-function Create_local_components_clusterB() {
-  let myPromise = new Promise((resolve, reject) => {
-    // try {
-    if (!fs.existsSync(ast_cli_dir_path)) {
-      create_dir_ast_cli();
-    }
-    //const fileContents = fs.readFileSync(config_file_path, "utf8");
-    ////take from the file config
-    //const data_configFile = JSON.parse(fileContents);
-
-    if (fs.existsSync(config_file_path)) {
-      fileContents = fs.readFileSync(config_file_path, "utf8");
-      ////take from the file config
-      data_configFile = JSON.parse(fileContents);
-
-      ////take k3d Path from the data_configFile from the file config
-      const k3dPath = data_configFile.k3dPath;
-      ////Change the directory
-      process.chdir(k3dPath);
-
-      var spawn = require("child_process").spawn,
-        child;
-      child = spawn("powershell.exe", [
-        'k3d.exe cluster delete dev; k3d cluster create dev --k3s-arg "--disable=traefik@server:0" --port 8080:80@server:0',
-      ]);
-      child.stdout.setEncoding("utf8");
-      child.stdout.on("data", function (data) {
-        data_for_create_dev += data;
-        arry_context_for_create_dev += data;
-      });
-
-      child.stderr.setEncoding("utf8");
-      child.stderr.on("data", function (data) {
-        console.log("stderr: " + data);
-        data = data.toString();
-        data_for_create_dev += data;
-      });
-
-      child.on("exit", function () {
-        resolve("ddd");
-      });
-      child.stdin.end();
-    }
-    printData.printData(child);
-  });
-  return myPromise;
-}
-
 
 async function create_cluster_sso() {
   try {

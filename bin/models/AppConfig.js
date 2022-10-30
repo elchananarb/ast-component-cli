@@ -266,7 +266,7 @@ let configeureNau = {
     "Unicorn-Elchanan",
     "Unicorn-Ely-Test",
   ],
-  regions: ["eu-west-1","eu-west-2", "eu-west-3","eu-central-1", "eu-north-1"],
+  regions: ["eu-west-1","eu-west-2", "eu-west-3","eu-central-1", "eu-north-1", "us-west-1"],
   baseAstComponent: "",
   services: [
     {
@@ -587,9 +587,9 @@ function Login_to_Docker() {
       child;
     child = spawn("powershell.exe", [
       `docker login --username ${username} --password ${jfrogToken} https://checkmarx.jfrog.io/artifactory/docker ;
-      helm repo remove ast;
+       helm repo remove ast;
        helm repo add ast https://checkmarx.jfrog.io/artifactory/ast-helm/ --username ${username} --password ${jfrogToken} ;
-      helm repo update`,
+       helm repo update`,
     ]);
   } catch (err) {
     console.error(err);
@@ -613,7 +613,6 @@ function create_file_config(configeureNau) {
     });
   });
 }
-
 function create_dir_ast_cli() {
   fs.mkdir(ast_cli_dir_path, (err) => {
     if (err) {
@@ -623,6 +622,7 @@ function create_dir_ast_cli() {
     }
   });
 }
+
 
 function Config_ast_cli() {
   //check if a dir exists
